@@ -3307,6 +3307,22 @@ class VoxelMetropolis3D {
         return active;
     }
 
+    followCitizen(citId) {
+        const cit = this.citizens3D.get(citId);
+        if (!cit || !cit.group) return;
+        this.targetFollowCitizen = cit;
+        const targetPos = new THREE.Vector3(
+            cit.group.position.x + 14,
+            cit.group.position.y + 12,
+            cit.group.position.z + 14
+        );
+        if (this.controls) this.controls.target.copy(cit.group.position);
+        if (this.camera) {
+            this.camera.position.set(targetPos.x, targetPos.y, targetPos.z);
+            this.camera.lookAt(cit.group.position);
+        }
+    }
+
     showCitizenDossier(citId) {
         if (window.openCitizenDossier) {
             window.openCitizenDossier(citId);
@@ -3327,6 +3343,7 @@ class VoxelMetropolis3D {
             while (obj) {
                 if (obj.userData && obj.userData.type === 'citizen') {
                     const citId = obj.userData.id;
+                    this.followCitizen(citId);
                     if (window.inspectCitizen) window.inspectCitizen(citId);
                     this.showCitizenDossier(citId);
                     return;
