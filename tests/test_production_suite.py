@@ -793,6 +793,21 @@ class TestOrnsteinUhlenbeckAndMacroFlow(unittest.TestCase):
         self.assertGreater(pruned, 0)
         self.assertLessEqual(len(persona.memory.nodes), 25)
 
+    def test_spatial_density_calculation(self):
+        """Verify LivingWorld.calculate_spatial_density returns valid density clustering for all sectors (GLM-5.3 & GLM-5.2 Swarm certified)."""
+        import server
+        density = server.WORLD.calculate_spatial_density(radius=150.0)
+        self.assertIsInstance(density, dict)
+        self.assertGreaterEqual(len(density), 20)
+        total_counted = sum(d["citizen_count"] for d in density.values())
+        self.assertGreater(total_counted, 0)
+        for zone, stats in density.items():
+            self.assertIn("citizen_count", stats)
+            self.assertIn("density_factor", stats)
+            self.assertIn("congestion_level", stats)
+            self.assertIn(stats["congestion_level"], ["HIGH", "MEDIUM", "LOW"])
+            self.assertGreaterEqual(stats["density_factor"], 0.0)
+
 if __name__ == "__main__":
     print("=" * 80)
     print("⚡ RUNNING BENGALURU LIVING METROPOLIS OS PRODUCTION TEST SUITE")

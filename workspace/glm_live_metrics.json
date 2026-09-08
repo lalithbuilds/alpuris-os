@@ -1,11 +1,11 @@
 {
   "daemon_status": "RUNNING_AUTONOMOUS_LOOP",
-  "total_cycles": 1,
-  "total_tokens_consumed": 1494,
+  "total_cycles": 2,
+  "total_tokens_consumed": 2153,
   "total_prompt_tokens": 359,
   "total_completion_tokens": 1135,
   "total_reasoning_tokens": 377,
-  "total_cost_usd": 0.0026823408,
+  "total_cost_usd": 0.003648642,
   "active_agents": [
     "ALPHA",
     "BETA",
@@ -15,6 +15,33 @@
   "last_cycle_timestamp": "2026-09-08T17:22:48Z",
   "last_git_commit": "feat(autonomous): GLM-5.2 sovereign engineering cycle #1 verified [tokens: 1494]",
   "recent_generations": [
+    {
+      "agent": "GLM-5.2 GAMMA",
+      "provider": "OpenRouter",
+      "gen_id": "gen-1788870807-ttNpGaPOhqV3qE87uiqB",
+      "total_tokens": 129,
+      "cost": 0.0001832928,
+      "timestamp": "2026-09-08T18:03:29Z",
+      "status": "success"
+    },
+    {
+      "agent": "GLM-5.2 ALPHA",
+      "provider": "OpenRouter",
+      "gen_id": "gen-1788870798-fb7O5nwavZ5gFu6GcPoh",
+      "total_tokens": 222,
+      "cost": 0.0003668784,
+      "timestamp": "2026-09-08T18:03:21Z",
+      "status": "success"
+    },
+    {
+      "agent": "GLM-5.2 BETA",
+      "provider": "OpenRouter",
+      "gen_id": "gen-1788870789-TLUPngVNiRKIm3gkjuh2",
+      "total_tokens": 308,
+      "cost": 0.00041613,
+      "timestamp": "2026-09-08T18:03:11Z",
+      "status": "success"
+    },
     {
       "agent": "DELTA",
       "agent_name": "GLM-5.2 DELTA",
@@ -49,5 +76,5 @@
       "timestamp": "2026-09-08T17:21:46Z"
     }
   ],
-  "last_updated": "2026-09-08T17:22:48Z"
+  "last_updated": "2026-09-08T18:03:29Z"
 }

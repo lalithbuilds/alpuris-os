@@ -260,6 +260,22 @@ class LivingWorld:
             count += 1
         return count
 
+    def calculate_spatial_density(self, radius: float = 150.0) -> Dict[str, Any]:
+        """
+        Calculates spatial density and congestion clusters across all 23 sectors.
+        Engineered by GLM-5.3 & GLM-5.2 Sovereign Swarm for ALPURIS OS.
+        """
+        sector_density = {}
+        for zone_name, coord in ZONE_COORDINATES.items():
+            neighbors = self.spatial_grid.query_radius(coord, radius)
+            density_factor = round(len(neighbors) / max(1, len(self.personas)), 4)
+            sector_density[zone_name] = {
+                "citizen_count": len(neighbors),
+                "density_factor": density_factor,
+                "congestion_level": "HIGH" if density_factor > 0.08 else ("MEDIUM" if density_factor > 0.03 else "LOW")
+            }
+        return sector_density
+
     def init_db(self):
         with self.db_lock:
             conn = sqlite3.connect(DB_PATH)
@@ -1346,6 +1362,7 @@ class LivingWorld:
             "stressor": stressor_event,
             "weather": self.weather,
             "silk_board_congestion": self.silk_board_congestion,
+            "sector_density": self.calculate_spatial_density(),
             "stocks": self.stocks,
             "blr_tech_index": f"{blr_tech_index:,.2f}",
             "radio_broadcasts": self.radio_broadcasts[:4],
