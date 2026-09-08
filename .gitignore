@@ -37,6 +37,7 @@ server.pid
 server.log
 *.pid
 *.log
+*.jsonl
 
 # OS & Editor
 .DS_Store

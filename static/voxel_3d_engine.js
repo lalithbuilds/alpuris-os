@@ -651,6 +651,20 @@ class VoxelMetropolis3D {
         const bulbInst = new THREE.InstancedMesh(bulbGeo, bulbMat, 150);
         bulbInst.instanceMatrix.setUsage(THREE.StaticDrawUsage);
 
+        // Ground Light Pool Decals (Warm Golden Halos on Road Asphalt)
+        const haloGeo = new THREE.CircleGeometry(7.5, 16);
+        haloGeo.rotateX(-Math.PI / 2);
+        const haloMat = new THREE.MeshBasicMaterial({
+            color: 0xfef08a,
+            transparent: true,
+            opacity: 0.22,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false
+        });
+        const haloInst = new THREE.InstancedMesh(haloGeo, haloMat, 150);
+        haloInst.instanceMatrix.setUsage(THREE.StaticDrawUsage);
+        this.streetLightHaloInst = haloInst;
+
         let lightCount = 0;
         nsLanes.forEach(x => {
             for (let z = -CITY_SPAN + 25; z <= CITY_SPAN - 25; z += 55) {
@@ -664,15 +678,32 @@ class VoxelMetropolis3D {
                 dummy.position.set(lx - 2.5, 13.5, z);
                 dummy.updateMatrix();
                 bulbInst.setMatrixAt(lightCount, dummy.matrix);
+
+                dummy.position.set(lx - 2.5, 0.28, z);
+                dummy.updateMatrix();
+                haloInst.setMatrixAt(lightCount, dummy.matrix);
                 lightCount++;
             }
         });
         poleInst.count = lightCount;
         bulbInst.count = lightCount;
+        haloInst.count = lightCount;
         poleInst.instanceMatrix.needsUpdate = true;
         bulbInst.instanceMatrix.needsUpdate = true;
+        haloInst.instanceMatrix.needsUpdate = true;
         this.scene.add(poleInst);
         this.scene.add(bulbInst);
+        this.scene.add(haloInst);
+
+        // Real PointLights at major boulevard crossroads (locked to 9 key hubs for 60 FPS locked perf)
+        [-115, 0, 115].forEach(cx => {
+            [-115, 0, 115].forEach(cz => {
+                const sl = new THREE.PointLight(0xfef08a, 0.0, 52, 1.8);
+                sl.position.set(cx, 13.5, cz);
+                this.scene.add(sl);
+                this.streetLights.push(sl);
+            });
+        });
     }
 
     createCityFillBlocks() {
@@ -817,6 +848,8 @@ class VoxelMetropolis3D {
         st.rotation.x = -Math.PI / 2;
         st.position.set(-230, 0.4, -180);
         this.scene.add(st);
+
+        this.lakeMeshes = [ul, bl, st];
     }
 
     create16BengaluruSectors() {
@@ -2009,6 +2042,21 @@ class VoxelMetropolis3D {
                 busGroup.add(tl);
             });
 
+            // Volumetric Bus Headlight Beams (Forward Road Projection)
+            const busBeamGeo = new THREE.ConeGeometry(3.6, 16, 8, 1, true);
+            busBeamGeo.rotateX(-Math.PI / 2);
+            const busBeamMat = new THREE.MeshBasicMaterial({
+                color: 0xfef08a,
+                transparent: true,
+                opacity: 0.15,
+                blending: THREE.AdditiveBlending,
+                depthWrite: false,
+                side: THREE.DoubleSide
+            });
+            const busBeam = new THREE.Mesh(busBeamGeo, busBeamMat);
+            busBeam.position.set(0, 1.0, 15.5);
+            busGroup.add(busBeam);
+
             // 6. Rotating Wheels
             const wheels = [];
             const wheelGeo = new THREE.CylinderGeometry(1.0, 1.0, 0.6, 12);
@@ -2421,20 +2469,52 @@ class VoxelMetropolis3D {
             const type = i % 3;
 
             if (type === 0) {
+                // Auto-rickshaw
                 const base = new THREE.Mesh(new THREE.BoxGeometry(3.0, 1.6, 4.4), autoGreen);
                 base.position.y = 1.0; vGroup.add(base);
                 const hood = new THREE.Mesh(new THREE.BoxGeometry(2.8, 1.4, 3.2), autoMat);
                 hood.position.set(0, 2.2, -0.4); vGroup.add(hood);
                 const headlight = new THREE.Mesh(new THREE.SphereGeometry(0.3, 6, 6), new THREE.MeshBasicMaterial({ color: 0xfef08a }));
                 headlight.position.set(0, 1.2, -2.3); vGroup.add(headlight);
+
+                // Volumetric forward headlight beam
+                const autoBeamGeo = new THREE.ConeGeometry(2.4, 9, 8, 1, true);
+                autoBeamGeo.rotateX(Math.PI / 2);
+                const autoBeam = new THREE.Mesh(autoBeamGeo, new THREE.MeshBasicMaterial({
+                    color: 0xfef08a, transparent: true, opacity: 0.16, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide
+                }));
+                autoBeam.position.set(0, 0.8, -6.5); vGroup.add(autoBeam);
+
+                const autoTail = new THREE.Mesh(new THREE.BoxGeometry(2.2, 0.35, 0.2), new THREE.MeshBasicMaterial({ color: 0xef4444 }));
+                autoTail.position.set(0, 1.1, 2.22); vGroup.add(autoTail);
             } else if (type === 1) {
                 const bus = new THREE.Mesh(new THREE.BoxGeometry(4.2, 3.6, 12.0), busMat);
                 bus.position.y = 2.0; vGroup.add(bus);
                 const win = new THREE.Mesh(new THREE.BoxGeometry(4.25, 1.2, 10.5), new THREE.MeshBasicMaterial({ color: 0x7dd3fc }));
                 win.position.y = 2.5; vGroup.add(win);
+
+                const busBeamGeo = new THREE.ConeGeometry(3.2, 14, 8, 1, true);
+                busBeamGeo.rotateX(Math.PI / 2);
+                const busBeam = new THREE.Mesh(busBeamGeo, new THREE.MeshBasicMaterial({
+                    color: 0xfef08a, transparent: true, opacity: 0.14, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide
+                }));
+                busBeam.position.set(0, 0.9, -12.5); vGroup.add(busBeam);
+
+                const busTail = new THREE.Mesh(new THREE.BoxGeometry(3.6, 0.45, 0.2), new THREE.MeshBasicMaterial({ color: 0xef4444 }));
+                busTail.position.set(0, 1.4, 6.02); vGroup.add(busTail);
             } else {
                 const cab = new THREE.Mesh(new THREE.BoxGeometry(3.4, 2.0, 6.4), cabMat);
                 cab.position.y = 1.2; vGroup.add(cab);
+
+                const cabBeamGeo = new THREE.ConeGeometry(2.6, 10, 8, 1, true);
+                cabBeamGeo.rotateX(Math.PI / 2);
+                const cabBeam = new THREE.Mesh(cabBeamGeo, new THREE.MeshBasicMaterial({
+                    color: 0xfef08a, transparent: true, opacity: 0.15, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide
+                }));
+                cabBeam.position.set(0, 0.8, -8.0); vGroup.add(cabBeam);
+
+                const cabTail = new THREE.Mesh(new THREE.BoxGeometry(2.8, 0.35, 0.2), new THREE.MeshBasicMaterial({ color: 0xef4444 }));
+                cabTail.position.set(0, 1.1, 3.22); vGroup.add(cabTail);
             }
 
             const isEW = Math.random() < 0.5;
@@ -2931,14 +3011,22 @@ class VoxelMetropolis3D {
             this.skyUniforms.bottomColor.value.copy(botCol);
         }
 
-        this.sunLight.intensity = sunIntensity;
-        this.ambientLight.intensity = ambIntensity;
-        this.hemiLight.intensity = hemiIntensity;
-        this.sunLight.position.copy(this.sunMesh.position);
-        this.sunLight.color.setHex(sunHex);
+        if (this.lightningFlashFrames && this.lightningFlashFrames > 0) {
+            // Lightning strike active: preserve intense illumination burst
+        } else {
+            this.sunLight.intensity = sunIntensity;
+            this.ambientLight.intensity = ambIntensity;
+            this.hemiLight.intensity = hemiIntensity;
+            this.sunLight.position.copy(this.sunMesh.position);
+            this.sunLight.color.setHex(sunHex);
+        }
 
         this.pointLights.forEach(pl => { pl.light.intensity = pl.baseIntensity * nightFactor; });
-        this.streetLights.forEach(sl => { sl.intensity = 2.2 * nightFactor; });
+        this.streetLights.forEach(sl => { sl.intensity = 2.4 * nightFactor; });
+        if (this.streetLightHaloInst) {
+            this.streetLightHaloInst.visible = nightFactor > 0.08;
+            this.streetLightHaloInst.material.opacity = 0.22 * nightFactor;
+        }
 
         // Dynamic Circadian Window Modulation: Windows glow brightly at night (up to 1.95x emissive)
         const winIntensity = 0.35 + nightFactor * 1.55;
@@ -3096,7 +3184,7 @@ class VoxelMetropolis3D {
             this.targetTimeOfDay = 0.94; // Switch to deep night
             const cue = document.getElementById('autopolis-cue-card');
             if (cue) {
-                cue.innerText = "🌙 Circadian Night Active: 100,000+ Glowing Windows";
+                cue.innerText = "🌙 Circadian Night Active: 100,000+ Glowing Windows & Street Lights";
                 cue.style.opacity = '1';
                 setTimeout(() => { if (cue) cue.style.opacity = '0'; }, 3000);
             }
@@ -3109,6 +3197,18 @@ class VoxelMetropolis3D {
                 setTimeout(() => { if (cue) cue.style.opacity = '0'; }, 3000);
             }
         }
+    }
+
+    toggleStorm() {
+        const willRain = !this.isRaining;
+        this.setWeather(willRain ? 'monsoon' : 'clear');
+        const cue = document.getElementById('autopolis-cue-card');
+        if (cue) {
+            cue.innerText = willRain ? "⛈️ Monsoon Storm Active: Dynamic Lightning Strikes & Rain" : "🌤️ Clear Weather Restored: Golden Sunlight";
+            cue.style.opacity = '1';
+            setTimeout(() => { if (cue) cue.style.opacity = '0'; }, 3000);
+        }
+        return willRain;
     }
 
     flyToVenue(venueKey) {
@@ -3635,6 +3735,46 @@ class VoxelMetropolis3D {
                 if (rp[i+1] < 0) rp[i+1] = 450;
             }
             this.rainParticles.geometry.attributes.position.needsUpdate = true;
+        }
+
+        // Dynamic Monsoon Lightning Simulation
+        if (this.isRaining) {
+            this.lightningTimer = (this.lightningTimer || 0) - delta;
+            if (this.lightningTimer <= 0 && Math.random() < 0.009) {
+                this.lightningTimer = 3.5 + Math.random() * 7.5;
+                this.lightningFlashFrames = 3;
+                if (this.sunLight) {
+                    this.sunLight.intensity = 9.5;
+                    this.sunLight.color.setHex(0xe0f2fe);
+                }
+                if (this.ambientLight) {
+                    this.ambientLight.intensity = 5.2;
+                }
+                if (this.skyUniforms) {
+                    this.skyUniforms.topColor.value.setHex(0xcfd8dc);
+                    this.skyUniforms.bottomColor.value.setHex(0x90caf9);
+                }
+            }
+            if (this.lightningFlashFrames > 0) {
+                this.lightningFlashFrames--;
+                if (this.lightningFlashFrames === 0) {
+                    if (this.sunLight) this.sunLight.color.setHex(0xfff8e7);
+                    if (this.skyUniforms) {
+                        this.skyUniforms.topColor.value.setHex(0x010308);
+                        this.skyUniforms.bottomColor.value.setHex(0x060c14);
+                    }
+                }
+            }
+        }
+
+        // Lake Water Specular Ripples & Elevation Waves
+        if (this.lakeMeshes) {
+            this.lakeMeshes.forEach((lake, idx) => {
+                lake.position.y = 0.4 + Math.sin(t * 1.6 + idx * 1.1) * 0.05;
+                if (lake.material && lake.material.emissiveIntensity !== undefined) {
+                    lake.material.emissiveIntensity = 0.35 + Math.sin(t * 2.4 + idx) * 0.15;
+                }
+            });
         }
 
         if (this.governorAvatar) {

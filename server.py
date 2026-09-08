@@ -651,6 +651,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             <button class="btn" style="background: linear-gradient(135deg, rgba(217, 119, 6, 0.85), rgba(180, 83, 9, 0.85)); border: 1px solid #f59e0b; font-size: 11px; font-weight: 700; color: #fff; padding: 4px 10px; border-radius: 6px;" onclick="if(window.metropolis3D) window.metropolis3D.cinematicWindowFlyThrough('UB_City_Luxury_Towers');">💎 UB City</button>
             <button class="btn" style="background: linear-gradient(135deg, rgba(147, 51, 234, 0.85), rgba(126, 34, 206, 0.85)); border: 1px solid #c084fc; font-size: 11px; font-weight: 700; color: #fff; padding: 4px 10px; border-radius: 6px;" onclick="if(window.metropolis3D) window.metropolis3D.cinematicWindowFlyThrough('Electronic_City_Phase_1');">🖥️ E-City</button>
             <button class="btn" style="background: rgba(30, 41, 59, 0.9); border: 1px solid #fde047; font-size: 11px; font-weight: 700; color: #fef08a; padding: 4px 10px; border-radius: 6px;" onclick="if(window.metropolis3D) window.metropolis3D.toggleDayNight();">💡 Night / Day</button>
+            <button class="btn" style="background: linear-gradient(135deg, rgba(14, 165, 233, 0.85), rgba(2, 132, 199, 0.85)); border: 1px solid #38bdf8; font-size: 11px; font-weight: 700; color: #e0f2fe; padding: 4px 10px; border-radius: 6px;" onclick="if(window.metropolis3D) { const on = window.metropolis3D.toggleStorm(); this.innerText = on ? '⚡ Storm: ON' : '⚡ Storm'; }">⚡ Storm</button>
         </div>
     </div>
 
