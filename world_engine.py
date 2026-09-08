@@ -1400,3 +1400,62 @@ if __name__ == "__main__":
     print(f"Citizens: {res['total_citizens']} Active across {len(res['zone_coordinates'])} Bengaluru Sectors")
     print(f"Weather: {res['weather']['temp']} {res['weather']['condition']} | Silk Board Congestion: {res['silk_board_congestion']}%")
     print(f"Spoken Dialogues: {len(res['active_conversations'])} simultaneous conversations")
+
+class SpatialHashGrid:
+    """
+    Spatial hash grid for O(1) average-time spatial queries on a 2D plane (x, z).
+    Architected by GLM-5.2 BETA for ALPURIS OS.
+    """
+    def __init__(self, cell_size=115):
+        if cell_size <= 0:
+            raise ValueError("cell_size must be positive")
+        self.cell_size = float(cell_size)
+        self._inv = 1.0 / self.cell_size
+        self._cells = {}
+
+    def _key(self, pos):
+        return (int(pos[0] * self._inv), int(pos[1] * self._inv))
+
+    def insert(self, entity_id, pos):
+        key = self._key(pos)
+        if key not in self._cells:
+            self._cells[key] = {}
+        self._cells[key][entity_id] = (float(pos[0]), float(pos[1]))
+
+    def remove(self, entity_id):
+        for key, cell in list(self._cells.items()):
+            if entity_id in cell:
+                del cell[entity_id]
+                if not cell:
+                    del self._cells[key]
+                return True
+        return False
+
+    def update(self, entity_id, pos):
+        self.remove(entity_id)
+        self.insert(entity_id, pos)
+
+    def query_radius(self, pos, radius):
+        if radius < 0:
+            raise ValueError("radius must be non-negative")
+        px = float(pos[0])
+        py = float(pos[1])
+        r2 = radius * radius
+        min_cx = int((px - radius) * self._inv)
+        max_cx = int((px + radius) * self._inv)
+        min_cy = int((py - radius) * self._inv)
+        max_cy = int((py + radius) * self._inv)
+        results = []
+        for cx in range(min_cx, max_cx + 1):
+            for cy in range(min_cy, max_cy + 1):
+                cell = self._cells.get((cx, cy))
+                if cell:
+                    for eid, (ox, oy) in cell.items():
+                        dx = ox - px
+                        dy = oy - py
+                        if dx * dx + dy * dy <= r2:
+                            results.append(eid)
+        return results
+
+
+

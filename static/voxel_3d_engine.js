@@ -126,6 +126,36 @@ class ProceduralAlpurisAudio {
         } catch (e) {}
     }
 
+    
+    synthesizeCitizenFootsteps(surface = 'concrete') {
+        if (!this.ctx || !this.initialized || this.isMuted) return;
+        try {
+            const now = this.ctx.currentTime;
+            const bufferSize = Math.floor(this.ctx.sampleRate * 0.08);
+            const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+            const data = buffer.getChannelData(0);
+            for (let i = 0; i < bufferSize; i++) {
+                data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufferSize * 0.35));
+            }
+            const source = this.ctx.createBufferSource();
+            source.buffer = buffer;
+
+            const filter = this.ctx.createBiquadFilter();
+            filter.type = 'lowpass';
+            filter.frequency.value = surface === 'grass' ? 650 : 1800;
+
+            const gain = this.ctx.createGain();
+            gain.gain.setValueAtTime(surface === 'grass' ? 0.08 : 0.14, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.09);
+
+            source.connect(filter);
+            filter.connect(gain);
+            gain.connect(this.masterGain);
+            source.start(now);
+            source.stop(now + 0.1);
+        } catch (e) {}
+    }
+
     toggle() {
         if (!this.initialized) {
             this.init();

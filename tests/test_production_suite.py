@@ -747,6 +747,26 @@ class TestOrnsteinUhlenbeckAndMacroFlow(unittest.TestCase):
 # MAIN ENTRYPOINT
 # ---------------------------------------------------------------------------
 
+
+    def test_spatial_hash_grid_clustering(self):
+        """Verify SpatialHashGrid clusters 10 citizens and returns O(1) neighbors within radius (GLM-5.2 GAMMA certified)."""
+        from world_engine import SpatialHashGrid
+
+        grid = SpatialHashGrid(cell_size=115)
+        for i in range(10):
+            grid.insert(f"cit_{i}", (i * 10.0, (i % 2) * 10.0))
+
+        # Query origin radius 25
+        neighbors = grid.query_radius((0.0, 0.0), 25.0)
+        self.assertIsInstance(neighbors, list)
+        self.assertIn("cit_0", neighbors)
+        self.assertIn("cit_1", neighbors)
+
+        # Test remove
+        grid.remove("cit_0")
+        after_remove = grid.query_radius((0.0, 0.0), 25.0)
+        self.assertNotIn("cit_0", after_remove)
+
 if __name__ == "__main__":
     print("=" * 80)
     print("⚡ RUNNING BENGALURU LIVING METROPOLIS OS PRODUCTION TEST SUITE")

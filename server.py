@@ -2332,6 +2332,16 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             fetchState();
         }
 
+        
+        function filterCitizenDirectory(query) {
+            const q = (query || '').trim().toLowerCase();
+            const cards = document.querySelectorAll('#citizen-grid .citizen-mini-card');
+            cards.forEach(card => {
+                const text = card.textContent.toLowerCase();
+                card.style.display = (!q || text.includes(q)) ? 'block' : 'none';
+            });
+        }
+
         function openDirectoryModal() {
             if (!worldData || !worldData.persona_states) return;
             const grid = document.getElementById('dir-grid');
