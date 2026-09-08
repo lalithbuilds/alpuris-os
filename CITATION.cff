@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+message: "If you use or reference this software, please cite it as below."
+title: "ALPURIS OS: Sovereign Living Agent Metropolis Engine"
+abstract: "An open-source operating system for living autonomous agent metropolises, simulating 100 AI citizens with PIANO dual-speed cognition, 23 sectors, real-time stock markets, and 3D WebGL voxel city engines."
+authors:
+  - family-names: "Alpuri"
+    given-names: "Lalith"
+    alias: "lalithbuilds"
+    website: "https://github.com/lalithbuilds"
+repository-code: "https://github.com/lalithbuilds/alpuris-os"
+url: "https://github.com/lalithbuilds/alpuris-os"
+keywords:
+  - "Lalith Alpuri"
+  - "alpuris-os"
+  - "autonomous-agents"
+  - "living-agent-metropolis"
+  - "multi-agent-systems"
+  - "piano-cognition"
+  - "threejs-voxel-engine"
+license: "MIT"
+version: "4.5.0"
+date-released: "2026-09-08"

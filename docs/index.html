@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- Primary Meta Tags for Google Search Indexing -->
+  <title>ALPURIS OS — Sovereign Living Agent Metropolis | by Lalith Alpuri</title>
+  <meta name="title" content="ALPURIS OS — Sovereign Living Agent Metropolis | by Lalith Alpuri">
+  <meta name="description" content="ALPURIS OS is an open-source living autonomous agent metropolis operating system created by Lalith Alpuri. Features 100 AI citizens with PIANO dual-speed cognition, 3D WebGL voxel city, real-time stock market, and procedural Web Audio.">
+  <meta name="keywords" content="Lalith Alpuri, ALPURIS OS, lalithbuilds, Lalith Alpuri GitHub, autonomous agents, living agent metropolis, multi-agent systems, AI operating system, PIANO cognition, threejs voxel simulation">
+  <meta name="author" content="Lalith Alpuri">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://lalithbuilds.github.io/alpuris-os/">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://lalithbuilds.github.io/alpuris-os/">
+  <meta property="og:title" content="ALPURIS OS — Sovereign Living Agent Metropolis | by Lalith Alpuri">
+  <meta property="og:description" content="The world's first open-source operating system for living agent metropolises. Created by Lalith Alpuri.">
+  <meta property="og:image" content="https://raw.githubusercontent.com/lalithbuilds/alpuris-os/main/docs/assets/bengaluru_glm_upgraded_graphics.png">
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://lalithbuilds.github.io/alpuris-os/">
+  <meta property="twitter:title" content="ALPURIS OS — Sovereign Living Agent Metropolis | by Lalith Alpuri">
+  <meta property="twitter:description" content="100 autonomous AI agents living in a 60FPS 3D voxel city. Created by Lalith Alpuri.">
+  <meta property="twitter:image" content="https://raw.githubusercontent.com/lalithbuilds/alpuris-os/main/docs/assets/bengaluru_glm_upgraded_graphics.png">
+
+  <!-- JSON-LD Entity Graph for Google Search Knowledge Graph -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Person",
+        "@id": "https://github.com/lalithbuilds#person",
+        "name": "Lalith Alpuri",
+        "alternateName": ["Lalith Chandra Alpuri", "lalithbuilds"],
+        "url": "https://github.com/lalithbuilds",
+        "sameAs": [
+          "https://github.com/lalithbuilds",
+          "https://lalithbuilds.github.io/alpuris-os/"
+        ],
+        "jobTitle": "Systems Architect & AI Infrastructure Engineer",
+        "description": "Creator of ALPURIS OS and Episoda Alpha MCP."
+      },
+      {
+        "@type": "SoftwareApplication",
+        "@id": "https://github.com/lalithbuilds/alpuris-os#software",
+        "name": "ALPURIS OS",
+        "alternateName": "Alpuris Living Agent Metropolis",
+        "applicationCategory": "SimulationApplication, OperatingSystem",
+        "operatingSystem": "Cross-platform (Web, Three.js, Python)",
+        "creator": {
+          "@id": "https://github.com/lalithbuilds#person"
+        },
+        "author": {
+          "@id": "https://github.com/lalithbuilds#person"
+        },
+        "description": "An open-source operating system for sovereign living agent metropolises with 100 AI citizens, PIANO dual-speed cognition, real-time stock markets, and 3D WebGL voxel city engines.",
+        "url": "https://github.com/lalithbuilds/alpuris-os",
+        "codeRepository": "https://github.com/lalithbuilds/alpuris-os",
+        "license": "https://opensource.org/licenses/MIT",
+        "version": "4.5.0"
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #060911;
+      color: #f8fafc;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+    }
+    .container {
+      max-width: 900px;
+      width: 100%;
+    }
+    .badge {
+      display: inline-block;
+      background: rgba(14, 165, 233, 0.15);
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      color: #38bdf8;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 9999px;
+      margin-bottom: 16px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+    h1 {
+      font-size: 42px;
+      font-weight: 900;
+      letter-spacing: -1px;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, #ffffff, #94a3b8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .author-line {
+      font-size: 18px;
+      color: #38bdf8;
+      font-weight: 600;
+      margin-bottom: 24px;
+    }
+    .author-line a {
+      color: #38bdf8;
+      text-decoration: none;
+      border-bottom: 1px dashed #38bdf8;
+    }
+    p.lead {
+      font-size: 17px;
+      line-height: 1.65;
+      color: #cbd5e1;
+      margin-bottom: 32px;
+    }
+    .cta-buttons {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 40px;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 14px;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #0284c7, #0369a1);
+      color: #fff;
+      border: 1px solid #38bdf8;
+      box-shadow: 0 4px 20px rgba(2, 132, 199, 0.4);
+    }
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #0369a1, #075985);
+      transform: translateY(-2px);
+    }
+    .btn-secondary {
+      background: rgba(30, 41, 59, 0.8);
+      border: 1px solid #475569;
+      color: #f1f5f9;
+    }
+    .btn-secondary:hover {
+      background: rgba(51, 65, 85, 0.9);
+      transform: translateY(-2px);
+    }
+    .card-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+    @media (max-width: 700px) { .card-grid { grid-template-columns: 1fr; } }
+    .card {
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid rgba(56, 189, 248, 0.2);
+      border-radius: 12px;
+      padding: 20px;
+    }
+    .card h3 {
+      font-size: 16px;
+      color: #f8fafc;
+      margin-bottom: 8px;
+    }
+    .card p {
+      font-size: 13px;
+      color: #94a3b8;
+      line-height: 1.5;
+    }
+    footer {
+      border-top: 1px solid #1e293b;
+      padding-top: 24px;
+      font-size: 13px;
+      color: #64748b;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    footer a { color: #94a3b8; text-decoration: none; }
+    footer a:hover { color: #38bdf8; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="badge">Open Source Operating System</div>
+    <h1>ALPURIS OS</h1>
+    <div class="author-line">Created & Architected by <a href="https://github.com/lalithbuilds">Lalith Alpuri (@lalithbuilds)</a></div>
+    <p class="lead">
+      The world's first open-source operating system for sovereign living agent metropolises. Simulating 100 autonomous AI citizens with PIANO dual-speed cognition, self-organizing across 23 dynamic sectors with a real-time stock market, municipal voting assembly, streaming newsroom, zero-asset procedural Web Audio synthesis, and an interactive 3D WebGL voxel city.
+    </p>
+
+    <div class="cta-buttons">
+      <a href="https://github.com/lalithbuilds/alpuris-os" class="btn btn-primary">⭐ View on GitHub (alpuris-os)</a>
+      <a href="https://github.com/lalithbuilds" class="btn btn-secondary">👤 Lalith Alpuri Profile</a>
+    </div>
+
+    <div class="card-grid">
+      <div class="card">
+        <h3>🧠 PIANO Dual-Speed Cognition</h3>
+        <p>Concurrent System-1 reflexive reflexes (~10Hz) and System-2 deliberative reasoning (~1Hz) driving 100 autonomous agents with memory provenance.</p>
+      </div>
+      <div class="card">
+        <h3>🧊 3D WebGL Voxel Engine (60 FPS)</h3>
+        <p>Three.js procedural city with dynamic monsoon storm lightning, vehicle headlight light cones, ground halos, and rotating holographic beacons.</p>
+      </div>
+      <div class="card">
+        <h3>🎵 Zero-Asset Procedural Web Audio</h3>
+        <p>Direct browser AudioContext synthesis generating pink noise monsoon rain, resonant thunderclaps, and electric metro kinetic hum.</p>
+      </div>
+      <div class="card">
+        <h3>👤 Citizen Dossier Cockpit</h3>
+        <p>Frosted-glass slide-out telemetry panel streaming live citizen thoughts, wallet balances, stamina, and Citizen Voice Radio.</p>
+      </div>
+    </div>
+
+    <footer>
+      <div>© 2026 Lalith Alpuri. MIT License.</div>
+      <div>
+        <a href="https://github.com/lalithbuilds/alpuris-os">Repository</a> • 
+        <a href="https://github.com/lalithbuilds">GitHub</a> • 
+        <a href="mailto:lalith070804@gmail.com">Contact</a>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>
