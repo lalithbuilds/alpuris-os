@@ -259,14 +259,14 @@ class ContinuousGLMDaemon:
                         )
                         return {"success": True, "content": content, "reasoning": reasoning, "record": record}
                 elif resp.status_code in (402, 429):
-                    self._log(f"⚠️ Key {masked_key} returned {resp.status_code}. Backing off 3s and rotating key...")
-                    time.sleep(3)
+                    self._log(f"⚠️ Key {masked_key} returned {resp.status_code}. Backing off 14s for account reservation release...")
+                    time.sleep(14)
                 else:
                     self._log(f"❌ API Error {resp.status_code}: {resp.text[:200]}")
-                    time.sleep(2)
+                    time.sleep(3)
             except Exception as e:
                 self._log(f"⚠️ Network error with key {masked_key}: {e}")
-                time.sleep(2)
+                time.sleep(3)
 
         return {"success": False, "error": "All OpenRouter keys exhausted or failed."}
 
@@ -278,57 +278,90 @@ class ContinuousGLMDaemon:
         self._log(f"🚀 INITIATING AUTONOMOUS CYCLE #{cycle_num}")
         self._log(f"=======================================================")
 
-        # Mission 1: GLM-5.2 BETA (ECS & Spatial Hashing Hook in world_engine.py)
-        time.sleep(2)
-        sys_prompt_beta = (
-            "You are GLM-5.2 BETA, Chief Cognitive Systems Architect for Lalith Alpuri on ALPURIS OS.\n"
-            "Return ONLY a clean Python code snippet to integrate SpatialHashGrid into LivingWorld.__init__ and LivingWorld.step().\n"
-            "No conversational filler, no markdown fences."
-        )
-        user_prompt_beta = (
-            "Provide a Python method `update_spatial_index(self)` for LivingWorld that iterates over self.personas, "
-            "clears or updates self.spatial_grid with each persona's (x, z) coordinates, and returns the count of indexed citizens."
-        )
-        res_beta = self.call_glm("BETA", sys_prompt_beta, user_prompt_beta, max_tokens=700)
+        if cycle_num % 2 == 1:
+            # Mission 1: GLM-5.2 BETA (Cognitive Systems & ECS)
+            time.sleep(4)
+            sys_prompt_beta = (
+                "You are GLM-5.2 BETA, Chief Cognitive Systems Architect for Lalith Alpuri on ALPURIS OS.\n"
+                "Return ONLY a clean Python code snippet to optimize LivingWorld.update_spatial_index.\n"
+                "No conversational filler, no markdown fences."
+            )
+            user_prompt_beta = (
+                "Provide a Python helper method `get_neighborhood_summary(self, location: str, radius: float = 150.0)` for LivingWorld "
+                "that queries self.spatial_grid around location and returns a dict with count of neighbors and list of citizen names."
+            )
+            res_beta = self.call_glm("BETA", sys_prompt_beta, user_prompt_beta, max_tokens=750)
 
-        # Mission 2: GLM-5.2 ALPHA (Procedural 3D Audio Walking Hook in static/voxel_3d_engine.js)
-        time.sleep(3)
-        sys_prompt_alpha = (
-            "You are GLM-5.2 ALPHA, Chief 3D Graphics & Audio Architect for Lalith Alpuri on ALPURIS OS.\n"
-            "Return ONLY a clean JavaScript function updateCitizenAudioProximity(cameraPos, citizenPos, walkCycle, audioEngine).\n"
-            "No conversational filler, no markdown fences."
-        )
-        user_prompt_alpha = (
-            "Provide a JS function that computes Euclidean distance between cameraPos and citizenPos, "
-            "and if distance < 35 meters and Math.sin(walkCycle) > 0.9, triggers audioEngine.synthesizeCitizenFootsteps('concrete')."
-        )
-        res_alpha = self.call_glm("ALPHA", sys_prompt_alpha, user_prompt_alpha, max_tokens=700)
+            # Mission 2: GLM-5.2 ALPHA (Procedural 3D Audio & Graphics)
+            time.sleep(8)
+            sys_prompt_alpha = (
+                "You are GLM-5.2 ALPHA, Chief 3D Graphics & Audio Architect for Lalith Alpuri on ALPURIS OS.\n"
+                "Return ONLY a clean JavaScript function updateCitizenAudioProximity(cameraPos, citizenPos, walkCycle, audioEngine).\n"
+                "No conversational filler, no markdown fences."
+            )
+            user_prompt_alpha = (
+                "Provide a JS function that computes Euclidean distance between cameraPos and citizenPos, "
+                "and if distance < 35 meters and Math.sin(walkCycle) > 0.9, triggers audioEngine.synthesizeCitizenFootsteps('concrete')."
+            )
+            res_alpha = self.call_glm("ALPHA", sys_prompt_alpha, user_prompt_alpha, max_tokens=750)
 
-        # Mission 3: GLM-5.2 DELTA (Generative Agent Memory Compaction & Reflection)
-        time.sleep(3)
-        sys_prompt_delta = (
-            "You are GLM-5.2 DELTA, Chief Generative Memory Architect for Lalith Alpuri on ALPURIS OS.\n"
-            "Return ONLY a valid Python method `compact_episodic_memory(self, max_episodes=20)` for Persona.\n"
-            "No conversational filler, no markdown fences."
-        )
-        user_prompt_delta = (
-            "Provide a method that inspects persona.memory_stream. If len > max_episodes, it synthesizes the oldest entries "
-            "into a consolidated reflection summary string, prepends it to the memory stream, and truncates the stream."
-        )
-        res_delta = self.call_glm("DELTA", sys_prompt_delta, user_prompt_delta, max_tokens=700)
+            # Mission 3: GLM-5.2 DELTA (Generative Memory & Compaction)
+            time.sleep(8)
+            sys_prompt_delta = (
+                "You are GLM-5.2 DELTA, Chief Generative Memory Architect for Lalith Alpuri on ALPURIS OS.\n"
+                "Return ONLY a valid Python method `get_episodic_narrative(self)` for Persona.\n"
+                "No conversational filler, no markdown fences."
+            )
+            user_prompt_delta = (
+                "Provide a method that formats the recent 5 memory nodes into a cohesive 1-paragraph chronological daily narrative string."
+            )
+            res_delta = self.call_glm("DELTA", sys_prompt_delta, user_prompt_delta, max_tokens=750)
 
-        # Mission 4: GLM-5.2 GAMMA (Production Test Verification)
-        time.sleep(3)
-        sys_prompt_gamma = (
-            "You are GLM-5.2 GAMMA, Chief Systems Reliability Architect for Lalith Alpuri on ALPURIS OS.\n"
-            "Return ONLY a valid Python test method `test_spatial_hash_grid_realtime_query(self)` for test_production_suite.py.\n"
-            "No conversational filler, no markdown fences."
-        )
-        user_prompt_gamma = (
-            "Provide a test method that imports SpatialHashGrid, inserts 5 entities at (10, 10), (12, 12), (150, 150), (200, 200), (11, 11), "
-            "queries radius 15 around (10, 10), and asserts exactly 3 entities are returned."
-        )
-        res_gamma = self.call_glm("GAMMA", sys_prompt_gamma, user_prompt_gamma, max_tokens=700)
+            # Mission 4: GLM-5.2 GAMMA (Production Test Verification)
+            time.sleep(8)
+            sys_prompt_gamma = (
+                "You are GLM-5.2 GAMMA, Chief Systems Reliability Architect for Lalith Alpuri on ALPURIS OS.\n"
+                "Return ONLY a valid Python test method `test_spatial_hash_grid_realtime_query(self)` for test_production_suite.py.\n"
+                "No conversational filler, no markdown fences."
+            )
+            user_prompt_gamma = (
+                "Provide a test method that imports SpatialHashGrid, inserts 5 entities, queries radius 15, and asserts results."
+            )
+            res_gamma = self.call_glm("GAMMA", sys_prompt_gamma, user_prompt_gamma, max_tokens=750)
+
+        else:
+            # Cycle 2 / Even: Forensic Audit & Research
+            time.sleep(4)
+            sys_prompt_beta = (
+                "You are GLM-5.2 BETA, Chief Cognitive Systems Architect for Lalith Alpuri on ALPURIS OS.\n"
+                "Output ONLY a concise JSON forensic audit report analyzing O(1) multi-agent attention performance."
+            )
+            user_prompt_beta = "Analyze spatial hashing vs quadtree for 100 to 1,000 citizens in ALPURIS OS. Return JSON with recommendation, complexity, and rationale."
+            res_beta = self.call_glm("BETA", sys_prompt_beta, user_prompt_beta, max_tokens=750)
+
+            time.sleep(8)
+            sys_prompt_alpha = (
+                "You are GLM-5.2 ALPHA, Chief 3D Graphics & Audio Architect for Lalith Alpuri on ALPURIS OS.\n"
+                "Output ONLY a concise JSON analysis of WebGL buffer management and voxel LOD chunking."
+            )
+            user_prompt_alpha = "Evaluate instanced mesh rendering for 100 citizens vs individual skinned meshes. Return JSON with FPS impact, draw call reduction, and implementation steps."
+            res_alpha = self.call_glm("ALPHA", sys_prompt_alpha, user_prompt_alpha, max_tokens=750)
+
+            time.sleep(8)
+            sys_prompt_delta = (
+                "You are GLM-5.2 DELTA, Chief Digital Presence & SEO Strategist for Lalith Alpuri on ALPURIS OS.\n"
+                "Output ONLY a technical showcase paragraph highlighting ALPURIS OS by Lalith Alpuri for tech press and GitHub README."
+            )
+            user_prompt_delta = "Write a compelling, authoritative 150-word executive announcement showcasing ALPURIS OS as the world-first living multi-agent OS created by Lalith Alpuri."
+            res_delta = self.call_glm("DELTA", sys_prompt_delta, user_prompt_delta, max_tokens=750)
+
+            time.sleep(8)
+            sys_prompt_gamma = (
+                "You are GLM-5.2 GAMMA, Chief Infrastructure & Reliability Architect for Lalith Alpuri on ALPURIS OS.\n"
+                "Output ONLY a JSON health audit report of the FastAPI / SSE event bus endpoints."
+            )
+            user_prompt_gamma = "Provide JSON health check spec covering /api/world/info, /api/events/bus, /api/citizen/profile with SLA thresholds."
+            res_gamma = self.call_glm("GAMMA", sys_prompt_gamma, user_prompt_gamma, max_tokens=750)
 
         # Step 5: Integration & Automated Regression Test
         self._log("🧪 Running Production Test Suite (pytest)...")

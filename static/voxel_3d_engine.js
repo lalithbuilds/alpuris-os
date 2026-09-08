@@ -3736,6 +3736,13 @@ class VoxelMetropolis3D {
                 cit.group.rotation.y = Math.atan2(dx, dz);
 
                 cit.walkCycle += delta * 12;
+                if (this.audio && this.camera && !this.audio.isMuted) {
+                    const camDistSq = this.camera.position.distanceToSquared(cit.group.position);
+                    if (camDistSq < 900 && Math.sin(cit.walkCycle) > 0.95 && Math.random() < 0.25) {
+                        const surface = cit.currentSector && cit.currentSector.includes('Park') ? 'grass' : 'concrete';
+                        this.audio.synthesizeCitizenFootsteps(surface);
+                    }
+                }
                 cit.lLeg.rotation.x =  Math.sin(cit.walkCycle) * 0.85;
                 cit.rLeg.rotation.x = -Math.sin(cit.walkCycle) * 0.85;
                 cit.lArm.rotation.x = -Math.sin(cit.walkCycle) * 0.7;

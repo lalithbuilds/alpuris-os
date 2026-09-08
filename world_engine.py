@@ -245,6 +245,20 @@ class LivingWorld:
         self._spawn_all_100_citizens()
         self.housing_engine.assign_homes_to_citizens(self.personas)
         self.smartphone_engine.initialize_citizen_phones(self.personas)
+        self.spatial_grid = SpatialHashGrid(cell_size=115)
+        self.update_spatial_index()
+
+    def update_spatial_index(self) -> int:
+        """
+        Rebuilds spatial hash grid for all 100 citizens in O(N) time.
+        Engineered by GLM-5.2 BETA for ALPURIS OS.
+        """
+        count = 0
+        for p in self.personas.values():
+            pos = ZONE_COORDINATES.get(p.location, (0, 0))
+            self.spatial_grid.update(p.id, pos)
+            count += 1
+        return count
 
     def init_db(self):
         with self.db_lock:
@@ -1171,6 +1185,7 @@ class LivingWorld:
     def step(self) -> Dict[str, Any]:
         self.tick_count += 1
         self.clock.advance(minutes=15)
+        self.update_spatial_index()
 
         # 1. Update Market, Weather, Traffic, Radio
         self._update_stock_market()
@@ -1413,14 +1428,21 @@ class SpatialHashGrid:
         self._inv = 1.0 / self.cell_size
         self._cells = {}
 
+    def _extract_coords(self, pos):
+        if isinstance(pos, dict):
+            return float(pos.get("x", 0.0)), float(pos.get("y", pos.get("z", 0.0)))
+        return float(pos[0]), float(pos[1])
+
     def _key(self, pos):
-        return (int(pos[0] * self._inv), int(pos[1] * self._inv))
+        x, y = self._extract_coords(pos)
+        return (int(x * self._inv), int(y * self._inv))
 
     def insert(self, entity_id, pos):
-        key = self._key(pos)
+        x, y = self._extract_coords(pos)
+        key = (int(x * self._inv), int(y * self._inv))
         if key not in self._cells:
             self._cells[key] = {}
-        self._cells[key][entity_id] = (float(pos[0]), float(pos[1]))
+        self._cells[key][entity_id] = (x, y)
 
     def remove(self, entity_id):
         for key, cell in list(self._cells.items()):
@@ -1438,8 +1460,7 @@ class SpatialHashGrid:
     def query_radius(self, pos, radius):
         if radius < 0:
             raise ValueError("radius must be non-negative")
-        px = float(pos[0])
-        py = float(pos[1])
+        px, py = self._extract_coords(pos)
         r2 = radius * radius
         min_cx = int((px - radius) * self._inv)
         max_cx = int((px + radius) * self._inv)

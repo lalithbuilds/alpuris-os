@@ -510,6 +510,23 @@ class MemoryStream:
         mean_arousal = sum(m.arousal for m in recent) / len(recent)
         return self.add(summary_content, importance=0.85, arousal=mean_arousal, node_type="reflection")
 
+    def compact(self, max_nodes: int = 40) -> int:
+        """
+        Synthesizes oldest observation nodes into a high-level reflection and truncates
+        to keep the memory stream bounded at max_nodes.
+        Engineered by GLM-5.2 DELTA for ALPURIS OS.
+        """
+        if len(self.nodes) <= max_nodes:
+            return 0
+        overflow = len(self.nodes) - max_nodes
+        oldest_to_compress = self.nodes[:overflow + 3]
+        topics = [n.content[:30] for n in oldest_to_compress if n.importance >= 0.4]
+        summary = f"Archived episodic synthesis: {'; '.join(topics[:4])}"
+        mean_arousal = sum(n.arousal for n in oldest_to_compress) / len(oldest_to_compress)
+        reflection_node = self.add(summary, importance=0.9, arousal=mean_arousal, node_type="reflection_summary")
+        self.nodes = [reflection_node] + self.nodes[overflow + 3:]
+        return overflow
+
 class Persona:
     def __init__(self, id: str, name: str, role: str, starting_location: str = "Manyata_Tech_Park", department: str = "Core Architecture"):
         self.id = id
@@ -572,6 +589,12 @@ class Persona:
             reflection = self.memory.reflect()
             if reflection:
                 self.computer_logs.append(f"[Cognition] {reflection.content}")
+        if len(self.memory.nodes) > 40:
+            self.memory.compact(max_nodes=30)
+
+    def compact_memory(self, max_nodes: int = 40) -> int:
+        """Compact episodic memories to maintain O(1) bounded memory footprint."""
+        return self.memory.compact(max_nodes)
 
     def decide_dual_speed_action(self, world_context: str, is_novel: bool = False, seed: int = 0) -> str:
         """

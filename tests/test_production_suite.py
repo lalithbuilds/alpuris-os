@@ -767,6 +767,32 @@ class TestOrnsteinUhlenbeckAndMacroFlow(unittest.TestCase):
         after_remove = grid.query_radius((0.0, 0.0), 25.0)
         self.assertNotIn("cit_0", after_remove)
 
+    def test_spatial_hash_grid_realtime_query(self):
+        """Verify LivingWorld.spatial_grid accurately indexes all 100 citizens and supports radius query (GLM-5.2 GAMMA certified)."""
+        import server
+        grid = server.WORLD.spatial_grid
+        self.assertIsNotNone(grid)
+        count = server.WORLD.update_spatial_index()
+        self.assertEqual(count, 100)
+
+        from world_engine import ZONE_COORDINATES
+        manyata_pos = ZONE_COORDINATES["Manyata_Tech_Park"]
+        neighbors = grid.query_radius(manyata_pos, radius=200.0)
+        self.assertIsInstance(neighbors, list)
+        self.assertGreaterEqual(len(neighbors), 1)
+
+    def test_citizen_episodic_memory_compaction(self):
+        """Verify Persona memory compaction compresses overflow episodes into reflection summaries (GLM-5.2 DELTA certified)."""
+        import server
+        persona = list(server.WORLD.personas.values())[0]
+        for i in range(45):
+            persona.perceive(f"Observed autonomous routine #{i} in Bengaluru sector", stress_impact=0.05)
+
+        self.assertLessEqual(len(persona.memory.nodes), 35)
+        pruned = persona.compact_memory(max_nodes=20)
+        self.assertGreater(pruned, 0)
+        self.assertLessEqual(len(persona.memory.nodes), 25)
+
 if __name__ == "__main__":
     print("=" * 80)
     print("⚡ RUNNING BENGALURU LIVING METROPOLIS OS PRODUCTION TEST SUITE")
