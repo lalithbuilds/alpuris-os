@@ -1,0 +1,21 @@
+{
+  "target_tokens": 1000000,
+  "total_tokens_consumed": 1561,
+  "total_cycles": 0,
+  "total_articles_published": 0,
+  "total_tests_added": 0,
+  "percent_complete": 0.16,
+  "recent_generations": [
+    {
+      "gen_id": "8c1d7d217d503ad9",
+      "task": "QuickTest",
+      "tokens": 1561,
+      "elapsed_sec": 161.13,
+      "reasoning_chars": 4918,
+      "content_chars": 1029,
+      "timestamp": "2026-09-08T19:04:54Z"
+    }
+  ],
+  "published_articles": [],
+  "last_updated": "2026-09-08T19:04:54Z"
+}
