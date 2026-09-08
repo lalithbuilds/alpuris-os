@@ -1,0 +1,53 @@
+{
+  "daemon_status": "RUNNING_AUTONOMOUS_LOOP",
+  "total_cycles": 1,
+  "total_tokens_consumed": 1494,
+  "total_prompt_tokens": 359,
+  "total_completion_tokens": 1135,
+  "total_reasoning_tokens": 377,
+  "total_cost_usd": 0.0026823408,
+  "active_agents": [
+    "ALPHA",
+    "BETA",
+    "GAMMA",
+    "DELTA"
+  ],
+  "last_cycle_timestamp": null,
+  "last_git_commit": null,
+  "recent_generations": [
+    {
+      "agent": "DELTA",
+      "agent_name": "GLM-5.2 DELTA",
+      "gen_id": "gen-1788868317-jrac66iFA6R0ke8pLsQl",
+      "prompt_tokens": 115,
+      "completion_tokens": 598,
+      "reasoning_tokens": 81,
+      "total_tokens": 713,
+      "cost": 0.0013625936,
+      "timestamp": "2026-09-08T17:22:06Z"
+    },
+    {
+      "agent": "ALPHA",
+      "agent_name": "GLM-5.2 ALPHA",
+      "gen_id": "gen-1788868310-Dreh029ImsBrX8s6PDtE",
+      "prompt_tokens": 125,
+      "completion_tokens": 132,
+      "reasoning_tokens": 15,
+      "total_tokens": 257,
+      "cost": 0.0003688304,
+      "timestamp": "2026-09-08T17:21:54Z"
+    },
+    {
+      "agent": "BETA",
+      "agent_name": "GLM-5.2 BETA",
+      "gen_id": "gen-1788868300-ViyTSF9wqr4PtvNf8IBz",
+      "prompt_tokens": 119,
+      "completion_tokens": 405,
+      "reasoning_tokens": 281,
+      "total_tokens": 524,
+      "cost": 0.0009509168,
+      "timestamp": "2026-09-08T17:21:46Z"
+    }
+  ],
+  "last_updated": "2026-09-08T17:22:06Z"
+}
