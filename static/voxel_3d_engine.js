@@ -9,6 +9,143 @@
  * 4. Cinematic Lighting & Dynamic Day/Night Cycle
  */
 
+
+/**
+ * ALPURIS OS — Procedural Web Audio Synthesizer
+ * Zero-asset audio synthesis: monsoon rain, resonant thunderclaps, and electric metro kinetic hum.
+ * Fully compliant with browser autoplay policies.
+ */
+class ProceduralAlpurisAudio {
+    constructor() {
+        this.ctx = null;
+        this.masterGain = null;
+        this.rainGain = null;
+        this.rainSource = null;
+        this.metroGain = null;
+        this.metroOsc1 = null;
+        this.metroOsc2 = null;
+        this.isMuted = false;
+        this.initialized = false;
+    }
+
+    init() {
+        if (this.initialized) {
+            if (this.ctx && this.ctx.state === 'suspended') this.ctx.resume();
+            return;
+        }
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        try {
+            this.ctx = new AudioCtx();
+            this.masterGain = this.ctx.createGain();
+            this.masterGain.gain.value = 0.35;
+            this.masterGain.connect(this.ctx.destination);
+
+            // Procedural Monsoon Rain (Pink Noise Buffer + Bandpass Filter)
+            const bufferSize = this.ctx.sampleRate * 2;
+            const noiseBuffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+            const output = noiseBuffer.getChannelData(0);
+            let b0 = 0, b1 = 0, b2 = 0;
+            for (let i = 0; i < bufferSize; i++) {
+                const white = Math.random() * 2 - 1;
+                b0 = 0.99886 * b0 + white * 0.0555179;
+                b1 = 0.99332 * b1 + white * 0.0750759;
+                b2 = 0.96900 * b2 + white * 0.1538520;
+                output[i] = (b0 + b1 + b2) * 0.09;
+            }
+
+            this.rainSource = this.ctx.createBufferSource();
+            this.rainSource.buffer = noiseBuffer;
+            this.rainSource.loop = true;
+
+            const rainFilter = this.ctx.createBiquadFilter();
+            rainFilter.type = 'bandpass';
+            rainFilter.frequency.value = 950;
+            rainFilter.Q.value = 1.3;
+
+            this.rainGain = this.ctx.createGain();
+            this.rainGain.gain.value = 0.0;
+
+            this.rainSource.connect(rainFilter);
+            rainFilter.connect(this.rainGain);
+            this.rainGain.connect(this.masterGain);
+            this.rainSource.start(0);
+
+            // Metro Transit Kinetic Sub-Bass Hum
+            this.metroOsc1 = this.ctx.createOscillator();
+            this.metroOsc2 = this.ctx.createOscillator();
+            this.metroOsc1.type = 'sine';
+            this.metroOsc2.type = 'sawtooth';
+            this.metroOsc1.frequency.value = 54.0;
+            this.metroOsc2.frequency.value = 108.5;
+
+            const metroFilter = this.ctx.createBiquadFilter();
+            metroFilter.type = 'lowpass';
+            metroFilter.frequency.value = 180;
+
+            this.metroGain = this.ctx.createGain();
+            this.metroGain.gain.value = 0.035;
+
+            this.metroOsc1.connect(metroFilter);
+            this.metroOsc2.connect(metroFilter);
+            metroFilter.connect(this.metroGain);
+            this.metroGain.connect(this.masterGain);
+            this.metroOsc1.start(0);
+            this.metroOsc2.start(0);
+
+            this.initialized = true;
+        } catch (e) {
+            console.warn('[ALPURIS Audio] Init notice:', e);
+        }
+    }
+
+    playThunder() {
+        if (!this.initialized || !this.ctx || this.isMuted) return;
+        try {
+            const now = this.ctx.currentTime;
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(85, now);
+            osc.frequency.exponentialRampToValueAtTime(28, now + 1.4);
+
+            gain.gain.setValueAtTime(0.42, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 2.2);
+
+            osc.connect(gain);
+            gain.connect(this.masterGain);
+            osc.start(now);
+            osc.stop(now + 2.3);
+        } catch (e) {}
+    }
+
+    setRainIntensity(val) {
+        if (!this.initialized || !this.rainGain || !this.ctx) return;
+        try {
+            this.rainGain.gain.setTargetAtTime(val * 0.28, this.ctx.currentTime, 0.4);
+        } catch (e) {}
+    }
+
+    toggle() {
+        if (!this.initialized) {
+            this.init();
+            return true;
+        }
+        if (this.ctx && this.ctx.state === 'suspended') {
+            this.ctx.resume();
+            this.isMuted = false;
+            if (this.masterGain) this.masterGain.gain.value = 0.35;
+            return true;
+        }
+        this.isMuted = !this.isMuted;
+        if (this.masterGain) {
+            this.masterGain.gain.value = this.isMuted ? 0.0 : 0.35;
+        }
+        return !this.isMuted;
+    }
+}
+
+
 class VoxelMetropolis3D {
     _addNeonWireframe(mesh, colorHex = 0x00f5ff, opacity = 0.88) {
         if (!mesh || !mesh.geometry) return null;
@@ -163,6 +300,7 @@ class VoxelMetropolis3D {
         this.mouse = new THREE.Vector2();
         this.sectorObjects = new Map();
         this.timeOfDay = 0.35;
+        this.audio = new ProceduralAlpurisAudio();
         this.rainParticles = null;
         this.isRaining = false;
         this.starField = null;
@@ -2935,6 +3073,7 @@ class VoxelMetropolis3D {
         const isRain = condition && /rain|shower|storm/i.test(condition);
         this.isRaining = isRain;
         this.rainParticles.visible = isRain;
+        if (this.audio) this.audio.setRainIntensity(isRain ? 1.0 : 0.0);
         if (isRain) {
             this.skyUniforms.topColor.value.setHex(0x010308);
             this.skyUniforms.bottomColor.value.setHex(0x060c14);
@@ -3125,6 +3264,25 @@ class VoxelMetropolis3D {
         }
     }
 
+
+    toggleAudio() {
+        if (!this.audio) this.audio = new ProceduralAlpurisAudio();
+        const active = this.audio.toggle();
+        const cue = document.getElementById('autopolis-cue-card');
+        if (cue) {
+            cue.innerText = active ? "🔊 ALPURIS Procedural Audio: Synthesizer Active" : "🔈 ALPURIS Procedural Audio: Muted";
+            cue.style.opacity = '1';
+            setTimeout(() => { if (cue) cue.style.opacity = '0'; }, 3000);
+        }
+        return active;
+    }
+
+    showCitizenDossier(citId) {
+        if (window.openCitizenDossier) {
+            window.openCitizenDossier(citId);
+        }
+    }
+
     onCanvasClick(e) {
         const rect = this.renderer.domElement.getBoundingClientRect();
         this.mouse.x =  ((e.clientX - rect.left) / rect.width)  * 2 - 1;
@@ -3140,6 +3298,7 @@ class VoxelMetropolis3D {
                 if (obj.userData && obj.userData.type === 'citizen') {
                     const citId = obj.userData.id;
                     if (window.inspectCitizen) window.inspectCitizen(citId);
+                    this.showCitizenDossier(citId);
                     return;
                 }
                 obj = obj.parent;
@@ -3252,6 +3411,11 @@ class VoxelMetropolis3D {
     toggleStorm() {
         const willRain = !this.isRaining;
         this.setWeather(willRain ? 'monsoon' : 'clear');
+        if (this.audio) {
+            this.audio.init();
+            this.audio.setRainIntensity(willRain ? 1.0 : 0.0);
+            if (willRain) this.audio.playThunder();
+        }
         const cue = document.getElementById('autopolis-cue-card');
         if (cue) {
             cue.innerText = willRain ? "⛈️ Monsoon Storm Active: Dynamic Lightning Strikes & Rain" : "🌤️ Clear Weather Restored: Golden Sunlight";
@@ -3807,6 +3971,7 @@ class VoxelMetropolis3D {
             if (this.lightningTimer <= 0 && Math.random() < 0.009) {
                 this.lightningTimer = 3.5 + Math.random() * 7.5;
                 this.lightningFlashFrames = 3;
+                if (this.audio) this.audio.playThunder();
                 if (this.sunLight) {
                     this.sunLight.intensity = 9.5;
                     this.sunLight.color.setHex(0xe0f2fe);

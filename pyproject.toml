@@ -3,21 +3,22 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "bengaluru-living-metropolis"
-version = "1.0.0"
-description = "Bengaluru Living Agent Metropolis OS: 100 Autonomous AI Citizens, 16 Iconic Sectors, 3D Voxel Engine, Circadian Lifecycle, Real-World Economy & Stock Market"
+name = "alpuris-os"
+version = "4.5.0"
+description = "ALPURIS OS: Sovereign Living Agent Metropolis Engine. Created by Lalith Alpuri. 100 Autonomous AI Citizens, PIANO Dual-Speed Cognition, 3D Voxel World, Real-World Economy & Stock Market"
 readme = "README.md"
-authors = [{ name = "Lalith", email = "lalith@rayglobal.ai" }]
+authors = [{ name = "Lalith Alpuri", email = "lalith070804@gmail.com" }]
 license = { text = "MIT" }
 requires-python = ">=3.10"
 keywords = [
+    "lalith-alpuri",
+    "alpuris-os",
     "autonomous-agents",
-    "living-world",
+    "living-agent-metropolis",
     "simulation",
     "multi-agent",
     "threejs",
     "metropolis-os",
-    "bengaluru",
     "cognitive-architecture"
 ]
 classifiers = [
@@ -47,11 +48,13 @@ neural = [
 ]
 
 [project.scripts]
+alpuris = "server:run_server"
 metropolis = "server:run_server"
 
 [project.urls]
-Homepage = "https://github.com/lalithbuilds/bengaluru-living-metropolis"
-Repository = "https://github.com/lalithbuilds/bengaluru-living-metropolis"
+Homepage = "https://github.com/lalithbuilds/alpuris-os"
+Repository = "https://github.com/lalithbuilds/alpuris-os"
+Documentation = "https://github.com/lalithbuilds/alpuris-os#readme"
 
 [tool.pytest.ini_options]
 minversion = "7.0"

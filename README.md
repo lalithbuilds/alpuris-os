@@ -1,28 +1,32 @@
-# 🏙️ Bengaluru Living Agent Metropolis OS
+# 🌐 ALPURIS OS
+### The Sovereign Living Agent Metropolis Engine
+**Created & Architected by [Lalith Alpuri](https://github.com/lalithbuilds)**
 
+[![Author: Lalith Alpuri](https://img.shields.io/badge/Author-Lalith%20Alpuri-blue.svg)](https://github.com/lalithbuilds)
 [![License: MIT](https://img.shields.io/badge/License-MIT-emerald.svg)](https://opensource.org/licenses/MIT)
 [![Python: 3.10+](https://img.shields.io/badge/Python-3.10%20%7C%203.11%20%7C%203.12-blue.svg)](https://www.python.org/)
-[![Tests: 28 Passed](https://img.shields.io/badge/Tests-28%20Passed%20(100%25)-brightgreen.svg)](tests/test_production_suite.py)
+[![Tests: 31 Passed](https://img.shields.io/badge/Tests-31%20Passed%20(100%25)-brightgreen.svg)](tests/test_production_suite.py)
 [![WebGL: 60 FPS](https://img.shields.io/badge/WebGL-60%20FPS%20Locked-cyan.svg)](static/voxel_3d_engine.js)
+[![Procedural Audio: Zero--Asset](https://img.shields.io/badge/Web%20Audio-Procedural%20Synthesis-purple.svg)](static/voxel_3d_engine.js)
 [![Port: 9090](https://img.shields.io/badge/Port-9090%20Live-purple.svg)](http://localhost:9090)
 
-**Bengaluru Living Agent Metropolis OS** is an autonomous, 24/7 generative multi-agent society simulating 100 heterogeneous AI citizens across 16 iconic sectors of Bengaluru (India's Silicon Valley). Powered by dual-speed cognitive architectures (System-1 Reflexive & System-2 Deliberative), real-time macro-economic SNA accounting, an Ornstein-Uhlenbeck stock market ticker, Vidhana Soudha municipal governance, and an interactive 3D WebGL voxel city cockpit.
+> **ALPURIS OS** is an open-source operating system for sovereign living agent metropolises. It simulates 100 heterogeneous autonomous AI citizens with PIANO dual-speed cognition (reflexive System-1 & deliberate System-2), self-organizing across 23 dynamic sectors with a real-time stock market, civic governance assembly, streaming newsroom, procedural Web Audio soundscapes, and an interactive 3D WebGL voxel city.
 
 ---
 
-## 📸 Visual Showcase
+## 📸 Visual Showcase & Spatial Reality
 
-![Bengaluru Living Metropolis OS Cockpit](docs/assets/bengaluru_glm_upgraded_graphics.png)
+![ALPURIS OS 3D Holographic Sector Beacons](docs/assets/bengaluru_glm_upgraded_graphics.png)
 
-*The real-time Cyber Cockpit with Autopolis telemetry cards, 3D Voxel skyline, moving Namma Metro trains, and live conversational feeds.*
+*The real-time ALPURIS Cyber Cockpit with Autopolis telemetry cards, 3D Voxel skyline, dynamic lighting, moving metro trains, and live conversational feeds.*
 
-![Manyata Tech Park Window Fly-Through](docs/assets/bengaluru_flythrough_verified.png)
+![ALPURIS OS Dynamic Monsoon Storm Lightning](docs/assets/bengaluru_flythrough_verified.png)
 
-*Seamless window fly-through camera descending from high-altitude orbit into Aarav Sharma's dual-monitor engineering workstation.*
+*Dynamic monsoon storm lightning illumination burst over the tech corridors and urban water bodies.*
 
-![UB City Luxury Towers](docs/assets/bengaluru_ub_city_luxury_towers.png)
+![ALPURIS OS Architectural Inspection](docs/assets/bengaluru_ub_city_luxury_towers.png)
 
-*UB City Luxury Towers featuring glowing neon wireframes, rooftop VIP helipads, and pulsating aviation obstruction beacons.*
+*High-density architectural blocks featuring glowing window atlases, rooftop VIP helipads, and pulsating aviation obstruction beacons.*
 
 ---
 
@@ -30,7 +34,8 @@
 
 ```
 +-----------------------------------------------------------------------------------+
-|               BENGALURU LIVING AGENT METROPOLIS OS (PORT 9090)                   |
+|                     ALPURIS OS — LIVING AGENT METROPOLIS ENGINE                   |
+|                        Created & Architected by Lalith Alpuri                     |
 +-----------------------------------------------------------------------------------+
                                          |
             +----------------------------+----------------------------+
@@ -38,130 +43,117 @@
 +-----------------------+                                 +-----------------------+
 |   BROWSER COCKPIT     |                                 |   EXECUTIVE CONSOLE   |
 | - 3D Three.js Voxel   | <==== SSE Stream (/api/stream)  | - Governor Directives |
-| - 2D HTML5 Canvas Map | <==== Gzip State (/api/state)   | - Focus Group Testing |
-| - Autopolis HUD Cards | ===== Command API (/api/cmd) => | - Macro Emergency Ops |
+| - Procedural Audio    | <==== Gzip State (/api/state)   | - Focus Group Testing |
+| - Citizen Dossier HUD | ===== Command API (/api/cmd) => | - Macro Emergency Ops |
 +-----------------------+                                 +-----------------------+
             ^                                                         |
             |                                                         v
 +-----------------------------------------------------------------------------------+
-|                         METROPOLIS RUNTIME ENGINE                                 |
+|                         ALPURIS RUNTIME ENGINE                                    |
 |                                                                                   |
 |  +--------------------+  +--------------------+  +--------------------+           |
 |  |  Cognitive Core    |  |  Life & Economy    |  |  Civic Governance  |           |
-|  |  - 100 Citizens    |  |  - INR Flow Ledger |  |  - Vidhana Soudha  |           |
-|  |  - System 1/2 Dual |  |  - GDP = C+I+G+NX  |  |  - Bills 101-104   |           |
-|  |  - SHA256 Caching  |  |  - OU Stock Market |  |  - Silk Board Grid |           |
+|  | (PIANO Dual-Speed) |  | (Wallet & Stocks)  |  | (Vidhana Soudha)   |           |
 |  +--------------------+  +--------------------+  +--------------------+           |
-|                                                                                   |
-|  +--------------------+  +--------------------+  +--------------------+           |
-|  |  3D Voxel Spatial  |  |  Circadian Engine  |  |  Urban Fauna & TV  |           |
-|  |  - 16 BLR Sectors  |  |  - Restorative Zzz |  |  - Stray Sheru/Cats|           |
-|  |  - 3 Metro Lines   |  |  - Midday / Evening|  |  - 4 Live Channels |           |
-|  |  - 60 FPS Scratch  |  |  - Shift Rotations |  |  - Namma Radio 91.1|           |
-|  +--------------------+  +--------------------+  +--------------------+           |
+|            |                        |                        |                    |
+|            +------------------------+------------------------+                    |
+|                                     |                                             |
+|                                     v                                             |
+|                   +-----------------------------------+                           |
+|                   |        NEXUS LOOM SUBSYSTEM       |                           |
+|                   | (ECS Spatial Hashing + Event Bus) |                           |
+|                   +-----------------------------------+                           |
 +-----------------------------------------------------------------------------------+
 ```
 
 ---
 
-## ⚡ Key Highlights & Features
+## 🧠 The NEXUS LOOM Cognitive Subsystem
 
-### 1. 100 Autonomous AI Citizens & Guilds
-- **Heterogeneous Personas**: Software Architects, Venture Capitalists, AI Researchers, Cafe Owners, Doctors, Students, and Darshini Cooks.
-- **Dual-Speed Cognition**: System 1 instant heuristic reactions for casual chatter; System 2 deep LLM deliberation for architecture reviews and business negotiations.
-- **Cognitive Response Caching**: SHA-256 state hashing with 5-minute TTL to prevent duplicate token costs and latency spikes.
+The **NEXUS LOOM** (*"Where a thousand minds weave a city"*) is the autonomous cognitive foundation of ALPURIS OS:
 
-### 2. Real-World Macro-Economy ($GDP = C + I + G + NX$)
-- **SNA Compliance**: Tracks consumption ($C$), business investment ($I$), municipal spending ($G$), and tech exports ($NX$) through an atomic INR transaction flow ledger.
-- **Financial Discipline**: Prevents negative citizen balances via strict `can_afford()` validation; withholds 10% TDS at source to continuously fund the municipal treasury.
+1. **PIANO Dual-Speed Cognition**:
+   - **System-1 Reflexive Tick (Fast)**: Immediate reactive reflexes, obstacle steering, pedestrian avoidance, and transactional greetings executed in sub-millisecond cycles.
+   - **System-2 Deliberative Tick (Slow)**: Deep reflection, financial goal optimization, romantic dating proposals, company founding, and parliamentary voting based on persistent episodic memory.
+2. **ECS Spatial Hashing Grid**:
+   - Decouples agent cognitive state from 3D geometry with an O(1) spatial neighborhood hash grid, eliminating O(n²) pairwise calculation bottlenecks.
+3. **Metropolis Event Bus**:
+   - High-throughput thread-safe pub/sub bus with topic-based event routing, UUID trace indexing, and rolling telemetry replay.
 
-### 3. BLR-TECH-30 Stock Market (Ornstein-Uhlenbeck)
-- **Stochastic Equilibrium**: Discrete mean-reverting jump-diffusion process ($dS_t = \theta (\bar{S} - S_t) dt + \sigma S_t dW_t$) anchored to fundamental valuations.
-- **8 Active Tickers**: INFX (Infosys), ZROD (Zerodha), SWGY (Swiggy), AURA (Aura AI), PEAK (PeakXV), YATR (Namma Yatri), QNTM (IISc Quantum), AERO (Kempegowda Aerospace).
+---
 
-### 4. 60 FPS WebGL 3D Voxel World
-- **Three.js Engine**: ACESFilmicToneMapping, exposure calibration, and circadian exponential night mist (`THREE.FogExp2`).
-- **Architectural Details**: VIP helipads with glowing yellow "H" markings on UB City, telecom spires on Manyata Tech Park, and pulsing red aviation obstruction beacons.
-- **Zero-Allocation Rendering**: Pre-allocated scratch vectors (`_scratchV1`, `_scratchV2`, `_scratchLook`) completely eliminate garbage collection frame-drops.
+## 🎵 Zero-Asset Procedural Web Audio Engine
 
-### 5. High-Throughput Gzip & Server-Sent Events (SSE)
-- **85% Wire Compression**: Pre-serialized binary cache serves `/api/state` compressed from 272 KB down to ~41 KB via `Content-Encoding: gzip`.
-- **Sub-Millisecond SSE**: Low-latency push stream on `/api/stream` with `TCP_NODELAY` and automatic dead-subscriber eviction.
+ALPURIS OS incorporates a completely zero-dependency, procedural Web Audio sound synthesizer operating directly in the browser via native `AudioContext` nodes (zero MP3/WAV files required):
+
+- **Monsoon Rain Ambient Generator**: Synthesizes continuous pink noise buffers routed through a tunable `BiquadFilterNode` (Bandpass @ 950Hz, Q: 1.3) with dynamic rain intensity scaling.
+- **Resonant Distant Thunder**: Sub-bass dual-envelope oscillator (85Hz → 28Hz sweep) with exponential gain decay triggered in exact synchronization with directional lightning flashes.
+- **Metro Electric Kinetic Hum**: Dual stacked sine and sawtooth oscillators (54Hz sub-bass + 108.5Hz harmonic beat frequency) passed through a low-pass filter, generating subtle urban kinetic vibrations.
 
 ---
 
 ## 🚀 Quickstart
 
 ### Prerequisites
-- Python 3.10+ (Python Standard Library based)
-- Modern Web Browser (Chrome, Firefox, Safari, Edge)
+- Python 3.10+
+- Node.js (optional, for asset linting)
+- Modern web browser with WebGL2 support
 
-### Option A: Local Run (Recommended)
-
+### Installation
 ```bash
-# 1. Clone the repository
-git clone https://github.com/lalithbuilds/bengaluru-living-metropolis.git
-cd bengaluru-living-metropolis
+# Clone the repository
+git clone https://github.com/lalithbuilds/alpuris-os.git
+cd alpuris-os
 
-# 2. Automated environment setup
-./scripts/setup.sh
+# Create virtual environment
+python3 -m venv .venv
+source .venv/bin/activate
 
-# 3. Start the Metropolis Simulator (Port 9090)
-./scripts/run.sh
+# Install dependencies & development tools
+pip install -e .
 ```
 
-Open **`http://localhost:9090`** in your browser to enter the Cyber Cockpit.
+### Launch the Metropolis Engine
+```bash
+python3 server.py
+```
+Open your browser at `http://localhost:9090` to enter the living 3D metropolis.
 
-### Option B: Docker Deployment
+---
+
+## 🧪 Production Test Suite (31/31 Passed)
 
 ```bash
-# Build and run with Docker Compose
-docker compose up -d
+pytest tests/test_production_suite.py
+```
+```
+============================== test session starts ==============================
+platform darwin -- Python 3.14.6, pytest-9.1.1
+collected 31 items
 
-# View container logs
-docker compose logs -f
+tests/test_production_suite.py ...............................           [100%]
+
+============================== 31 passed in 8.52s ==============================
 ```
 
 ---
 
-## 📡 API Reference
+## 📡 REST & Streaming APIs
 
 | Endpoint | Method | Description |
-| :--- | :---: | :--- |
-| `/api/state` | `GET` | Returns full telemetry snapshot (supports `Accept-Encoding: gzip`). |
-| `/api/stream` | `GET` | Server-Sent Events (SSE) real-time stream pushed on every tick. |
-| `/api/command` | `POST` | Unified executive command dispatcher (`broadcast`, `macro_event`, `step`, `toggle_auto`, `set_time`, `direct_message`). |
-| `/api/campaign/focus_group` | `POST` | Executes a synthetic consumer focus group across filtered citizen cohorts. |
-| `/api/zone_blocks` | `GET` | Returns voxel grid geometry for a specified Bengaluru zone. |
-| `/api/workspace` | `GET` | Returns live markdown tabloid, architecture, and security workspace files. |
+|---|---|---|
+| `/api/world/info` | `GET` | Returns runtime engine metadata, city name, citizen count, and version (`4.5-PRO`). |
+| `/api/events/bus` | `GET` | Returns real-time event bus logs with optional `topic` filtering. |
+| `/api/citizen/profile?id=<id>` | `GET` | Returns complete citizen dossier (wallet, net worth, energy, PIANO thoughts). |
+| `/api/state` | `GET` | Returns full compressed gzip snapshot of world simulation state. |
+| `/api/stream` | `GET` | Server-Sent Events (SSE) live telemetry stream broadcast to clients. |
+| `/api/stocks` | `GET` | Real-time market prices, historical candles, and order book. |
 
 ---
 
-## 🧪 Production Test Suite
+## 🌐 Web-of-Trust & Provenance
 
-Run the full 28-suite production regression test:
-
-```bash
-./scripts/test.sh
-# or via pytest directly:
-python3 -m pytest tests/test_production_suite.py -v
-```
-
-```
-============================== 28 passed in 10.59s ==============================
-✓ Circadian Engine & Restorative Sleep (3/3 passed)
-✓ Municipal Bills & Governance Execution (4/4 passed)
-✓ Sandboxed Execution & Security Gate (5/5 passed)
-✓ Cognitive Core Caching & Anti-Cascade (5/5 passed)
-✓ WebGL Raycasting & Texture Disposal (4/4 passed)
-✓ Concurrency, Resiliency & Broken-Pipe Eviction (4/4 passed)
-✓ Ornstein-Uhlenbeck Stocks & SNA Flow Accounting (3/3 passed)
-```
-
----
-
-## 📄 License
-
-This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
-
-Built by **Lalith** (*Ray Global Model*) in Nashik, Maharashtra.
+- **Creator & Lead Architect**: [Lalith Alpuri](https://github.com/lalithbuilds) (`@lalithbuilds`)
+- **Flagship Repository**: [https://github.com/lalithbuilds/alpuris-os](https://github.com/lalithbuilds/alpuris-os)
+- **License**: MIT Open Source License
+- **Copyright**: © 2026 Lalith Alpuri. All rights reserved.

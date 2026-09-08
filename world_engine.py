@@ -1305,8 +1305,8 @@ class LivingWorld:
         fauna_state = self.fauna_engine.step_fauna(self.personas, self.tick_count)
 
         telemetry = {
-            "city_name": os.getenv("METROPOLIS_NAME", "Bengaluru Living Metropolis OS"),
-            "world_name": os.getenv("METROPOLIS_NAME", "Bengaluru Living Metropolis OS"),
+            "city_name": os.getenv("METROPOLIS_SHORT_NAME", "Alpuris"),
+            "world_name": os.getenv("METROPOLIS_NAME", "Alpuris OS — Living Agent Metropolis"),
             "tick": self.tick_count,
             "world_time": self.clock.get_time_str(),
             "time_fraction": self.clock.get_time_of_day_fraction(),

@@ -187,7 +187,25 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bengaluru Living Agent Metropolis OS — 100 Autonomous Citizens</title>
+        <title>ALPURIS OS — Living Agent Metropolis | by Lalith Alpuri</title>
+    <!-- JSON-LD Structured Entity Metadata for Lalith Alpuri & ALPURIS OS -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "ALPURIS OS",
+      "alternateName": "Alpuris Living Agent Metropolis OS",
+      "operatingSystem": "Web, Three.js, Python, Node.js",
+      "applicationCategory": "SimulationApplication",
+      "creator": {
+        "@type": "Person",
+        "name": "Lalith Alpuri",
+        "url": "https://github.com/lalithbuilds"
+      },
+      "description": "ALPURIS OS is an autonomous living agent metropolis operating system with 100 AI citizens, PIANO dual-speed cognition, real-world market economy, and 3D voxel world engine created by Lalith Alpuri.",
+      "url": "https://github.com/lalithbuilds/alpuris-os"
+    }
+    </script>
     <style>
         :root {
             --bg: #06090e;
@@ -530,8 +548,8 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     <div class="header">
         <div class="title">
             <span class="live-dot"></span>
-            BENGALURU LIVING AGENT METROPOLIS OS
-            <span class="badge-city">NAMMA BENGALURU</span>
+            ALPURIS OS // LIVING AGENT METROPOLIS
+            <span class="badge-city" style="background: linear-gradient(135deg, #0284c7, #38bdf8); color: #fff; font-weight: 800; border: 1px solid #7dd3fc;">BY LALITH ALPURI</span>
         </div>
         <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
             <div class="badge-weather" id="b-weather">23°C • Gentle Breeze</div>
@@ -625,9 +643,9 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         <div id="autopolis-hud-header" style="position: absolute; top: 14px; left: 14px; z-index: 10; background: rgba(8, 14, 26, 0.88); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(0, 245, 255, 0.5); box-shadow: 0 0 25px rgba(0, 245, 255, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 8px 14px; font-family: 'JetBrains Mono', monospace; pointer-events: auto;">
             <div style="display: flex; align-items: center; gap: 8px;">
                 <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #00ff66; box-shadow: 0 0 10px #00ff66;"></span>
-                <span style="font-size: 11px; font-weight: 800; color: #00f5ff; letter-spacing: 0.8px;">BENGALURU METROPOLIS OS // 100 CITIZENS</span>
+                <span style="font-size: 11px; font-weight: 800; color: #00f5ff; letter-spacing: 0.8px;">ALPURIS OS // 100 LIVING CITIZENS</span>
             </div>
-            <div style="font-size: 9px; color: #94a3b8; margin-top: 3px; letter-spacing: 0.5px;">16 SECTORS • 3 METRO LINES • 100K+ GLOWING WINDOWS • 60 FPS</div>
+            <div style="font-size: 9px; color: #94a3b8; margin-top: 3px; letter-spacing: 0.5px;">ALPURIS METROPOLIS • 23 SECTORS • CREATED BY LALITH ALPURI • 60 FPS</div>
         </div>
 
         <!-- Autopolis-Style Glassmorphic Telemetry Card (Top Right) -->
@@ -651,6 +669,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             <button class="btn" style="background: linear-gradient(135deg, rgba(217, 119, 6, 0.85), rgba(180, 83, 9, 0.85)); border: 1px solid #f59e0b; font-size: 11px; font-weight: 700; color: #fff; padding: 4px 10px; border-radius: 6px;" onclick="if(window.metropolis3D) window.metropolis3D.cinematicWindowFlyThrough('UB_City_Luxury_Towers');">💎 UB City</button>
             <button class="btn" style="background: linear-gradient(135deg, rgba(147, 51, 234, 0.85), rgba(126, 34, 206, 0.85)); border: 1px solid #c084fc; font-size: 11px; font-weight: 700; color: #fff; padding: 4px 10px; border-radius: 6px;" onclick="if(window.metropolis3D) window.metropolis3D.cinematicWindowFlyThrough('Electronic_City_Phase_1');">🖥️ E-City</button>
             <button class="btn" style="background: rgba(30, 41, 59, 0.9); border: 1px solid #fde047; font-size: 11px; font-weight: 700; color: #fef08a; padding: 4px 10px; border-radius: 6px;" onclick="if(window.metropolis3D) window.metropolis3D.toggleDayNight();">💡 Night / Day</button>
+            <button class="btn" style="background: linear-gradient(135deg, rgba(168, 85, 247, 0.85), rgba(147, 51, 234, 0.85)); border: 1px solid #c084fc; font-size: 11px; font-weight: 700; color: #f3e8ff; padding: 4px 10px; border-radius: 6px;" onclick="if(window.metropolis3D) { const on = window.metropolis3D.toggleAudio(); this.innerText = on ? '🔊 Audio: ON' : '🔈 Audio: OFF'; }">🔊 Audio: ON</button>
             <button class="btn" style="background: linear-gradient(135deg, rgba(14, 165, 233, 0.85), rgba(2, 132, 199, 0.85)); border: 1px solid #38bdf8; font-size: 11px; font-weight: 700; color: #e0f2fe; padding: 4px 10px; border-radius: 6px;" onclick="if(window.metropolis3D) { const on = window.metropolis3D.toggleStorm(); this.innerText = on ? '⚡ Storm: ON' : '⚡ Storm'; }">⚡ Storm</button>
         </div>
     </div>
@@ -2384,6 +2403,43 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             document.getElementById('citizen-modal').style.display = 'flex';
         }
 
+        
+        function openCitizenDossier(pid) {
+            const panel = document.getElementById('citizen-dossier-panel');
+            if (!panel) return;
+            if (!worldData || !worldData.persona_states) return;
+            const p = worldData.persona_states.find(c => c.id === pid);
+            if (!p) return;
+
+            window.currentDossierCitizen = p;
+            document.getElementById('dossier-name').innerText = p.name || p.id;
+            document.getElementById('dossier-role').innerText = (p.role || 'Citizen') + ' • ' + (p.department || 'Guild');
+            document.getElementById('dossier-wallet').innerText = '₹' + (p.net_worth || p.wallet_inr || 25000).toLocaleString();
+            document.getElementById('dossier-energy').innerText = (p.energy || 95) + '%';
+            document.getElementById('dossier-department').innerText = p.department || 'Autonomous Agent';
+            document.getElementById('dossier-sector').innerText = (p.zone || 'Alpuris Central').replace(/_/g, ' ');
+
+            const thoughtText = p.action ? `"${p.action}"` : `"Deliberating next action within ${p.zone || 'Alpuris'}..."`;
+            document.getElementById('dossier-thought').innerText = thoughtText;
+
+            panel.style.right = '0px';
+        }
+
+        function closeCitizenDossier() {
+            const panel = document.getElementById('citizen-dossier-panel');
+            if (panel) panel.style.right = '-430px';
+        }
+
+        function speakCurrentCitizen() {
+            if (!window.currentDossierCitizen) return;
+            const p = window.currentDossierCitizen;
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(`${p.name}, ${p.role}. Current thought: ${p.action || 'Living in Alpuris'}`);
+                utterance.rate = 1.05;
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
         function closeModal() {
             document.getElementById('citizen-modal').style.display = 'none';
         }
@@ -3017,6 +3073,58 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         setInterval(fetchEvents, 8000);        // events feed
         setInterval(fetchWorkspace, 25000);    // workspace files slower
     </script>
+
+    <!-- Citizen Dossier Slide-Out Cockpit (ALPURIS OS Signature) -->
+    <div id="citizen-dossier-panel" style="position: fixed; top: 0; right: -430px; width: 400px; height: 100vh; z-index: 9999; background: rgba(9, 14, 26, 0.95); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border-left: 1px solid rgba(56, 189, 248, 0.4); box-shadow: -15px 0 50px rgba(0, 0, 0, 0.85); transition: right 0.35s cubic-bezier(0.16, 1, 0.3, 1); display: flex; flex-direction: column; overflow-y: auto; padding: 22px; font-family: 'Inter', -apple-system, sans-serif;">
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(56, 189, 248, 0.25); padding-bottom: 14px; margin-bottom: 18px;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <div style="width: 44px; height: 44px; border-radius: 10px; background: linear-gradient(135deg, #0284c7, #38bdf8); display: flex; align-items: center; justify-content: center; font-size: 22px; box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);">👤</div>
+                <div>
+                    <div id="dossier-name" style="font-size: 17px; font-weight: 800; color: #f8fafc; letter-spacing: -0.3px;">Citizen Dossier</div>
+                    <div id="dossier-role" style="font-size: 11px; color: #38bdf8; font-family: 'JetBrains Mono', monospace;">Autonomous Agent • PIANO v4.5</div>
+                </div>
+            </div>
+            <button onclick="closeCitizenDossier()" style="background: rgba(30, 41, 59, 0.9); border: 1px solid #475569; color: #94a3b8; width: 30px; height: 30px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 15px;">✕</button>
+        </div>
+
+        <!-- Live Telemetry Grid -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px;">
+            <div style="background: rgba(15, 23, 42, 0.85); border: 1px solid #1e293b; border-radius: 8px; padding: 10px 12px;">
+                <div style="font-size: 10px; color: #64748b; text-transform: uppercase; font-weight: 700;">Net Worth / Balance</div>
+                <div id="dossier-wallet" style="font-size: 15px; font-weight: 800; color: #10b981; font-family: 'JetBrains Mono', monospace; margin-top: 2px;">₹25,000</div>
+            </div>
+            <div style="background: rgba(15, 23, 42, 0.85); border: 1px solid #1e293b; border-radius: 8px; padding: 10px 12px;">
+                <div style="font-size: 10px; color: #64748b; text-transform: uppercase; font-weight: 700;">Stamina & Energy</div>
+                <div id="dossier-energy" style="font-size: 15px; font-weight: 800; color: #f59e0b; font-family: 'JetBrains Mono', monospace; margin-top: 2px;">95%</div>
+            </div>
+            <div style="background: rgba(15, 23, 42, 0.85); border: 1px solid #1e293b; border-radius: 8px; padding: 10px 12px;">
+                <div style="font-size: 10px; color: #64748b; text-transform: uppercase; font-weight: 700;">Guild Department</div>
+                <div id="dossier-department" style="font-size: 12px; font-weight: 700; color: #e2e8f0; margin-top: 2px;">Engineering Guild</div>
+            </div>
+            <div style="background: rgba(15, 23, 42, 0.85); border: 1px solid #1e293b; border-radius: 8px; padding: 10px 12px;">
+                <div style="font-size: 10px; color: #64748b; text-transform: uppercase; font-weight: 700;">Current Sector</div>
+                <div id="dossier-sector" style="font-size: 12px; font-weight: 700; color: #38bdf8; margin-top: 2px;">Manyata Tech Park</div>
+            </div>
+        </div>
+
+        <!-- Active PIANO Cognitive Thought Stream -->
+        <div style="background: rgba(15, 23, 42, 0.95); border: 1px solid rgba(56, 189, 248, 0.35); border-radius: 8px; padding: 14px; margin-bottom: 16px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                <span style="font-size: 10px; font-weight: 800; color: #38bdf8; letter-spacing: 0.6px;">🧠 PIANO COGNITIVE STREAM</span>
+                <span style="font-size: 9px; background: rgba(56, 189, 248, 0.2); color: #38bdf8; padding: 2px 6px; border-radius: 4px; font-weight: bold;">SYSTEM-1 / 2 LIVE</span>
+            </div>
+            <div id="dossier-thought" style="font-size: 13px; line-height: 1.55; color: #f1f5f9; font-style: italic;">
+                "Analyzing microservice traces at cluster..."
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div style="display: flex; gap: 10px; margin-top: auto;">
+            <button id="dossier-voice-btn" class="btn" style="flex: 1; background: linear-gradient(135deg, #0284c7, #0369a1); border: 1px solid #38bdf8; color: #fff; font-size: 12px; font-weight: 700; padding: 10px; border-radius: 6px;" onclick="speakCurrentCitizen()">🎙️ Citizen Voice Radio</button>
+            <button class="btn" style="background: rgba(30, 41, 59, 0.9); border: 1px solid #64748b; color: #cbd5e1; font-size: 12px; padding: 10px 14px; border-radius: 6px;" onclick="closeCitizenDossier()">Close</button>
+        </div>
+    </div>
+
 </body>
 </html>
 """
@@ -3264,12 +3372,12 @@ class WorldHandler(SimpleHTTPRequestHandler):
             self._send_json(profile)
         elif parsed.path == "/api/world/info":
             info = {
-                "metropolis_name": os.getenv("METROPOLIS_NAME", "Bengaluru Living Agent Metropolis OS"),
-                "city_name": os.getenv("METROPOLIS_SHORT_NAME", "Bengaluru"),
-                "version": "4.2-PRO",
+                "metropolis_name": os.getenv("METROPOLIS_NAME", "Alpuris OS — Living Agent Metropolis"),
+                "city_name": os.getenv("METROPOLIS_SHORT_NAME", "Alpuris"),
+                "version": "4.5-PRO",
                 "total_citizens": len(WORLD.personas),
                 "total_sectors": len(ZONE_METADATA),
-                "engine": "Ray Kernel Metropolis OS"
+                "engine": "Alpuris OS Engine by Lalith Alpuri"
             }
             self._send_json(info)
         elif parsed.path.startswith("/static/"):
