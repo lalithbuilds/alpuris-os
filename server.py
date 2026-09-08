@@ -3224,6 +3224,54 @@ class WorldHandler(SimpleHTTPRequestHandler):
                     "recent_interactions": WORLD.fauna_engine.recent_interactions[-10:]
                 }
             self._send_json(f_data)
+        elif parsed.path == "/api/events/bus":
+            query_params = {}
+            if "?" in self.path:
+                qstr = self.path.split("?", 1)[1]
+                query_params = dict(q.split("=") for q in qstr.split("&") if "=" in q)
+            topic = query_params.get("topic")
+            limit = int(query_params.get("limit", 50))
+            with WORLD_LOCK:
+                events = WORLD.event_bus.get_recent(limit=limit, topic=topic)
+            self._send_json({"events": events, "total_events": len(events)})
+        elif parsed.path == "/api/citizen/profile":
+            query_params = {}
+            if "?" in self.path:
+                qstr = self.path.split("?", 1)[1]
+                query_params = dict(q.split("=") for q in qstr.split("&") if "=" in q)
+            cid = query_params.get("id", "AARAV")
+            with WORLD_LOCK:
+                p = WORLD.personas.get(cid.upper())
+                if not p:
+                    for k, v in WORLD.personas.items():
+                        if k.lower() == cid.lower() or v.name.lower() == cid.lower():
+                            p = v
+                            break
+                if p:
+                    profile = {
+                        "id": p.id,
+                        "name": p.name,
+                        "role": p.role,
+                        "department": p.department,
+                        "location": p.location,
+                        "wallet_inr": p.wallet_inr,
+                        "energy": p.energy,
+                        "stress_arousal": p.current_arousal,
+                        "status": "active"
+                    }
+                else:
+                    profile = {"error": f"Citizen {cid} not found"}
+            self._send_json(profile)
+        elif parsed.path == "/api/world/info":
+            info = {
+                "metropolis_name": os.getenv("METROPOLIS_NAME", "Bengaluru Living Agent Metropolis OS"),
+                "city_name": os.getenv("METROPOLIS_SHORT_NAME", "Bengaluru"),
+                "version": "4.2-PRO",
+                "total_citizens": len(WORLD.personas),
+                "total_sectors": len(ZONE_METADATA),
+                "engine": "Ray Kernel Metropolis OS"
+            }
+            self._send_json(info)
         elif parsed.path.startswith("/static/"):
             file_path = os.path.join("/Users/lalith/ray_agent_world", parsed.path[1:])
             if os.path.exists(file_path):

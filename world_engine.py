@@ -160,12 +160,58 @@ WEATHER_STATES = [
     {"temp": "16°C", "condition": "Morning Radiation Mist", "humidity": "82%", "aqi": 55, "desc": "Early flights touching down at Kempegowda International Airport"}
 ]
 
+class MetropolisEventBus:
+    """
+    Unified Publish/Subscribe Event Bus for emergent city events across all 16 sectors.
+    Decouples real-time civic events, macro triggers, economic shocks, and citizen reactions.
+    """
+    def __init__(self, max_history: int = 250):
+        self.subscribers: Dict[str, List[Any]] = {}
+        self.history: List[Dict[str, Any]] = []
+        self.max_history = max_history
+        self._lock = threading.Lock()
+
+    def subscribe(self, topic: str, handler: Any):
+        with self._lock:
+            self.subscribers.setdefault(topic, []).append(handler)
+
+    def publish(self, topic: str, payload: Dict[str, Any]) -> Dict[str, Any]:
+        with self._lock:
+            import uuid
+            event = {
+                "id": str(uuid.uuid4())[:8],
+                "topic": topic,
+                "payload": payload,
+                "timestamp": time.time(),
+                "time_str": time.strftime("%H:%M:%S")
+            }
+            self.history.append(event)
+            if len(self.history) > self.max_history:
+                self.history.pop(0)
+            handlers = list(self.subscribers.get(topic, [])) + list(self.subscribers.get("*", []))
+
+        for h in handlers:
+            try:
+                h(event)
+            except Exception:
+                pass
+        return event
+
+    def get_recent(self, limit: int = 50, topic: Optional[str] = None) -> List[Dict[str, Any]]:
+        with self._lock:
+            if topic:
+                filtered = [e for e in self.history if e["topic"] == topic]
+            else:
+                filtered = list(self.history)
+            return filtered[-limit:]
+
 class LivingWorld:
     def __init__(self):
         self.computer = ComputerInterface()
         self.clock = WorldClock(start_hour=9, start_minute=0)
         self.x11_lock = threading.Lock()
         self.db_lock = threading.Lock()
+        self.event_bus = MetropolisEventBus()
         self.personas: Dict[str, Persona] = {}
         self.tick_count = 0
         self.world_time = time.time()
@@ -492,6 +538,11 @@ class LivingWorld:
             p.known_rumors.append(f"Governor Lalith ordered: {directive_text[:35]}")
             p.set_speech_bubble(f"Alert: {directive_text[:30]}")
         self.log_event("GOVERNOR", "Lalith (City Governor)", "City Administration", "All_Bengaluru", f"[BROADCAST] {directive_text}", 0.5)
+        self.event_bus.publish("governor_directive", {
+            "directive": directive_text,
+            "affected_citizens": len(self.personas),
+            "tick": self.tick_count
+        })
         return {"status": "broadcast_sent", "directive": directive_text, "affected_citizens": len(self.personas)}
 
     def direct_message_citizen(self, persona_id: str, message: str) -> Dict[str, Any]:
@@ -551,6 +602,12 @@ class LivingWorld:
             p.known_rumors.append(desc[:40])
 
         self.log_event("MACRO_EVENT", "Bengaluru City Ops", "Emergency Operations", "All_Bengaluru", desc, 0.4)
+        self.event_bus.publish("macro_event", {
+            "event_type": event_type,
+            "description": desc,
+            "impact": impact,
+            "tick": self.tick_count
+        })
         return {"status": "triggered", "event": desc}
 
     def _update_stock_market(self):
@@ -1248,7 +1305,8 @@ class LivingWorld:
         fauna_state = self.fauna_engine.step_fauna(self.personas, self.tick_count)
 
         telemetry = {
-            "city_name": "Bengaluru Living Metropolis OS",
+            "city_name": os.getenv("METROPOLIS_NAME", "Bengaluru Living Metropolis OS"),
+            "world_name": os.getenv("METROPOLIS_NAME", "Bengaluru Living Metropolis OS"),
             "tick": self.tick_count,
             "world_time": self.clock.get_time_str(),
             "time_fraction": self.clock.get_time_of_day_fraction(),
@@ -1306,6 +1364,7 @@ class LivingWorld:
             "active_conversations": conversations,
             "recent_conversations": self.get_recent_conversations(limit=10),
             "recent_events": self.get_recent_events(limit=30),
+            "event_bus_recent": self.event_bus.get_recent(limit=20),
             "city_bills": self.city_bills,
             "chronicle_headlines": self.chronicle_headlines[:4],
             "voxel_world": self.voxel_world.get_all_world_stats(),

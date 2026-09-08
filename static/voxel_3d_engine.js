@@ -181,6 +181,7 @@ class VoxelMetropolis3D {
         this.tooltipEl = null;
         this.animTime = 0;
         this.rooftopBeacons = [];
+        this.sectorHolograms = [];
         this.buildingWindowMaterials = [];
         this.windowAtlasMat = null;
         this.luxuryWindowMat = null;
@@ -883,6 +884,33 @@ class VoxelMetropolis3D {
             group.add(auraMesh);
 
             this.buildSectorArchitecture(key, group, s);
+
+            // Floating Holographic Cyber Sector Ring & Laser Pillar
+            const holoRingGeo = new THREE.TorusGeometry(s.radius * 0.45, 0.45, 6, 32);
+            holoRingGeo.rotateX(Math.PI / 2);
+            const holoRingMat = new THREE.MeshBasicMaterial({
+                color: s.color,
+                transparent: true,
+                opacity: 0.82,
+                blending: THREE.AdditiveBlending
+            });
+            const holoRing = new THREE.Mesh(holoRingGeo, holoRingMat);
+            holoRing.position.set(0, s.bldgH + 16, 0);
+            group.add(holoRing);
+
+            const holoBeamGeo = new THREE.CylinderGeometry(0.35, 0.75, s.bldgH + 28, 8, 1, true);
+            const holoBeamMat = new THREE.MeshBasicMaterial({
+                color: s.color,
+                transparent: true,
+                opacity: 0.16,
+                blending: THREE.AdditiveBlending,
+                depthWrite: false
+            });
+            const holoBeam = new THREE.Mesh(holoBeamGeo, holoBeamMat);
+            holoBeam.position.set(0, (s.bldgH + 28) / 2, 0);
+            group.add(holoBeam);
+
+            this.sectorHolograms.push({ ring: holoRing, beam: holoBeam, baseH: s.bldgH + 16, rotSpeed: 0.8 + Math.random() * 0.6 });
 
             const label = this.createTextSprite(s.name, s.color, 14);
             label.position.set(0, s.bldgH + 24, 0);
@@ -3117,6 +3145,28 @@ class VoxelMetropolis3D {
                 obj = obj.parent;
             }
         }
+
+        // Sector Raycasting: Click any sector building/plaza to smoothly fly camera there
+        const sectorGroups = [];
+        this.sectorObjects.forEach(s => { if (s.group) sectorGroups.push(s.group); });
+        const sectorHits = this.raycaster.intersectObjects(sectorGroups, true);
+        for (const hit of sectorHits) {
+            let obj = hit.object;
+            while (obj) {
+                if (obj.userData && obj.userData.type === 'sector') {
+                    const sectorKey = obj.userData.key;
+                    this.flyToVenue(sectorKey);
+                    const cue = document.getElementById('autopolis-cue-card');
+                    if (cue) {
+                        cue.innerText = `📍 Gliding into ${obj.userData.name}`;
+                        cue.style.opacity = '1';
+                        setTimeout(() => { if (cue) cue.style.opacity = '0'; }, 3000);
+                    }
+                    return;
+                }
+                obj = obj.parent;
+            }
+        }
     }
 
     onCanvasDblClick(e) {
@@ -3336,6 +3386,15 @@ class VoxelMetropolis3D {
             }
         }
 
+        // Floating Holographic Sector Ring Rotations & Levitation
+        if (this.sectorHolograms && this.sectorHolograms.length > 0) {
+            for (let i = 0; i < this.sectorHolograms.length; i++) {
+                const sh = this.sectorHolograms[i];
+                sh.ring.rotation.z += delta * sh.rotSpeed;
+                sh.ring.position.y = sh.baseH + Math.sin(t * 2.2 + i * 0.4) * 1.6;
+            }
+        }
+
         this.cloudMeshes.forEach(c => {
             c.group.position.x += c.speed * delta;
             if (c.group.position.x > 1200) c.group.position.x = -1200;
@@ -3370,6 +3429,11 @@ class VoxelMetropolis3D {
             this._scratchV1.lerpVectors(pStart, pEnd, tr.t);
             tr.group.position.copy(this._scratchV1);
             tr.group.lookAt(pEnd);
+
+            // Pantograph Catenary Electric Spark Simulation (Subtle Blue Energy Pulse)
+            if (Math.random() < 0.02) {
+                this.spawnPlacementParticles(this._scratchV1.x, this._scratchV1.y + 6.2, this._scratchV1.z, 0x38bdf8);
+            }
         });
 
         this.vehicles3D.forEach(v => {

@@ -202,6 +202,63 @@ class GLMAutonomousEngineer:
         except Exception as e:
             return f"Error listing files: {e}"
 
+    def web_search(self, query: str) -> str:
+        import urllib.request
+        import urllib.parse
+        results = []
+
+        # Candidate queries: full query, first two words, first word
+        words = query.strip().split()
+        candidate_queries = [query]
+        if len(words) > 2:
+            candidate_queries.append(" ".join(words[:2]))
+        if len(words) > 1 and words[0] not in ("tutorial", "guide", "procedural"):
+            candidate_queries.append(words[0])
+
+        # 1. GitHub Search for open-source reference implementations
+        for q in candidate_queries:
+            try:
+                gh_url = f"https://api.github.com/search/repositories?q={urllib.parse.quote(q)}&per_page=3"
+                req = urllib.request.Request(gh_url, headers={"User-Agent": "MetropolisGLM/1.0"})
+                with urllib.request.urlopen(req, timeout=6) as r:
+                    data = json.loads(r.read().decode("utf-8"))
+                    items = data.get("items", [])
+                    if items:
+                        for item in items[:2]:
+                            results.append(f"GitHub: {item['full_name']} — {item.get('description', '')} ({item['html_url']})")
+                        break
+            except Exception:
+                pass
+
+        # 2. Wikipedia Technical Concept Search
+        for q in candidate_queries:
+            try:
+                wiki_url = f"https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch={urllib.parse.quote(q)}&format=json"
+                req = urllib.request.Request(wiki_url, headers={"User-Agent": "MetropolisGLM/1.0"})
+                with urllib.request.urlopen(req, timeout=6) as r:
+                    data = json.loads(r.read().decode("utf-8"))
+                    items = data.get("query", {}).get("search", [])
+                    if items:
+                        for item in items[:2]:
+                            clean_snip = re.sub(r"<[^>]+>", "", item["snippet"])
+                            results.append(f"Wikipedia: [{item['title']}] {clean_snip}")
+                        break
+            except Exception:
+                pass
+
+        # 3. DuckDuckGo Instant Answer
+        try:
+            ddg_url = f"https://api.duckduckgo.com/?q={urllib.parse.quote(candidate_queries[0])}&format=json"
+            req = urllib.request.Request(ddg_url, headers={"User-Agent": "MetropolisGLM/1.0"})
+            with urllib.request.urlopen(req, timeout=6) as r:
+                data = json.loads(r.read().decode("utf-8"))
+                if data.get("AbstractText"):
+                    results.append(f"DuckDuckGo Abstract: {data['AbstractText']}")
+        except Exception:
+            pass
+
+        return "\n".join(results) if results else f"No search results found for: {query}"
+
     def execute_tool(self, call: Dict[str, Any]) -> str:
         tool_name = call.get("tool")
         if tool_name == "read_file":
@@ -214,6 +271,8 @@ class GLMAutonomousEngineer:
             return self.run_command(call.get("command", ""))
         elif tool_name == "list_files":
             return self.list_files(call.get("directory", "."))
+        elif tool_name == "web_search":
+            return self.web_search(call.get("query", ""))
         elif tool_name == "finish_task":
             return f"MISSION ACCOMPLISHED: {call.get('summary', 'Done')}"
         else:
@@ -261,7 +320,9 @@ class GLMAutonomousEngineer:
             '   {"tool": "run_command", "command": "pytest ... / node -c ..."}\n'
             "5. List files in directory:\n"
             '   {"tool": "list_files", "directory": "."}\n'
-            "6. Finish task:\n"
+            "6. Search the web (GitHub, Wikipedia, DuckDuckGo):\n"
+            '   {"tool": "web_search", "query": "<search query>"}\n'
+            "7. Finish task:\n"
             '   {"tool": "finish_task", "summary": "<description of completed work>"}\n\n'
             "RULES:\n"
             "- Always read existing code before editing to guarantee exact string matches.\n"

@@ -692,6 +692,56 @@ class TestOrnsteinUhlenbeckAndMacroFlow(unittest.TestCase):
         self.assertEqual(parsed["tick"], 999)
         self.assertEqual(parsed["status"], "METROPOLIS_OK")
 
+    def test_metropolis_event_bus_pub_sub(self):
+        """Verify MetropolisEventBus handles pub/sub, topic filtering, and event history."""
+        from world_engine import MetropolisEventBus
+        bus = MetropolisEventBus(max_history=50)
+        received = []
+        bus.subscribe("monsoon_alert", lambda e: received.append(e))
+
+        evt = bus.publish("monsoon_alert", {"severity": "high", "sector": "Silk_Board"})
+        self.assertIn("id", evt)
+        self.assertEqual(evt["topic"], "monsoon_alert")
+        self.assertEqual(len(received), 1)
+        self.assertEqual(received[0]["payload"]["sector"], "Silk_Board")
+
+        # Verify get_recent with topic filter
+        recent = bus.get_recent(topic="monsoon_alert")
+        self.assertEqual(len(recent), 1)
+        self.assertEqual(recent[0]["payload"]["severity"], "high")
+
+    def test_event_bus_and_world_info_api_routes(self):
+        """Verify /api/events/bus and /api/world/info HTTP endpoints."""
+        base_url = "http://127.0.0.1:9090"
+        url_bus = f"{base_url}/api/events/bus"
+        req = urllib.request.Request(url_bus)
+        with urllib.request.urlopen(req, timeout=5) as resp:
+            self.assertEqual(resp.status, 200)
+            data = json.loads(resp.read().decode())
+            self.assertIn("events", data)
+
+        url_info = f"{base_url}/api/world/info"
+        req_info = urllib.request.Request(url_info)
+        with urllib.request.urlopen(req_info, timeout=5) as resp:
+            self.assertEqual(resp.status, 200)
+            data = json.loads(resp.read().decode())
+            self.assertIn("metropolis_name", data)
+            self.assertIn("version", data)
+            self.assertEqual(data["version"], "4.2-PRO")
+
+    def test_citizen_profile_api_route(self):
+        """Verify /api/citizen/profile returns full citizen profile with name, role, and department."""
+        base_url = "http://127.0.0.1:9090"
+        url = f"{base_url}/api/citizen/profile?id=AARAV"
+        req = urllib.request.Request(url)
+        with urllib.request.urlopen(req, timeout=5) as resp:
+            self.assertEqual(resp.status, 200)
+            data = json.loads(resp.read().decode())
+            self.assertEqual(data.get("id"), "AARAV")
+            self.assertIn("name", data)
+            self.assertIn("department", data)
+            self.assertIn("wallet_inr", data)
+
 
 # ---------------------------------------------------------------------------
 # MAIN ENTRYPOINT
