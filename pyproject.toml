@@ -7,11 +7,13 @@ name = "alpuris-os"
 version = "4.5.0"
 description = "ALPURIS OS: Sovereign Living Agent Metropolis Engine. Created by Lalith Alpuri. 100 Autonomous AI Citizens, PIANO Dual-Speed Cognition, 3D Voxel World, Real-World Economy & Stock Market"
 readme = "README.md"
-authors = [{ name = "Lalith Alpuri", email = "lalith070804@gmail.com" }]
+authors = [{ name = "Lalith Chandra (Lalith Alpuri)", email = "lalith070804@gmail.com" }]
 license = { text = "MIT" }
 requires-python = ">=3.10"
 keywords = [
+    "lalith-chandra",
     "lalith-alpuri",
+    "lalith-chandra-alpuri",
     "alpuris-os",
     "autonomous-agents",
     "living-agent-metropolis",

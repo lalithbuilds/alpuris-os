@@ -1,11 +1,12 @@
 # 🌐 ALPURIS OS
 ### The Sovereign Living Agent Metropolis Engine
-**Created & Architected by [Lalith Alpuri](https://github.com/lalithbuilds)**
+**Created & Architected by [Lalith Chandra (Lalith Alpuri)](https://github.com/lalithbuilds)**
 
-[![Author: Lalith Alpuri](https://img.shields.io/badge/Author-Lalith%20Alpuri-blue.svg)](https://github.com/lalithbuilds)
+[![Author: Lalith Chandra](https://img.shields.io/badge/Author-Lalith%20Chandra-blue.svg)](https://github.com/lalithbuilds)
+[![Creator: Lalith Alpuri](https://img.shields.io/badge/Creator-Lalith%20Alpuri-purple.svg)](https://github.com/lalithbuilds)
 [![License: MIT](https://img.shields.io/badge/License-MIT-emerald.svg)](https://opensource.org/licenses/MIT)
 [![Python: 3.10+](https://img.shields.io/badge/Python-3.10%20%7C%203.11%20%7C%203.12-blue.svg)](https://www.python.org/)
-[![Tests: 31 Passed](https://img.shields.io/badge/Tests-31%20Passed%20(100%25)-brightgreen.svg)](tests/test_production_suite.py)
+[![Tests: 35 Passed](https://img.shields.io/badge/Tests-35%20Passed%20(100%25)-brightgreen.svg)](tests/test_production_suite.py)
 [![WebGL: 60 FPS](https://img.shields.io/badge/WebGL-60%20FPS%20Locked-cyan.svg)](static/voxel_3d_engine.js)
 [![Procedural Audio: Zero--Asset](https://img.shields.io/badge/Web%20Audio-Procedural%20Synthesis-purple.svg)](static/voxel_3d_engine.js)
 [![Port: 9090](https://img.shields.io/badge/Port-9090%20Live-purple.svg)](http://localhost:9090)
