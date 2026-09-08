@@ -4,6 +4,7 @@
 
 [![Author: Lalith Chandra](https://img.shields.io/badge/Author-Lalith%20Chandra-blue.svg)](https://github.com/lalithbuilds)
 [![Creator: Lalith Alpuri](https://img.shields.io/badge/Creator-Lalith%20Alpuri-purple.svg)](https://github.com/lalithbuilds)
+[![LinkedIn: Lalith Chandra](https://img.shields.io/badge/LinkedIn-Lalith%20Chandra-0A66C2.svg?logo=linkedin&logoColor=white)](https://www.linkedin.com/in/lalith-chandra-058531418/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-emerald.svg)](https://opensource.org/licenses/MIT)
 [![Python: 3.10+](https://img.shields.io/badge/Python-3.10%20%7C%203.11%20%7C%203.12-blue.svg)](https://www.python.org/)
 [![Tests: 35 Passed](https://img.shields.io/badge/Tests-35%20Passed%20(100%25)-brightgreen.svg)](tests/test_production_suite.py)
