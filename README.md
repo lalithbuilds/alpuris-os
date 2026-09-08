@@ -12,7 +12,7 @@
 
 ## 📸 Visual Showcase
 
-![Bengaluru Living Metropolis OS Cockpit](docs/assets/bengaluru_model_council_verified_production.png)
+![Bengaluru Living Metropolis OS Cockpit](docs/assets/bengaluru_glm_upgraded_graphics.png)
 
 *The real-time Cyber Cockpit with Autopolis telemetry cards, 3D Voxel skyline, moving Namma Metro trains, and live conversational feeds.*
 
