@@ -1,0 +1,5 @@
+# Core Metropolis Engine Dependencies
+# Pure Python Standard Library Architecture with Zero Mandatory Dependencies!
+# Optional high-performance additions:
+fastembed>=0.2.0; python_version < "3.13"
+numpy>=1.24.0; python_version < "3.13"

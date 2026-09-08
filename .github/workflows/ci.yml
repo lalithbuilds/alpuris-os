@@ -1,0 +1,57 @@
+name: Metropolis OS CI / Production Verification
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    name: Production Test Suite (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12"]
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+        cache: "pip"
+        cache-dependency-path: "requirements-dev.txt"
+
+    - name: Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements-dev.txt
+
+    - name: Code Syntax & Integrity Audit (Ruff)
+      run: |
+        ruff check --select E,F,W --ignore E501,F401,F841 .
+
+    - name: Execute 28-Suite Production Regression Tests
+      run: |
+        python -m pytest tests/test_production_suite.py -v
+
+  docker:
+    name: Docker Containerization Build Test
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Build Docker Container
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        push: false
+        tags: lalithbuilds/bengaluru-living-metropolis:latest

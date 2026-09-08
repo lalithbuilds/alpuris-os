@@ -1,0 +1,64 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bengaluru-living-metropolis"
+version = "1.0.0"
+description = "Bengaluru Living Agent Metropolis OS: 100 Autonomous AI Citizens, 16 Iconic Sectors, 3D Voxel Engine, Circadian Lifecycle, Real-World Economy & Stock Market"
+readme = "README.md"
+authors = [{ name = "Lalith", email = "lalith@rayglobal.ai" }]
+license = { text = "MIT" }
+requires-python = ">=3.10"
+keywords = [
+    "autonomous-agents",
+    "living-world",
+    "simulation",
+    "multi-agent",
+    "threejs",
+    "metropolis-os",
+    "bengaluru",
+    "cognitive-architecture"
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-cov>=4.1.0",
+    "ruff>=0.4.0",
+    "playwright>=1.40.0"
+]
+neural = [
+    "fastembed>=0.2.0",
+    "numpy>=1.24.0"
+]
+
+[project.scripts]
+metropolis = "server:run_server"
+
+[project.urls]
+Homepage = "https://github.com/lalithbuilds/bengaluru-living-metropolis"
+Repository = "https://github.com/lalithbuilds/bengaluru-living-metropolis"
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+exclude = ["vendor", "sandbox", "temp_storage", ".pytest_cache"]
