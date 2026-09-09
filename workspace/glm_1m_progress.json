@@ -1,11 +1,47 @@
 {
   "target_tokens": 1000000,
-  "total_tokens_consumed": 79947,
-  "total_cycles": 9,
-  "total_articles_published": 9,
+  "total_tokens_consumed": 100745,
+  "total_cycles": 11,
+  "total_articles_published": 11,
   "total_tests_added": 0,
-  "percent_complete": 7.99,
+  "percent_complete": 10.07,
   "recent_generations": [
+    {
+      "gen_id": "a006b42de31052a8",
+      "task": "TestGen-11",
+      "tokens": 1880,
+      "elapsed_sec": 80.07,
+      "reasoning_chars": 9603,
+      "content_chars": 1243,
+      "timestamp": "2026-09-09T11:08:11Z"
+    },
+    {
+      "gen_id": "95231d8600373557",
+      "task": "Article-11",
+      "tokens": 7060,
+      "elapsed_sec": 169.32,
+      "reasoning_chars": 25771,
+      "content_chars": 9032,
+      "timestamp": "2026-09-09T11:06:50Z"
+    },
+    {
+      "gen_id": "b25c5065d1c8a598",
+      "task": "TestGen-10",
+      "tokens": 1500,
+      "elapsed_sec": 52.1,
+      "reasoning_chars": 4968,
+      "content_chars": 1457,
+      "timestamp": "2026-09-09T11:03:25Z"
+    },
+    {
+      "gen_id": "b03d0c1a10d545c2",
+      "task": "Article-10",
+      "tokens": 10358,
+      "elapsed_sec": 381.03,
+      "reasoning_chars": 41669,
+      "content_chars": 8192,
+      "timestamp": "2026-09-09T11:02:32Z"
+    },
     {
       "gen_id": "8de841d3072fc9f6",
       "task": "TestGen-9",
@@ -169,7 +205,9 @@
     "amx-accelerated-cognitive-memory-substrates-v6",
     "sovereign-agent-metropolis-operating-systems-v7",
     "knowledge-graph-entity-triangulation-systems-architects-v8",
-    "piano-dual-speed-cognition-architecture-v9"
+    "piano-dual-speed-cognition-architecture-v9",
+    "amx-accelerated-cognitive-memory-substrates-v10",
+    "sovereign-agent-metropolis-operating-systems-v11"
   ],
-  "last_updated": "2026-09-09T10:55:44Z"
+  "last_updated": "2026-09-09T11:08:11Z"
 }
