@@ -1,11 +1,29 @@
 {
   "target_tokens": 1000000,
-  "total_tokens_consumed": 9006,
-  "total_cycles": 1,
-  "total_articles_published": 1,
+  "total_tokens_consumed": 19943,
+  "total_cycles": 2,
+  "total_articles_published": 2,
   "total_tests_added": 0,
-  "percent_complete": 0.9,
+  "percent_complete": 1.99,
   "recent_generations": [
+    {
+      "gen_id": "ae5a134562fef628",
+      "task": "TestGen-2",
+      "tokens": 1500,
+      "elapsed_sec": 47.74,
+      "reasoning_chars": 6498,
+      "content_chars": 1083,
+      "timestamp": "2026-09-09T10:19:51Z"
+    },
+    {
+      "gen_id": "bf79a1b1cfcabf89",
+      "task": "Article-2",
+      "tokens": 9437,
+      "elapsed_sec": 294.9,
+      "reasoning_chars": 37933,
+      "content_chars": 7141,
+      "timestamp": "2026-09-09T10:19:03Z"
+    },
     {
       "gen_id": "834c0eecb621fc24",
       "task": "TestGen-1",
@@ -35,7 +53,8 @@
     }
   ],
   "published_articles": [
-    "piano-dual-speed-cognition-architecture"
+    "piano-dual-speed-cognition-architecture",
+    "amx-accelerated-cognitive-memory-substrates"
   ],
-  "last_updated": "2026-09-09T10:13:40Z"
+  "last_updated": "2026-09-09T10:19:51Z"
 }
