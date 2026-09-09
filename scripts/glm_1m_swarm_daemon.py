@@ -170,7 +170,7 @@ class OneMillionTokenSwarm:
         with open(LOG_FILE, "a", encoding="utf-8") as f:
             f.write(line + "\n")
 
-    def call_glm_5_3_deep(self, prompt: str, task_tag: str, timeout: int = 60) -> Optional[Dict[str, Any]]:
+    def call_glm_5_3_deep(self, prompt: str, task_tag: str, timeout: int = 240) -> Optional[Dict[str, Any]]:
         headers = {
             "Authorization": f"Bearer {TOKENROUTER_KEY}",
             "Content-Type": "application/json"
@@ -192,6 +192,8 @@ class OneMillionTokenSwarm:
             content_chunks = []
             gen_id = f"tr-{int(time.time())}"
             api_tokens = 0
+            chunk_count = 0
+            last_heartbeat = time.time()
 
             for line in r.iter_lines(chunk_size=128):
                 if line:
@@ -212,6 +214,10 @@ class OneMillionTokenSwarm:
                                 content_chunks.append(delta["content"])
                             if data.get("usage"):
                                 api_tokens = data["usage"].get("total_tokens", 0)
+                            chunk_count += 1
+                            if time.time() - last_heartbeat >= 20.0:
+                                last_heartbeat = time.time()
+                                self._log(f"⏳ [Worker-{task_tag}] Streaming in progress... {chunk_count} chunks received ({len(reasoning_chunks)} reasoning, {len(content_chunks)} content) | Elapsed: {time.time()-start_t:.1f}s")
                         except Exception:
                             pass
 
