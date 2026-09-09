@@ -1,11 +1,29 @@
 {
   "target_tokens": 1000000,
-  "total_tokens_consumed": 141382,
-  "total_cycles": 16,
-  "total_articles_published": 15,
+  "total_tokens_consumed": 150476,
+  "total_cycles": 17,
+  "total_articles_published": 16,
   "total_tests_added": 0,
-  "percent_complete": 14.14,
+  "percent_complete": 15.05,
   "recent_generations": [
+    {
+      "gen_id": "9a1cf42c5682f110",
+      "task": "TestGen-17",
+      "tokens": 1500,
+      "elapsed_sec": 38.02,
+      "reasoning_chars": 4851,
+      "content_chars": 1056,
+      "timestamp": "2026-09-09T11:36:03Z"
+    },
+    {
+      "gen_id": "74ac6a6e4e6e447dac041548f0d2def7",
+      "task": "Article-17",
+      "tokens": 7594,
+      "elapsed_sec": 142.2,
+      "reasoning_chars": 19484,
+      "content_chars": 10151,
+      "timestamp": "2026-09-09T11:35:25Z"
+    },
     {
       "gen_id": "8146ebedc3af8a02",
       "task": "TestGen-16",
@@ -292,7 +310,8 @@
     "knowledge-graph-entity-triangulation-systems-architects-v12",
     "piano-dual-speed-cognition-architecture-v13",
     "sovereign-agent-metropolis-operating-systems-v15",
-    "knowledge-graph-entity-triangulation-systems-architects-v16"
+    "knowledge-graph-entity-triangulation-systems-architects-v16",
+    "piano-dual-speed-cognition-architecture-v17"
   ],
-  "last_updated": "2026-09-09T11:32:31Z"
+  "last_updated": "2026-09-09T11:36:03Z"
 }
