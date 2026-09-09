@@ -1,11 +1,29 @@
 {
   "target_tokens": 1000000,
-  "total_tokens_consumed": 69586,
-  "total_cycles": 8,
-  "total_articles_published": 8,
+  "total_tokens_consumed": 79947,
+  "total_cycles": 9,
+  "total_articles_published": 9,
   "total_tests_added": 0,
-  "percent_complete": 6.96,
+  "percent_complete": 7.99,
   "recent_generations": [
+    {
+      "gen_id": "8de841d3072fc9f6",
+      "task": "TestGen-9",
+      "tokens": 1500,
+      "elapsed_sec": 38.26,
+      "reasoning_chars": 3860,
+      "content_chars": 931,
+      "timestamp": "2026-09-09T10:55:44Z"
+    },
+    {
+      "gen_id": "9dbb206b2e46469593c23daee2e829f1",
+      "task": "Article-9",
+      "tokens": 8861,
+      "elapsed_sec": 194.66,
+      "reasoning_chars": 26658,
+      "content_chars": 9229,
+      "timestamp": "2026-09-09T10:55:05Z"
+    },
     {
       "gen_id": "b63e75641a3a6f39",
       "task": "Article-8",
@@ -150,7 +168,8 @@
     "piano-dual-speed-cognition-architecture-v5",
     "amx-accelerated-cognitive-memory-substrates-v6",
     "sovereign-agent-metropolis-operating-systems-v7",
-    "knowledge-graph-entity-triangulation-systems-architects-v8"
+    "knowledge-graph-entity-triangulation-systems-architects-v8",
+    "piano-dual-speed-cognition-architecture-v9"
   ],
-  "last_updated": "2026-09-09T10:51:08Z"
+  "last_updated": "2026-09-09T10:55:44Z"
 }

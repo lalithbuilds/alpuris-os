@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PIANO: Dual-Speed Cognition Architecture for Sovereign Living Metropolises — Lalith Chandra (Lalith Alpuri)</title>
+  <meta name="description" content="Formal architectural specification of the PIANO dual-speed cognitive model uniting System-1 reactive reflexes (~10Hz) with System-2 deliberative LLM planning (~1Hz). Authored by Lalith Chandra (Lalith Alpuri).">
+  <meta name="author" content="Lalith Chandra (Lalith Alpuri)">
+  <link rel="canonical" href="https://lalithbuilds.github.io/alpuris-os/articles/piano-dual-speed-cognition-architecture-v9.html">
+  <meta property="og:title" content="PIANO: Dual-Speed Cognition Architecture for Sovereign Living Metropolises">
+  <meta property="og:description" content="Formal architectural specification of the PIANO dual-speed cognitive model uniting System-1 reactive reflexes (~10Hz) with System-2 deliberative LLM planning (~1Hz). Authored by Lalith Chandra (Lalith Alpuri).">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://lalithbuilds.github.io/alpuris-os/articles/piano-dual-speed-cognition-architecture-v9.html">
+  <meta property="og:site_name" content="ALPURIS OS Technical Publications">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:creator" content="@lalithbuilds">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "PIANO: Dual-Speed Cognition Architecture for Sovereign Living Metropolises",
+    "description": "Formal architectural specification of the PIANO dual-speed cognitive model uniting System-1 reactive reflexes (~10Hz) with System-2 deliberative LLM planning (~1Hz). Authored by Lalith Chandra (Lalith Alpuri).",
+    "author": {
+      "@type": "Person",
+      "name": "Lalith Chandra Alpuri",
+      "alternateName": ["Lalith Chandra", "Lalith Alpuri", "lalithbuilds"],
+      "sameAs": [
+        "https://www.linkedin.com/in/lalith-chandra-058531418/",
+        "https://github.com/lalithbuilds",
+        "https://lalithbuilds.github.io/alpuris-os/"
+      ]
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "ALPURIS OS",
+      "url": "https://lalithbuilds.github.io/alpuris-os/"
+    },
+    "datePublished": "2026-09-08",
+    "inLanguage": "en"
+  }
+  </script>
+  <style>
+    :root { --bg: #090d16; --card: #111827; --border: rgba(255,255,255,0.08); --text: #e2e8f0; --dim: #94a3b8; --accent: #38bdf8; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.7; padding: 2rem 1rem; }
+    .container { max-width: 820px; margin: 0 auto; background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 2.5rem; }
+    .nav-bar { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 1rem; margin-bottom: 2rem; }
+    .nav-bar a { color: var(--accent); text-decoration: none; font-weight: 600; }
+    h1 { font-size: 2rem; color: #f8fafc; margin-bottom: 0.75rem; }
+    .meta { font-size: 0.9rem; color: var(--dim); margin-bottom: 2rem; border-bottom: 1px solid var(--border); padding-bottom: 1rem; }
+    .meta a { color: var(--accent); text-decoration: none; }
+    h2 { font-size: 1.4rem; color: #38bdf8; margin: 2rem 0 1rem; }
+    h3 { font-size: 1.15rem; color: #cbd5e1; margin: 1.5rem 0 0.5rem; }
+    p { margin-bottom: 1.25rem; }
+    ul, ol { margin-left: 1.5rem; margin-bottom: 1.25rem; }
+    li { margin-bottom: 0.5rem; }
+    code { background: rgba(0,0,0,0.4); padding: 0.2rem 0.4rem; border-radius: 4px; font-family: monospace; font-size: 0.9em; }
+    pre { background: #050811; border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem; overflow-x: auto; margin-bottom: 1.5rem; }
+    pre code { background: none; padding: 0; }
+    .footer { margin-top: 3rem; border-top: 1px solid var(--border); padding-top: 1.5rem; text-align: center; color: var(--dim); font-size: 0.85rem; }
+    .badge { display: inline-block; background: rgba(56,189,248,0.15); color: #38bdf8; padding: 0.25rem 0.6rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; margin-right: 0.5rem; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="nav-bar">
+      <a href="https://lalithbuilds.github.io/alpuris-os/">← ALPURIS OS Home</a>
+      <div>
+        <a href="https://www.linkedin.com/in/lalith-chandra-058531418/" target="_blank" style="margin-right: 1rem;">LinkedIn</a>
+        <a href="https://github.com/lalithbuilds" target="_blank">GitHub</a>
+      </div>
+    </div>
+    <span class="badge">TECHNICAL WHITEPAPER</span>
+    <span class="badge">ALPURIS OS & EPISODA ALPHA</span>
+    <h1>PIANO: Dual-Speed Cognition Architecture for Sovereign Living Metropolises</h1>
+    <div class="meta">
+      By <a href="https://www.linkedin.com/in/lalith-chandra-058531418/"><strong>Lalith Chandra (Lalith Alpuri)</strong></a> (<a href="https://github.com/lalithbuilds">@lalithbuilds</a>) · Systems Architect · Published September 2026
+    </div>
+    <div class="content">
+      <h1>PIANO: Dual-Speed Cognition for Autonomous Agent Metropolises</h1>
+<p><strong>Lalith Chandra (Lalith Alpuri)</strong> — Systems Architect, ALPURIS OS · Creator, Episoda Alpha MCP</p>
+<p>GitHub: [@lalithbuilds](https://github.com/lalithbuilds) · LinkedIn: [linkedin.com/in/lalith-chandra-058531418](https://www.linkedin.com/in/lalith-chandra-058531418/)</p>
+<p>*ALPURIS OS Technical Paper TP-002 · Status: Production*</p>
+<p>---</p>
+<h2>Abstract</h2>
+<p>PIANO (<strong>P</strong>arallel <strong>I</strong>ntuitive–<strong>A</strong>nalytical <strong>N</strong>eural <strong>O</strong>rchestration) is the cognition substrate of ALPURIS OS, an open-source living agent metropolis simulating 100 autonomous AI citizens across 23 dynamic sectors, with real-time stock markets and zero-asset Web Audio procedural synthesis. PIANO bifurcates cognition after the dual-process model: a fixed-rate <strong>System-1</strong> reactive tick loop performs perception, drive integration, and action selection every 100 ms with no deliberative cost, while an event-triggered <strong>System-2</strong> reflection path performs sparse, expensive goal and identity revision. The two speeds are coupled through a tiered memory plane kept permanently bounded by salience-weighted compaction, and executed over an ECS substrate with spatial neighborhood hashing that renders perception queries O(1) amortized. The result is emergent, city-scale behavior at interactive frame rates on commodity, browser-class hardware.</p>
+<h2>1. Introduction</h2>
+<p>The central failure mode of autonomous agent societies is economic: a naive architecture that invokes a deliberative model per agent per tick requires 100 citizens × 10 ticks/s = 1,000 inferences per second — infeasible in cost and latency. The opposite failure is behavioral: pure-heuristic agents degrade into shallow automata with no interiority, no narrative continuity, and no capacity for goal revision.</p>
+<p>PIANO resolves the dilemma by taking Kahneman's dual-process theory [2] as an engineering specification rather than a metaphor. System-1 is fast, cheap, and always on; System-2 is slow, expensive, and rare. Everything in ALPURIS OS — the 23 sector economies, the order-book stock market, the procedural ambience — runs off the same deterministic simulation clock that PIANO governs.</p>
+<h2>2. Architectural Overview</h2>
+<p>Three planes over a data-oriented ECS core:</p>
+<p>1. <strong>Simulation plane</strong> — fixed-timestep accumulator loop at 10 Hz (dt = 100 ms), deterministic given a seed.</p>
+<p>2. <strong>Cognition plane</strong> — the System-1 loop plus a reflection scheduler that admits System-2 passes under a global budget.</p>
+<p>3. <strong>Memory plane</strong> — a three-tier store whose size is invariant to simulation age, guaranteeing that System-2 prompts never grow unboundedly.</p>
+<h2>3. System-1: The Reactive Tick Loop</h2>
+<p>Each tick executes five phases per citizen: spatial hash sync, perception, drive integration, action selection, and event emission. Drives (hunger, energy, wealth-anxiety, social appetite, mood vector) are leaky first-order integrators:</p>
+<p>> <code>drive[i] ← clamp(drive[i] + (demand[i] − satiation(action, i)) · dt)</code></p>
+<p>Action selection is an argmax over a compiled utility table (<code>U(a) = Σ w_i(a)·drive_i + w_prox·socialProximity</code>), roughly 40 verbs per sector archetype — no network calls touch the hot path. Reactive dialogue draws from cached per-sector template banks; market actions post limit orders into sector order books; ambience actions emit Web Audio synth triggers keyed by sector. Per-agent budget is sub-100 µs, keeping the full metropolis tick in the sub-millisecond regime.</p>
+<pre><code>tick(dt = 100 ms):
+  spatialHash.rebuildDirty()                        // ECS Transform mutations only
+  for agent in citizens:
+    P   = spatialHash.query(agent.pos, R_p)        // 3×3 cell sweep
+    D   = drives.integrate(agent, P, dt)
+    act = policy.select(agent, D, P)                // argmax, O(1) table lookup
+    act.execute(agent, dt)                          // steering, orders, utterances
+    T0.push(agent, act.event)                       // raw episodic ring buffer
+  market.tickAllSectors()                           // 23 order books matched
+  reflectionScheduler.drain(budget)                  // due System-2 passes, if any
+</code></pre>
+<h2>4. System-2: Reflection Triggers</h2>
+<p>A reflection is a deliberate pass in which a citizen inspects its compacted history and revises goals and identity. Reflections are <strong>never scheduled unconditionally</strong>; they fire on triggers:</p>
+<li>**Salience accumulation:** cumulative salience ΣS ≥ θ_s over the rolling window.</li>
+<li>**Goal frustration:** a directive unmet for > N ticks (N = 600 ≈ one simulated hour).</li>
+<li>**Anomaly:** percept surprise ≥ 3σ from the sector's rolling baseline (crashes, fires, windfalls).</li>
+<li>**Social threshold:** a relationship weight crossing a tier boundary (acquaintance → friend).</li>
+<li>**Circadian:** one guaranteed end-of-day review per citizen.</li>
+<p>Each citizen holds a token bucket (capacity 3, refill 1/simulated day); a global scheduler caps concurrent reflections and spreads them across idle ticks, eliminating thundering-herd cost spikes. The pass itself is a four-stage pipeline: (1) assemble bounded context (identity digest + semantic store + top-k salient episodes by retained salience); (2) deliberate; (3) compile the revised plan into a <strong>directive tree</strong> that System-1 consumes as utility-override weights; (4) patch the identity digest differentially. This is the loop closure that makes dual-speed cognition coherent: System-2 writes; System-1 executes for the next several thousand ticks.</p>
+<h2>5. Memory Compaction</h2>
+<p>The memory plane guarantees bounded context — the property that keeps System-2 economically viable at any city age.</p>
+<p>| Tier | Store | Retention | Writer | Reader |</p>
+<p>|---|---|---|---|---|</p>
+<p>| T0 | Raw event ring buffer (512 events/agent) | ~1 simulated day | System-1 | Compactor |</p>
+<p>| T1 | Salient episodic index | decay-gated | Compactor | System-2 |</p>
+<p>| T2 | Semantic fact store + identity digest | permanent, patched | Compactor | System-2 |</p>
+<p>When T0 saturates, the compactor drains it: (1) near-duplicate events are merged via locality-sensitive hashing on embeddings (cosine ≥ 0.92 keeps the max-salience copy); (2) each survivor is scored <code>S = α·novelty + β·|valence| + γ·goalRelevance</code>; (3) events with S ≥ θ_mem promote to T1; (4) entity–relation–object triples are upserted into T2 and the narrative digest is regenerated. A nightly decay sweep applies <code>R(t) = S·e^(−λΔt)</code>, demoting episodes below a forgetting floor. Consequently every System-2 prompt is O(|T2| + k) tokens — independent of how long the metropolis has lived.</p>
+<h2>6. ECS Spatial Neighborhood Hashing</h2>
+<p>All runtime state lives in archetype-chunked, structure-of-arrays ECS storage (Transform, Drives, Wallet, OrderBookRef, MemoryRef, AmbienceSource, SectorTag), giving cache-coherent iteration. Neighborhood perception uses a uniform-grid spatial hash:</p>
+<li>**Cell size:** c = ⌈1.5 · R_p⌉, so any radius-R_p query resolves within a 3×3 cell sweep.</li>
+<li>**Key:** quantized coordinates packed as `(ix << 16) | (iy & 0xFFFF)`, hashed FNV-1a into a 2¹³-bucket table.</li>
+<li>**Update:** dirty-set rebuild — only entities whose Transform mutated reinsert; full rebuild remains viable at this population.</li>
+<li>**Query:** with mean occupancy k̄ ≈ 8, a perception pass touches ~72 candidates, pruned by squared distance before social and market interaction logic.</li>
+<p>A second, macro layer partitions the map into the 23 sectors as coarse occupancy lists, giving O(1) sector resolution, order-book fan-in for the market tick, and dispatch onto the ambience bus that drives the zero-asset Web Audio synthesis. Build is O(n), query is O(k̄), memory is O(n + grid).</p>
+<h2>7. Emergence and Amortization</h2>
+<p>Against the naive per-tick baseline of 1,000 deliberation calls/second, PIANO's token-bucketed reflection regime reduces expensive inference by roughly three orders of magnitude while preserving depth. The observable consequences are structural: commuting waves at sector shift boundaries, genuine price discovery in the sector order books, friendship graphs correlated with spatial co-occurrence, and diurnal mood cycles audible in the procedural ambience. Critically, reflection logs double as first-class observability artifacts — citizen diaries that make the society debuggable.</p>
+<h2>8. Conclusion</h2>
+<p>PIANO demonstrates that the dual-process model is not merely descriptive but prescriptively buildable. Three invariants carry the system: expensive deliberation amortized across thousands of cheap reactive ticks; memory compaction keeping the slow path's context invariant to age; and spatial hashing keeping the fast path sublinear. Future work includes adaptive per-agent decay rates (λ), cross-metropolis federation via Episoda Alpha MCP, and GPU-resident hash grids.</p>
+<h2>References</h2>
+<p>[1] Lalith Chandra (Lalith Alpuri). *ALPURIS OS* — open-source living agent metropolis. GitHub: [@lalithbuilds](https://github.com/lalithbuilds).</p>
+<p>[2] D. Kahneman. *Thinking, Fast and Slow*. FSG, 2011.</p>
+<p>[3] J. S. Park et al. *Generative Agents: Interactive Simulacra of Human Behavior*. UIST, 2023.</p>
+<p>[4] M. Teschner et al. *Optimized Spatial Hashing for Collision Detection of Deformable Models*. VMV, 2003.</p>
+<p>[5] Lalith Chandra — professional profile: [linkedin.com/in/lalith-chandra-058531418](https://www.linkedin.com/in/lalith-chandra-058531418/).</p>
+    </div>
+    <div class="footer">
+      <p>© 2026 Lalith Chandra (Lalith Alpuri). MIT Licensed Architecture.</p>
+      <p>ALPURIS OS: Sovereign Living Agent Metropolis Engine & Episoda Alpha Cognitive Memory Substrates.</p>
+    </div>
+  </div>
+</body>
+</html>
