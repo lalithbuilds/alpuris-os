@@ -1,11 +1,29 @@
 {
   "target_tokens": 1000000,
-  "total_tokens_consumed": 131704,
-  "total_cycles": 15,
-  "total_articles_published": 14,
+  "total_tokens_consumed": 141382,
+  "total_cycles": 16,
+  "total_articles_published": 15,
   "total_tests_added": 0,
-  "percent_complete": 13.17,
+  "percent_complete": 14.14,
   "recent_generations": [
+    {
+      "gen_id": "8146ebedc3af8a02",
+      "task": "TestGen-16",
+      "tokens": 1500,
+      "elapsed_sec": 68.67,
+      "reasoning_chars": 6398,
+      "content_chars": 1215,
+      "timestamp": "2026-09-09T11:32:31Z"
+    },
+    {
+      "gen_id": "8bac3738dc056e22",
+      "task": "Article-16",
+      "tokens": 8178,
+      "elapsed_sec": 257.32,
+      "reasoning_chars": 34494,
+      "content_chars": 7634,
+      "timestamp": "2026-09-09T11:31:21Z"
+    },
     {
       "gen_id": "91e97fa9d2d3459a",
       "task": "TestGen-15",
@@ -273,7 +291,8 @@
     "sovereign-agent-metropolis-operating-systems-v11",
     "knowledge-graph-entity-triangulation-systems-architects-v12",
     "piano-dual-speed-cognition-architecture-v13",
-    "sovereign-agent-metropolis-operating-systems-v15"
+    "sovereign-agent-metropolis-operating-systems-v15",
+    "knowledge-graph-entity-triangulation-systems-architects-v16"
   ],
-  "last_updated": "2026-09-09T11:26:30Z"
+  "last_updated": "2026-09-09T11:32:31Z"
 }
