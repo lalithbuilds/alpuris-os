@@ -1,11 +1,29 @@
 {
   "target_tokens": 1000000,
-  "total_tokens_consumed": 1561,
-  "total_cycles": 0,
-  "total_articles_published": 0,
+  "total_tokens_consumed": 9006,
+  "total_cycles": 1,
+  "total_articles_published": 1,
   "total_tests_added": 0,
-  "percent_complete": 0.16,
+  "percent_complete": 0.9,
   "recent_generations": [
+    {
+      "gen_id": "834c0eecb621fc24",
+      "task": "TestGen-1",
+      "tokens": 1500,
+      "elapsed_sec": 31.35,
+      "reasoning_chars": 5463,
+      "content_chars": 1420,
+      "timestamp": "2026-09-09T10:13:40Z"
+    },
+    {
+      "gen_id": "bb670fe6e8667596",
+      "task": "Article-1",
+      "tokens": 5945,
+      "elapsed_sec": 231.85,
+      "reasoning_chars": 20683,
+      "content_chars": 9479,
+      "timestamp": "2026-09-09T10:13:07Z"
+    },
     {
       "gen_id": "8c1d7d217d503ad9",
       "task": "QuickTest",
@@ -16,6 +34,8 @@
       "timestamp": "2026-09-08T19:04:54Z"
     }
   ],
-  "published_articles": [],
-  "last_updated": "2026-09-08T19:04:54Z"
+  "published_articles": [
+    "piano-dual-speed-cognition-architecture"
+  ],
+  "last_updated": "2026-09-09T10:13:40Z"
 }
