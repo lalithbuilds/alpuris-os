@@ -1,11 +1,20 @@
 {
   "target_tokens": 1000000,
-  "total_tokens_consumed": 121565,
-  "total_cycles": 13,
+  "total_tokens_consumed": 123065,
+  "total_cycles": 14,
   "total_articles_published": 13,
   "total_tests_added": 0,
-  "percent_complete": 12.16,
+  "percent_complete": 12.31,
   "recent_generations": [
+    {
+      "gen_id": "b4207f170c45e0a8",
+      "task": "TestGen-14",
+      "tokens": 1500,
+      "elapsed_sec": 29.15,
+      "reasoning_chars": 4883,
+      "content_chars": 1074,
+      "timestamp": "2026-09-09T11:21:53Z"
+    },
     {
       "gen_id": "bf72cc99356783b0",
       "task": "TestGen-13",
@@ -247,5 +256,5 @@
     "knowledge-graph-entity-triangulation-systems-architects-v12",
     "piano-dual-speed-cognition-architecture-v13"
   ],
-  "last_updated": "2026-09-09T11:20:43Z"
+  "last_updated": "2026-09-09T11:21:53Z"
 }
