@@ -94,6 +94,12 @@ ALPURIS OS incorporates a completely zero-dependency, procedural Web Audio sound
 
 ---
 
+## Discoverability Keywords
+
+ALPURIS OS is built for developers searching for **local-first AI agents**, **multi-agent simulation**, **agentic AI worlds**, **autonomous agent operating systems**, **AI city simulation**, **WebGL agent visualization**, **cognitive architecture**, **digital twin simulation**, and **production-tested Python agent runtimes**.
+
+Use ALPURIS OS when you want a visible, inspectable runtime for autonomous citizens, world state, city-scale events, and commandable multi-agent behavior without depending on a hosted black-box platform.
+
 ## 🚀 Quickstart
 
 ### Prerequisites
