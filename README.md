@@ -100,6 +100,42 @@ ALPURIS OS is built for developers searching for **local-first AI agents**, **mu
 
 Use ALPURIS OS when you want a visible, inspectable runtime for autonomous citizens, world state, city-scale events, and commandable multi-agent behavior without depending on a hosted black-box platform.
 
+## 90-Second Demo Path
+
+A visitor should be able to see the project before reading the full architecture.
+
+1. Install and start the local server:
+
+   ```bash
+   python3 -m venv .venv
+   source .venv/bin/activate
+   pip install -e .
+   python3 server.py
+   ```
+
+2. Open `http://localhost:9090`.
+3. Verify the city is alive by checking:
+   - the 3D WebGL voxel city renders in the browser
+   - `/api/state` returns the current world state
+   - `/api/world/info` returns the metropolis metadata
+   - `/api/citizen/profile?id=0` returns a citizen profile
+4. Run the production suite:
+
+   ```bash
+   python3 -m pytest -q
+   ```
+
+Expected local baseline: **35 tests passing**.
+
+### What to Show in Public Demos
+
+- 10-20 seconds: open the city and move through the 3D environment.
+- 10-20 seconds: show one citizen dossier and live cognitive state.
+- 10-20 seconds: trigger or observe a city event.
+- 10-20 seconds: show the test suite passing.
+
+This makes the large claim tangible: ALPURIS OS is not just a concept README; it is a runnable multi-agent city runtime.
+
 ## 🚀 Quickstart
 
 ### Prerequisites
