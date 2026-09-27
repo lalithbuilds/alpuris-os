@@ -3290,12 +3290,18 @@ class WorldHandler(SimpleHTTPRequestHandler):
                 self._send_json(WORKSPACE_CACHE["data"])
             else:
                 workspace_files = {}
-                for fname in ["bengaluru_chronicle_tabloid.md", "bengaluru_cloud_architecture.md", "electronic_city_security_audit.log", "indiranagar_startup_pulse.json"]:
-                    fpath = os.path.join(WORKSPACE_DIR, fname)
+                tracked_files = {
+                    "bengaluru_chronicle_tabloid.md": "bengaluru_chronicle_tabloid.md",
+                    "bengaluru_cloud_architecture.md": "bengaluru_cloud_architecture.md",
+                    "electronic_city_security_audit.log": "security_audit_log.txt",
+                    "indiranagar_startup_pulse.json": "indiranagar_startup_pulse.json",
+                }
+                for public_name, disk_name in tracked_files.items():
+                    fpath = os.path.join(WORKSPACE_DIR, disk_name)
                     if os.path.exists(fpath):
                         try:
                             with open(fpath, "r") as f:
-                                workspace_files[fname] = f.read()[-500:]
+                                workspace_files[public_name] = f.read()[-500:]
                         except Exception:
                             pass
                 WORKSPACE_CACHE["timestamp"] = now

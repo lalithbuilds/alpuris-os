@@ -62,8 +62,9 @@ except ModuleNotFoundError:
     from citizen_smartphone_engine import CitizenSmartphoneEngine
     from urban_fauna_and_parks_engine import UrbanFaunaAndParksEngine
 
-DB_PATH = "/Users/lalith/ray_agent_world/world_memory.sqlite"
-WORKSPACE_DIR = "/Users/lalith/ray_agent_world/workspace"
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+DB_PATH = os.environ.get("ALPURIS_DB_PATH", os.path.join(PROJECT_ROOT, "world_memory.sqlite"))
+WORKSPACE_DIR = os.environ.get("ALPURIS_WORKSPACE_DIR", os.path.join(PROJECT_ROOT, "workspace"))
 
 # Detailed Bengaluru Spatial Sectors with Real GPS Coordinates
 ZONE_METADATA = {
@@ -1494,6 +1495,5 @@ class SpatialHashGrid:
                         if dx * dx + dy * dy <= r2:
                             results.append(eid)
         return results
-
 
 

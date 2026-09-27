@@ -637,6 +637,34 @@ class TestConcurrencyAndResilience(unittest.TestCase):
 class TestOrnsteinUhlenbeckAndMacroFlow(unittest.TestCase):
     """Verifies advanced economic equilibrium, Ornstein-Uhlenbeck mean-reversion, and gzip streaming."""
 
+    server_instance: ThreadingHTTPServer = None
+    server_thread: threading.Thread = None
+    base_url: str = ""
+
+    @classmethod
+    def setUpClass(cls):
+        live_url = "http://127.0.0.1:9090/api/state"
+        try:
+            with urllib.request.urlopen(live_url, timeout=1.5) as resp:
+                if resp.status == 200:
+                    cls.base_url = "http://127.0.0.1:9090"
+                    return
+        except Exception:
+            pass
+
+        cls.server_instance = ThreadingHTTPServer(("127.0.0.1", 0), WorldHandler)
+        cls.server_instance.daemon_threads = True
+        cls.base_url = f"http://127.0.0.1:{cls.server_instance.server_port}"
+        cls.server_thread = threading.Thread(target=cls.server_instance.serve_forever, daemon=True)
+        cls.server_thread.start()
+        time.sleep(0.5)
+
+    @classmethod
+    def tearDownClass(cls):
+        if cls.server_instance:
+            cls.server_instance.shutdown()
+            cls.server_instance.server_close()
+
     def test_ornstein_uhlenbeck_stock_dynamics(self):
         """Verify stock market does not drift exponentially and stays anchored with OU mean-reversion."""
         from world_engine import BASE_STOCK_PRICES
@@ -712,7 +740,7 @@ class TestOrnsteinUhlenbeckAndMacroFlow(unittest.TestCase):
 
     def test_event_bus_and_world_info_api_routes(self):
         """Verify /api/events/bus and /api/world/info HTTP endpoints."""
-        base_url = "http://127.0.0.1:9090"
+        base_url = self.base_url
         url_bus = f"{base_url}/api/events/bus"
         req = urllib.request.Request(url_bus)
         with urllib.request.urlopen(req, timeout=5) as resp:
@@ -731,7 +759,7 @@ class TestOrnsteinUhlenbeckAndMacroFlow(unittest.TestCase):
 
     def test_citizen_profile_api_route(self):
         """Verify /api/citizen/profile returns full citizen profile with name, role, and department."""
-        base_url = "http://127.0.0.1:9090"
+        base_url = self.base_url
         url = f"{base_url}/api/citizen/profile?id=AARAV"
         req = urllib.request.Request(url)
         with urllib.request.urlopen(req, timeout=5) as resp:
