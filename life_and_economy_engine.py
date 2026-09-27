@@ -12,11 +12,13 @@ Drives:
 import time
 import math
 import random
+import os
 import sqlite3
 import threading
 from typing import Dict, List, Any, Optional, Tuple
 
-DB_PATH = "/Users/lalith/ray_agent_world/world_memory.sqlite"
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+DB_PATH = os.environ.get("ALPURIS_DB_PATH", os.path.join(PROJECT_ROOT, "world_memory.sqlite"))
 
 # Startup archetypes founded by ambitious Bangalore citizens
 STARTUP_TEMPLATES = [

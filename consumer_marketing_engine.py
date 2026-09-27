@@ -21,11 +21,13 @@ import time
 import json
 import random
 import re
+import os
 import sqlite3
 import threading
 from typing import Dict, List, Any, Optional, Tuple
 
-DB_PATH = "/Users/lalith/ray_agent_world/world_memory.sqlite"
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+DB_PATH = os.environ.get("ALPURIS_DB_PATH", os.path.join(PROJECT_ROOT, "world_memory.sqlite"))
 
 SECTORS = [
     "TECH_DEV_TOOL",
