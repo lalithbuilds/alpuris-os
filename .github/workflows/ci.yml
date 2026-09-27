@@ -35,7 +35,7 @@ jobs:
       run: |
         ruff check --select E,F,W --ignore E501,F401,F841 .
 
-    - name: Execute 28-Suite Production Regression Tests
+    - name: Execute Production Regression Tests
       run: |
         python -m pytest tests/test_production_suite.py -v
 
