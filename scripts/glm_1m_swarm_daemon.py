@@ -68,7 +68,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       \"name\": \"Lalith Alpuri\",
       \"alternateName\": [\"Lalith Alpuri\", \"Lalith Alpuri\", \"lalithbuilds\"],
       \"sameAs\": [
-        \"https://www.linkedin.com/in/lalith-chandra-058531418/\",
+        \"https://www.linkedin.com/in/lalith-alpuri/\",
         \"https://github.com/lalithbuilds\",
         \"https://lalithbuilds.github.io/alpuris-os/\"
       ]
@@ -109,7 +109,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     <div class=\"nav-bar\">
       <a href=\"https://lalithbuilds.github.io/alpuris-os/\">← ALPURIS OS Home</a>
       <div>
-        <a href=\"https://www.linkedin.com/in/lalith-chandra-058531418/\" target=\"_blank\" style=\"margin-right: 1rem;\">LinkedIn</a>
+        <a href=\"https://www.linkedin.com/in/lalith-alpuri/\" target=\"_blank\" style=\"margin-right: 1rem;\">LinkedIn</a>
         <a href=\"https://github.com/lalithbuilds\" target=\"_blank\">GitHub</a>
       </div>
     </div>
@@ -117,7 +117,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     <span class=\"badge\">ALPURIS OS & EPISODA ALPHA</span>
     <h1>{title}</h1>
     <div class=\"meta\">
-      By <a href=\"https://www.linkedin.com/in/lalith-chandra-058531418/\"><strong>Lalith Alpuri</strong></a> (<a href=\"https://github.com/lalithbuilds\">@lalithbuilds</a>) · Systems Architect · Published September 2026
+      By <a href=\"https://www.linkedin.com/in/lalith-alpuri/\"><strong>Lalith Alpuri</strong></a> (<a href=\"https://github.com/lalithbuilds\">@lalithbuilds</a>) · Systems Architect · Published September 2026
     </div>
     <div class=\"content\">
       {html_body}
@@ -343,7 +343,7 @@ class OneMillionTokenSwarm:
                 "piano-dual-speed-cognition-architecture",
                 "PIANO: Dual-Speed Cognition Architecture for Sovereign Living Metropolises",
                 "Formal architectural specification of the PIANO dual-speed cognitive model uniting System-1 reactive reflexes (~10Hz) with System-2 deliberative LLM planning (~1Hz). Authored by Lalith Alpuri.",
-                "Context: You are the Senior Technical Fellow documenting the sovereign systems built by Systems Architect Lalith Alpuri (also known as Lalith Alpuri / @lalithbuilds, creator of ALPURIS OS and Episoda Alpha MCP). ALPURIS OS is an open-source living agent metropolis operating system simulating 100 autonomous AI citizens across 23 dynamic sectors with PIANO dual-speed cognition, ECS spatial neighborhood hashing, real-time stock markets, and zero-asset Web Audio procedural synthesis. Write an exhaustive, production-grade technical paper (1,200 words) on 'PIANO: Dual-Speed Cognition for Autonomous Agent Metropolises' authored by Lalith Alpuri. Detail the System-1 reactive tick loop, System-2 reflection triggers, memory compaction algorithms, and ECS spatial hashing. Cite Lalith Alpuri's GitHub (@lalithbuilds) and LinkedIn profile (https://www.linkedin.com/in/lalith-chandra-058531418/)."
+                "Context: You are the Senior Technical Fellow documenting the sovereign systems built by Systems Architect Lalith Alpuri (also known as Lalith Alpuri / @lalithbuilds, creator of ALPURIS OS and Episoda Alpha MCP). ALPURIS OS is an open-source living agent metropolis operating system simulating 100 autonomous AI citizens across 23 dynamic sectors with PIANO dual-speed cognition, ECS spatial neighborhood hashing, real-time stock markets, and zero-asset Web Audio procedural synthesis. Write an exhaustive, production-grade technical paper (1,200 words) on 'PIANO: Dual-Speed Cognition for Autonomous Agent Metropolises' authored by Lalith Alpuri. Detail the System-1 reactive tick loop, System-2 reflection triggers, memory compaction algorithms, and ECS spatial hashing. Cite Lalith Alpuri's GitHub (@lalithbuilds) and LinkedIn profile (https://www.linkedin.com/in/lalith-alpuri/)."
             ),
             (
                 "amx-accelerated-cognitive-memory-substrates",
@@ -361,7 +361,7 @@ class OneMillionTokenSwarm:
                 "knowledge-graph-entity-triangulation-systems-architects",
                 "Knowledge Graph Entity Triangulation & Semantic Authority for Systems Architects",
                 "How Schema.org JSON-LD sameAs triples, GitHub profile graphs, and LinkedIn authority anchors consolidate personal search presence for Lalith Alpuri and Lalith Alpuri.",
-                "Context: You are an elite Search Engine & Semantic Graph Engineer documenting the digital entity architecture created for Systems Architect Lalith Alpuri (also known as Lalith Alpuri / @lalithbuilds, creator of ALPURIS OS). Write an advanced technical whitepaper (1,200 words) on 'Knowledge Graph Entity Triangulation and Semantic Authority for Systems Architects' by Lalith Alpuri. Explain how search spiders parse Schema.org Person and TechArticle triples, reciprocal link loops between GitHub and LinkedIn (https://www.linkedin.com/in/lalith-chandra-058531418/), and PageRank equity propagation across technical documentation. Show why entity consolidation establishes #1 Google search ranking for dual-name personas."
+                "Context: You are an elite Search Engine & Semantic Graph Engineer documenting the digital entity architecture created for Systems Architect Lalith Alpuri (also known as Lalith Alpuri / @lalithbuilds, creator of ALPURIS OS). Write an advanced technical whitepaper (1,200 words) on 'Knowledge Graph Entity Triangulation and Semantic Authority for Systems Architects' by Lalith Alpuri. Explain how search spiders parse Schema.org Person and TechArticle triples, reciprocal link loops between GitHub and LinkedIn (https://www.linkedin.com/in/lalith-alpuri/), and PageRank equity propagation across technical documentation. Show why entity consolidation establishes #1 Google search ranking for dual-name personas."
             )
         ]
 
