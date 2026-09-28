@@ -165,7 +165,7 @@ Open your browser at `http://localhost:9090` to enter the living 3D metropolis.
 
 ---
 
-## 🧪 Production Test Suite (31/31 Passed)
+## 🧪 Production Test Suite (35 Passed)
 
 ```bash
 pytest tests/test_production_suite.py
@@ -173,11 +173,11 @@ pytest tests/test_production_suite.py
 ```
 ============================== test session starts ==============================
 platform darwin -- Python 3.14.6, pytest-9.1.1
-collected 31 items
+collected 35 items
 
 tests/test_production_suite.py ...............................           [100%]
 
-============================== 31 passed in 8.52s ==============================
+============================== 35 passed ==============================
 ```
 
 ---

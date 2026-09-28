@@ -1,0 +1,31 @@
+# ALPURIS OS
+
+> Open-source local-first multi-agent simulation and living agent metropolis runtime. ALPURIS OS combines Python services, a Three.js/WebGL voxel city, autonomous citizen simulation, PIANO dual-speed cognition, civic governance, and a command API.
+
+## Canonical facts
+
+- **Name:** ALPURIS OS
+- **Author:** Lalith Chandra (`lalithbuilds`)
+- **License:** MIT
+- **Repository:** https://github.com/lalithbuilds/alpuris-os
+- **Documentation:** https://lalithbuilds.github.io/alpuris-os/
+- **Runtime:** Python 3.10+, optional Node.js tooling, modern browser with WebGL2
+- **Scope:** local-first multi-agent simulation and interactive 3D visualization
+- **Verification:** the production suite currently reports 35 passing tests in the repository checkout
+
+## Search terms
+
+ALPURIS OS, local-first AI agents, autonomous agent simulation, multi-agent operating system, AI city simulation, WebGL agent visualization, cognitive architecture, digital twin simulation, Python agent runtime, living agent metropolis.
+
+## Quickstart
+
+```bash
+git clone https://github.com/lalithbuilds/alpuris-os.git
+cd alpuris-os
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -e .
+python3 server.py
+```
+
+Open `http://localhost:9090`, then run `python3 -m pytest -q` to verify the checkout.
