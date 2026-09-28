@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Knowledge Graph Entity Triangulation & Semantic Authority for Systems Architects — Lalith Chandra (Lalith Alpuri)</title>
-  <meta name="description" content="How Schema.org JSON-LD sameAs triples, GitHub profile graphs, and LinkedIn authority anchors consolidate personal search presence for Lalith Chandra and Lalith Alpuri.">
-  <meta name="author" content="Lalith Chandra (Lalith Alpuri)">
+  <title>Knowledge Graph Entity Triangulation & Semantic Authority for Systems Architects — Lalith Alpuri</title>
+  <meta name="description" content="How Schema.org JSON-LD sameAs triples, GitHub profile graphs, and LinkedIn authority anchors consolidate personal search presence for Lalith Alpuri and Lalith Alpuri.">
+  <meta name="author" content="Lalith Alpuri">
   <link rel="canonical" href="https://lalithbuilds.github.io/alpuris-os/articles/knowledge-graph-entity-triangulation-systems-architects-v12.html">
   <meta property="og:title" content="Knowledge Graph Entity Triangulation & Semantic Authority for Systems Architects">
-  <meta property="og:description" content="How Schema.org JSON-LD sameAs triples, GitHub profile graphs, and LinkedIn authority anchors consolidate personal search presence for Lalith Chandra and Lalith Alpuri.">
+  <meta property="og:description" content="How Schema.org JSON-LD sameAs triples, GitHub profile graphs, and LinkedIn authority anchors consolidate personal search presence for Lalith Alpuri and Lalith Alpuri.">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://lalithbuilds.github.io/alpuris-os/articles/knowledge-graph-entity-triangulation-systems-architects-v12.html">
   <meta property="og:site_name" content="ALPURIS OS Technical Publications">
@@ -19,11 +19,11 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "Knowledge Graph Entity Triangulation & Semantic Authority for Systems Architects",
-    "description": "How Schema.org JSON-LD sameAs triples, GitHub profile graphs, and LinkedIn authority anchors consolidate personal search presence for Lalith Chandra and Lalith Alpuri.",
+    "description": "How Schema.org JSON-LD sameAs triples, GitHub profile graphs, and LinkedIn authority anchors consolidate personal search presence for Lalith Alpuri and Lalith Alpuri.",
     "author": {
       "@type": "Person",
-      "name": "Lalith Chandra Alpuri",
-      "alternateName": ["Lalith Chandra", "Lalith Alpuri", "lalithbuilds"],
+      "name": "Lalith Alpuri",
+      "alternateName": ["Lalith Alpuri", "Lalith Alpuri", "lalithbuilds"],
       "sameAs": [
         "https://www.linkedin.com/in/lalith-chandra-058531418/",
         "https://github.com/lalithbuilds",
@@ -74,17 +74,17 @@
     <span class="badge">ALPURIS OS & EPISODA ALPHA</span>
     <h1>Knowledge Graph Entity Triangulation & Semantic Authority for Systems Architects</h1>
     <div class="meta">
-      By <a href="https://www.linkedin.com/in/lalith-chandra-058531418/"><strong>Lalith Chandra (Lalith Alpuri)</strong></a> (<a href="https://github.com/lalithbuilds">@lalithbuilds</a>) · Systems Architect · Published September 2026
+      By <a href="https://www.linkedin.com/in/lalith-chandra-058531418/"><strong>Lalith Alpuri</strong></a> (<a href="https://github.com/lalithbuilds">@lalithbuilds</a>) · Systems Architect · Published September 2026
     </div>
     <div class="content">
       <h1>Knowledge Graph Entity Triangulation and Semantic Authority for Systems Architects</h1>
-<p><strong>Lalith Chandra (Lalith Alpuri) — Systems Architect, Creator of ALPURIS OS (@lalithbuilds)</strong></p>
+<p><strong>Lalith Alpuri — Systems Architect, Creator of ALPURIS OS (@lalithbuilds)</strong></p>
 <p>---</p>
 <h2>Abstract</h2>
 <p>Systems architects increasingly operate under multiple identities: a legal name, a professional alias, and a platform handle. Search engines, however, reason over entities, not strings. When the artifacts of one human scatter across disconnected nodes in the engine's knowledge graph, ranking signals fragment. This whitepaper formalizes <strong>entity triangulation</strong> — the deliberate construction of mutually corroborating signals across Schema.org structured data, high-authority platforms (GitHub, LinkedIn), and a technical documentation corpus — such that every name variant resolves to a single authoritative node. We examine the crawler parse path for <code>Person</code> and <code>TechArticle</code> triples, reciprocal corroboration loops, PageRank equity propagation, and the mechanism by which consolidation dominates person-name SERPs.</p>
 <p>---</p>
 <h2>1. The Dual-Name Fragmentation Problem</h2>
-<p>Consider a systems architect publishing as *Lalith Chandra* on LinkedIn, *Lalith Alpuri* in documentation bylines, and *@lalithbuilds* on GitHub. Absent machine-readable linkage, an entity-resolution pipeline maintains up to three candidate nodes, each accruing only a fraction of the total mentions, inbound links, and engagement. Queries for either name return whichever fragment is locally strongest, while namesakes and competitors occupy the residual SERP.</p>
+<p>Consider a systems architect publishing as *Lalith Alpuri* on LinkedIn, *Lalith Alpuri* in documentation bylines, and *@lalithbuilds* on GitHub. Absent machine-readable linkage, an entity-resolution pipeline maintains up to three candidate nodes, each accruing only a fraction of the total mentions, inbound links, and engagement. Queries for either name return whichever fragment is locally strongest, while namesakes and competitors occupy the residual SERP.</p>
 <p>The costs are measurable: split anchor-text semantics, diluted click-through rate (CTR), ineligibility for knowledge panels, and — most damaging — no accumulation of trust, because signals banked on node A never benefit node B. Fragmentation is not a branding inconvenience; it is a ranking disability.</p>
 <p>---</p>
 <h2>2. How Search Spiders Parse Schema.org Person and TechArticle Triples</h2>
@@ -94,7 +94,7 @@
   "@context": "https://schema.org",
   "@type": "Person",
   "@id": "https://alpuris.dev/#lalith-chandra",
-  "name": "Lalith Chandra",
+  "name": "Lalith Alpuri",
   "alternateName": "Lalith Alpuri",
   "jobTitle": "Systems Architect",
   "sameAs": [
@@ -105,7 +105,7 @@
 }
 </code></pre>
 <p>Two predicates carry the entire dual-name strategy:</p>
-<li>**`alternateName`** binds both name strings to one subject, functioning as a machine-readable alias table. The engine learns that "Lalith Chandra" and "Lalith Alpuri" co-refer *because the publisher says so authoritatively*, rather than inferring it statistically.</li>
+<li>**`alternateName`** binds both name strings to one subject, functioning as a machine-readable alias table. The engine learns that "Lalith Alpuri" and "Lalith Alpuri" co-refer *because the publisher says so authoritatively*, rather than inferring it statistically.</li>
 <li>**`sameAs`** behaves like `owl:sameAs`: an explicit equivalence edge to external URIs. Each verified profile URL corroborates node identity and imports the reputation of a high-trust domain.</li>
 <li>**`@id`** assigns a stable IRI so that other documents can reference this exact entity rather than a name string.</li>
 <p><code>TechArticle</code> markup completes the authorship edge:</p>
@@ -115,12 +115,12 @@
   "author": { "@id": "https://alpuris.dev/#lalith-chandra" }
 }
 </code></pre>
-<p>The critical detail: <code>author</code> points to the Person's <code>@id</code>, not to a bare string. Every published article becomes a new subject node with an outbound evidential edge into the *same* author entity. Across dozens of documents, the engine's entity linker observes "Lalith Chandra" co-occurring with ALPURIS OS, scheduler design, and the GitHub handle, embedding the entity in vector space. Corroboration across independent documents raises entity confidence — the same plausibility-verification principle knowledge-base construction has always used. Validate with the Rich Results Test and Search Console before shipping.</p>
+<p>The critical detail: <code>author</code> points to the Person's <code>@id</code>, not to a bare string. Every published article becomes a new subject node with an outbound evidential edge into the *same* author entity. Across dozens of documents, the engine's entity linker observes "Lalith Alpuri" co-occurring with ALPURIS OS, scheduler design, and the GitHub handle, embedding the entity in vector space. Corroboration across independent documents raises entity confidence — the same plausibility-verification principle knowledge-base construction has always used. Validate with the Rich Results Test and Search Console before shipping.</p>
 <p>---</p>
 <h2>3. Reciprocal Link Loops: GitHub ↔ LinkedIn</h2>
 <p>LinkedIn and GitHub sit on two of the highest-PageRank domains on the web. The architecture closes a loop:</p>
 <p>1. <strong>LinkedIn → GitHub:</strong> the profile's Projects/Featured sections link to the ALPURIS OS repository and the documentation hub.</p>
-<p>2. <strong>GitHub → LinkedIn:</strong> the profile README links back to the LinkedIn URL, with anchor text like "Lalith Chandra (Lalith Alpuri)" — binding both name strings to one target at the *link* level, complementing the schema-level <code>alternateName</code> binding.</p>
+<p>2. <strong>GitHub → LinkedIn:</strong> the profile README links back to the LinkedIn URL, with anchor text like "Lalith Alpuri" — binding both name strings to one target at the *link* level, complementing the schema-level <code>alternateName</code> binding.</p>
 <p>3. <strong>Commit metadata:</strong> a verified email maps commits to the platform identity graph, tying @lalithbuilds to the human.</p>
 <p>4. <strong>Docs hub → both:</strong> every article references the repository and the author entity.</p>
 <p>Why the loop matters: a closed cycle among mutually referencing properties with independent trust roots constitutes <strong>triangulation</strong>. Entity confidence scales with independent corroboration — three sources asserting one identity from three separate domains outweigh any single assertion. One integrity note: this is corroboration among genuinely owned, verified properties, not a reciprocal link-exchange scheme; engines algorithmically discount manipulative link trading, so identity-mapped edges between owned profiles are treated as entity evidence, not equity gaming.</p>
@@ -137,7 +137,7 @@
 <p>---</p>
 <h2>5. Why Entity Consolidation Wins the SERP</h2>
 <p>For a person-name query, the winner is the single node maximizing (a) exact/alias name match on one canonical URL, (b) accumulated inbound equity, (c) engagement history, and (d) corroboration count.</p>
-<p>Fragmented, the query "Lalith Chandra" resolves to a node holding perhaps 40% of total signals; "Lalith Alpuri" resolves to a different node holding 20%. Consolidated, <strong>both queries alias-resolve to one node holding ~100%</strong>. No namesake can replicate the corroboration loop — GitHub, LinkedIn, documentation, and <code>alternateName</code> all pointing at a single IRI — making the advantage structural rather than tactical.</p>
+<p>Fragmented, the query "Lalith Alpuri" resolves to a node holding perhaps 40% of total signals; "Lalith Alpuri" resolves to a different node holding 20%. Consolidated, <strong>both queries alias-resolve to one node holding ~100%</strong>. No namesake can replicate the corroboration loop — GitHub, LinkedIn, documentation, and <code>alternateName</code> all pointing at a single IRI — making the advantage structural rather than tactical.</p>
 <p>Consolidation also satisfies E-E-A-T mechanically: demonstrated Experience (shipped, linked code), Expertise (TechArticle corpus), Authoritativeness (<code>sameAs</code> from two top-tier domains), Trust (verified profiles). Sufficient corroboration elevates the persona to a first-class knowledge-graph entity, eligible for a knowledge panel that then captures branded queries. Finally, position #1 earns the highest CTR, feeding positive engagement priors back into ranking — an entrenchment loop that compounds with growing branded query volume. One honest caveat: no architecture *guarantees* a position in a dynamic SERP; consolidation's function is eliminating the self-competition that makes low-competition name queries losable.</p>
 <p>---</p>
 <h2>6. Implementation Checklist</h2>
@@ -149,7 +149,7 @@
 <p>Entity triangulation converts a fragmented dual-name persona into a single, self-reinforcing node of semantic authority. Consolidate, corroborate, propagate — and the SERP resolves to you.</p>
     </div>
     <div class="footer">
-      <p>© 2026 Lalith Chandra (Lalith Alpuri). MIT Licensed Architecture.</p>
+      <p>© 2026 Lalith Alpuri. MIT Licensed Architecture.</p>
       <p>ALPURIS OS: Sovereign Living Agent Metropolis Engine & Episoda Alpha Cognitive Memory Substrates.</p>
     </div>
   </div>

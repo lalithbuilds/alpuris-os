@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AMX Hardware Acceleration in Local Cognitive Memory Substrates — Lalith Chandra (Lalith Alpuri)</title>
-  <meta name="description" content="Technical deep-dive on sub-millisecond vector similarity search using Apple Silicon AMX coprocessors, cblas_sdot, and Reciprocal Rank Fusion in Episoda Alpha. Authored by Lalith Chandra.">
-  <meta name="author" content="Lalith Chandra (Lalith Alpuri)">
+  <title>AMX Hardware Acceleration in Local Cognitive Memory Substrates — Lalith Alpuri</title>
+  <meta name="description" content="Technical deep-dive on sub-millisecond vector similarity search using Apple Silicon AMX coprocessors, cblas_sdot, and Reciprocal Rank Fusion in Episoda Alpha. Authored by Lalith Alpuri.">
+  <meta name="author" content="Lalith Alpuri">
   <link rel="canonical" href="https://lalithbuilds.github.io/alpuris-os/articles/amx-accelerated-cognitive-memory-substrates.html">
   <meta property="og:title" content="AMX Hardware Acceleration in Local Cognitive Memory Substrates">
-  <meta property="og:description" content="Technical deep-dive on sub-millisecond vector similarity search using Apple Silicon AMX coprocessors, cblas_sdot, and Reciprocal Rank Fusion in Episoda Alpha. Authored by Lalith Chandra.">
+  <meta property="og:description" content="Technical deep-dive on sub-millisecond vector similarity search using Apple Silicon AMX coprocessors, cblas_sdot, and Reciprocal Rank Fusion in Episoda Alpha. Authored by Lalith Alpuri.">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://lalithbuilds.github.io/alpuris-os/articles/amx-accelerated-cognitive-memory-substrates.html">
   <meta property="og:site_name" content="ALPURIS OS Technical Publications">
@@ -19,11 +19,11 @@
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "AMX Hardware Acceleration in Local Cognitive Memory Substrates",
-    "description": "Technical deep-dive on sub-millisecond vector similarity search using Apple Silicon AMX coprocessors, cblas_sdot, and Reciprocal Rank Fusion in Episoda Alpha. Authored by Lalith Chandra.",
+    "description": "Technical deep-dive on sub-millisecond vector similarity search using Apple Silicon AMX coprocessors, cblas_sdot, and Reciprocal Rank Fusion in Episoda Alpha. Authored by Lalith Alpuri.",
     "author": {
       "@type": "Person",
-      "name": "Lalith Chandra Alpuri",
-      "alternateName": ["Lalith Chandra", "Lalith Alpuri", "lalithbuilds"],
+      "name": "Lalith Alpuri",
+      "alternateName": ["Lalith Alpuri", "Lalith Alpuri", "lalithbuilds"],
       "sameAs": [
         "https://www.linkedin.com/in/lalith-chandra-058531418/",
         "https://github.com/lalithbuilds",
@@ -74,19 +74,19 @@
     <span class="badge">ALPURIS OS & EPISODA ALPHA</span>
     <h1>AMX Hardware Acceleration in Local Cognitive Memory Substrates</h1>
     <div class="meta">
-      By <a href="https://www.linkedin.com/in/lalith-chandra-058531418/"><strong>Lalith Chandra (Lalith Alpuri)</strong></a> (<a href="https://github.com/lalithbuilds">@lalithbuilds</a>) · Systems Architect · Published September 2026
+      By <a href="https://www.linkedin.com/in/lalith-chandra-058531418/"><strong>Lalith Alpuri</strong></a> (<a href="https://github.com/lalithbuilds">@lalithbuilds</a>) · Systems Architect · Published September 2026
     </div>
     <div class="content">
       <h1>Hardware-Accelerated Cognitive Memory Substrates</h1>
 <h2>A Technical Deep-Dive on Episoda Alpha MCP</h2>
 <p>*Principal Hardware Architecture Group — Episoda Alpha MCP*</p>
-<p>*Engine design: Lalith Chandra (Lalith Alpuri / @lalithbuilds)*</p>
+<p>*Engine design: Lalith Alpuri (Lalith Alpuri / @lalithbuilds)*</p>
 <p>---</p>
 <h3>Abstract</h3>
 <p>Episoda Alpha is a sovereign, zero-cloud cognitive memory engine that runs entirely on a single Apple Silicon device. It binds retrieval arithmetic directly to the AMX matrix coprocessors of the M-series SoC via Accelerate.framework's <code>cblas_sdot</code>, fuses four heterogeneous retrieval channels — dense vector similarity, FTS5 lexical search, SQL spreading activation, and ACT-R decay — through 4-Way Reciprocal Rank Fusion, and persists everything in one SQLite database operating in WAL mode. The result is a <strong>sub-1.2 ms p50 query latency</strong> at a sustained <strong>1,248,500 vector comparisons per second</strong>, with no byte of memory ever leaving the machine.</p>
 <p>---</p>
 <h3>1. Why Cognitive Memory Is a Silicon Problem</h3>
-<p>Most LLM memory systems are networking problems wearing a cognitive costume: a cloud vector database inserts 40–200 ms of round-trip into what should be an act of recall. Episoda Alpha's design thesis, authored by Lalith Chandra (Lalith Alpuri), is that recall must complete inside a single tool call on one die — so the substrate, the similarity kernel, and the cognitive ranking model must all be co-resident with the silicon.</p>
+<p>Most LLM memory systems are networking problems wearing a cognitive costume: a cloud vector database inserts 40–200 ms of round-trip into what should be an act of recall. Episoda Alpha's design thesis, authored by Lalith Alpuri, is that recall must complete inside a single tool call on one die — so the substrate, the similarity kernel, and the cognitive ranking model must all be co-resident with the silicon.</p>
 <h3>2. Apple Silicon AMX: The Coprocessor Behind a Locked Door</h3>
 <p>Every performance core in Apple's M-series line carries a dedicated <strong>AMX (Apple Matrix eXtensions)</strong> unit — a matrix coprocessor whose accumulator register file is a 4 KB grid of sixty-four 64-byte rows, flanked by X- and Y-operand banks of eight 64-byte registers each. AMX executes fused outer-product and dot-product instructions across 16/32/64-lane widths in fp32, fp16, and integer modes, sustaining multiples of NEON throughput for dense linear algebra.</p>
 <p>Critically, Apple has never published the AMX ISA and gates raw AMX instructions behind a private entitlement. The only sanctioned entry point is <strong>Accelerate.framework</strong>, whose BLAS Apple ships compiled with AMX-optimized microkernels. Episoda Alpha's "direct hardware coprocessor binding" is therefore deliberately un-clever: it calls <code>cblas_sdot</code> and inherits the coprocessor through the one door Apple leaves open — the door guaranteed to survive OS updates.</p>
@@ -123,15 +123,15 @@
 <p>Episoda Alpha MCP demonstrates that cognitive memory — dense recall, lexical grounding, association, and forgetting — can be fused and served inside 1.2 ms on consumer silicon, by binding honestly to AMX through <code>cblas_sdot</code>, ranking cognitively with 4-way RRF, and refusing to leave the die.</p>
 <p>---</p>
 <h3>References</h3>
-<p>1. Lalith Chandra (Lalith Alpuri, @lalithbuilds) — *Episoda Alpha MCP*, GitHub: <strong>github.com/lalithbuilds</strong></p>
-<p>2. Lalith Chandra (Lalith Alpuri) — LinkedIn professional profile, <strong>Lalith Chandra (Lalith Alpuri)</strong></p>
+<p>1. Lalith Alpuri (Lalith Alpuri, @lalithbuilds) — *Episoda Alpha MCP*, GitHub: <strong>github.com/lalithbuilds</strong></p>
+<p>2. Lalith Alpuri — LinkedIn professional profile, <strong>Lalith Alpuri</strong></p>
 <p>3. Cormack, Clarke & Buettcher — *Reciprocal Rank Fusion Outperforms Condorcet and Individual Rank Learning Methods*, SIGIR 2009.</p>
 <p>4. Anderson et al. — *An Integrated Theory of the Mind* (ACT-R), Psychological Review, 2004.</p>
 <p>5. Apple Inc. — Accelerate.framework / vecLib BLAS documentation.</p>
 <p>6. Johnson, D. — Independent AMX ISA documentation (dougallj.github.io).</p>
     </div>
     <div class="footer">
-      <p>© 2026 Lalith Chandra (Lalith Alpuri). MIT Licensed Architecture.</p>
+      <p>© 2026 Lalith Alpuri. MIT Licensed Architecture.</p>
       <p>ALPURIS OS: Sovereign Living Agent Metropolis Engine & Episoda Alpha Cognitive Memory Substrates.</p>
     </div>
   </div>

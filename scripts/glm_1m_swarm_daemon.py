@@ -6,7 +6,7 @@ Target: Continuous high-throughput generation until 1M tokens reached.
 Missions:
 1. Boost Digital Presence:
    - Generate full-length technical whitepapers & articles on ALPURIS OS & Episoda Alpha.
-   - Author: Lalith Chandra (Lalith Alpuri) · @lalithbuilds.
+   - Author: Lalith Alpuri · @lalithbuilds.
    - Render HTML articles with Schema.org JSON-LD, OpenGraph, Canonical URLs into docs/articles/.
    - Update docs/sitemap.xml and submit to IndexNow (Bing & IndexNow engine crawlers).
 2. Continuous Codebase & Test Suite Expansion:
@@ -46,9 +46,9 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 <head>
   <meta charset=\"UTF-8\">
   <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
-  <title>{title} — Lalith Chandra (Lalith Alpuri)</title>
+  <title>{title} — Lalith Alpuri</title>
   <meta name=\"description\" content=\"{description}\">
-  <meta name=\"author\" content=\"Lalith Chandra (Lalith Alpuri)\">
+  <meta name=\"author\" content=\"Lalith Alpuri\">
   <link rel=\"canonical\" href=\"https://lalithbuilds.github.io/alpuris-os/articles/{slug}.html\">
   <meta property=\"og:title\" content=\"{title}\">
   <meta property=\"og:description\" content=\"{description}\">
@@ -65,8 +65,8 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     \"description\": \"{description}\",
     \"author\": {{
       \"@type\": \"Person\",
-      \"name\": \"Lalith Chandra Alpuri\",
-      \"alternateName\": [\"Lalith Chandra\", \"Lalith Alpuri\", \"lalithbuilds\"],
+      \"name\": \"Lalith Alpuri\",
+      \"alternateName\": [\"Lalith Alpuri\", \"Lalith Alpuri\", \"lalithbuilds\"],
       \"sameAs\": [
         \"https://www.linkedin.com/in/lalith-chandra-058531418/\",
         \"https://github.com/lalithbuilds\",
@@ -117,13 +117,13 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     <span class=\"badge\">ALPURIS OS & EPISODA ALPHA</span>
     <h1>{title}</h1>
     <div class=\"meta\">
-      By <a href=\"https://www.linkedin.com/in/lalith-chandra-058531418/\"><strong>Lalith Chandra (Lalith Alpuri)</strong></a> (<a href=\"https://github.com/lalithbuilds\">@lalithbuilds</a>) · Systems Architect · Published September 2026
+      By <a href=\"https://www.linkedin.com/in/lalith-chandra-058531418/\"><strong>Lalith Alpuri</strong></a> (<a href=\"https://github.com/lalithbuilds\">@lalithbuilds</a>) · Systems Architect · Published September 2026
     </div>
     <div class=\"content\">
       {html_body}
     </div>
     <div class=\"footer\">
-      <p>© 2026 Lalith Chandra (Lalith Alpuri). MIT Licensed Architecture.</p>
+      <p>© 2026 Lalith Alpuri. MIT Licensed Architecture.</p>
       <p>ALPURIS OS: Sovereign Living Agent Metropolis Engine & Episoda Alpha Cognitive Memory Substrates.</p>
     </div>
   </div>
@@ -342,26 +342,26 @@ class OneMillionTokenSwarm:
             (
                 "piano-dual-speed-cognition-architecture",
                 "PIANO: Dual-Speed Cognition Architecture for Sovereign Living Metropolises",
-                "Formal architectural specification of the PIANO dual-speed cognitive model uniting System-1 reactive reflexes (~10Hz) with System-2 deliberative LLM planning (~1Hz). Authored by Lalith Chandra (Lalith Alpuri).",
-                "Context: You are the Senior Technical Fellow documenting the sovereign systems built by Systems Architect Lalith Chandra (also known as Lalith Alpuri / @lalithbuilds, creator of ALPURIS OS and Episoda Alpha MCP). ALPURIS OS is an open-source living agent metropolis operating system simulating 100 autonomous AI citizens across 23 dynamic sectors with PIANO dual-speed cognition, ECS spatial neighborhood hashing, real-time stock markets, and zero-asset Web Audio procedural synthesis. Write an exhaustive, production-grade technical paper (1,200 words) on 'PIANO: Dual-Speed Cognition for Autonomous Agent Metropolises' authored by Lalith Chandra (Lalith Alpuri). Detail the System-1 reactive tick loop, System-2 reflection triggers, memory compaction algorithms, and ECS spatial hashing. Cite Lalith Chandra's GitHub (@lalithbuilds) and LinkedIn profile (https://www.linkedin.com/in/lalith-chandra-058531418/)."
+                "Formal architectural specification of the PIANO dual-speed cognitive model uniting System-1 reactive reflexes (~10Hz) with System-2 deliberative LLM planning (~1Hz). Authored by Lalith Alpuri.",
+                "Context: You are the Senior Technical Fellow documenting the sovereign systems built by Systems Architect Lalith Alpuri (also known as Lalith Alpuri / @lalithbuilds, creator of ALPURIS OS and Episoda Alpha MCP). ALPURIS OS is an open-source living agent metropolis operating system simulating 100 autonomous AI citizens across 23 dynamic sectors with PIANO dual-speed cognition, ECS spatial neighborhood hashing, real-time stock markets, and zero-asset Web Audio procedural synthesis. Write an exhaustive, production-grade technical paper (1,200 words) on 'PIANO: Dual-Speed Cognition for Autonomous Agent Metropolises' authored by Lalith Alpuri. Detail the System-1 reactive tick loop, System-2 reflection triggers, memory compaction algorithms, and ECS spatial hashing. Cite Lalith Alpuri's GitHub (@lalithbuilds) and LinkedIn profile (https://www.linkedin.com/in/lalith-chandra-058531418/)."
             ),
             (
                 "amx-accelerated-cognitive-memory-substrates",
                 "AMX Hardware Acceleration in Local Cognitive Memory Substrates",
-                "Technical deep-dive on sub-millisecond vector similarity search using Apple Silicon AMX coprocessors, cblas_sdot, and Reciprocal Rank Fusion in Episoda Alpha. Authored by Lalith Chandra.",
-                "Context: You are the Principal Hardware Architect writing the official technical whitepaper for Episoda Alpha MCP, designed by Lalith Chandra (also known as Lalith Alpuri / @lalithbuilds). Episoda Alpha is a sovereign, zero-cloud cognitive memory engine utilizing direct Apple Silicon AMX hardware coprocessor bindings via Accelerate.framework cblas_sdot, 4-Way Reciprocal Rank Fusion, single SQLite WAL substrate, and achieving sub-1.2ms p50 query latency with 1,248,500 vector comparisons/sec. Write an exhaustive technical deep-dive (1,200 words) on 'Hardware-Accelerated Cognitive Memory Substrates' by Lalith Chandra (Lalith Alpuri). Explain Apple Silicon AMX matrix coprocessors, Accelerate.framework cblas_sdot, 4-Way Reciprocal Rank Fusion (dense + FTS5 + SQL spreading + ACT-R decay), and sub-1.2ms p50 query latency. Cite Lalith Chandra's GitHub and LinkedIn."
+                "Technical deep-dive on sub-millisecond vector similarity search using Apple Silicon AMX coprocessors, cblas_sdot, and Reciprocal Rank Fusion in Episoda Alpha. Authored by Lalith Alpuri.",
+                "Context: You are the Principal Hardware Architect writing the official technical whitepaper for Episoda Alpha MCP, designed by Lalith Alpuri (also known as Lalith Alpuri / @lalithbuilds). Episoda Alpha is a sovereign, zero-cloud cognitive memory engine utilizing direct Apple Silicon AMX hardware coprocessor bindings via Accelerate.framework cblas_sdot, 4-Way Reciprocal Rank Fusion, single SQLite WAL substrate, and achieving sub-1.2ms p50 query latency with 1,248,500 vector comparisons/sec. Write an exhaustive technical deep-dive (1,200 words) on 'Hardware-Accelerated Cognitive Memory Substrates' by Lalith Alpuri. Explain Apple Silicon AMX matrix coprocessors, Accelerate.framework cblas_sdot, 4-Way Reciprocal Rank Fusion (dense + FTS5 + SQL spreading + ACT-R decay), and sub-1.2ms p50 query latency. Cite Lalith Alpuri's GitHub and LinkedIn."
             ),
             (
                 "sovereign-agent-metropolis-operating-systems",
                 "The Architecture of Sovereign Living Agent Metropolises",
-                "How ALPURIS OS models 100 autonomous citizens, dynamic stock exchanges, zero-asset Web Audio synthesis, and real-time civic governance. Authored by Lalith Chandra (Lalith Alpuri).",
-                "Context: You are the Lead Systems Architect documenting ALPURIS OS, created by Systems Architect Lalith Chandra (Lalith Alpuri / @lalithbuilds). ALPURIS OS is the world's first open-source operating system for living autonomous agent metropolises. It models 100 heterogeneous AI citizens self-organizing across 23 dynamic sectors with a real-time stock market, municipal voting assembly, streaming newsroom, zero-asset procedural Web Audio synthesis, and an interactive 3D WebGL voxel city. Write a comprehensive systems architecture treatise (1,200 words) on 'Sovereign Living Agent Metropolis Engines: ALPURIS OS' by Lalith Chandra (Lalith Alpuri). Detail the macro-economic accounting identities (GDP = C + I + G + NX), Silk Board congestion simulations, 3D WebGL voxel visualization, and zero-asset procedural Web Audio synthesis."
+                "How ALPURIS OS models 100 autonomous citizens, dynamic stock exchanges, zero-asset Web Audio synthesis, and real-time civic governance. Authored by Lalith Alpuri.",
+                "Context: You are the Lead Systems Architect documenting ALPURIS OS, created by Systems Architect Lalith Alpuri (Lalith Alpuri / @lalithbuilds). ALPURIS OS is the world's first open-source operating system for living autonomous agent metropolises. It models 100 heterogeneous AI citizens self-organizing across 23 dynamic sectors with a real-time stock market, municipal voting assembly, streaming newsroom, zero-asset procedural Web Audio synthesis, and an interactive 3D WebGL voxel city. Write a comprehensive systems architecture treatise (1,200 words) on 'Sovereign Living Agent Metropolis Engines: ALPURIS OS' by Lalith Alpuri. Detail the macro-economic accounting identities (GDP = C + I + G + NX), Silk Board congestion simulations, 3D WebGL voxel visualization, and zero-asset procedural Web Audio synthesis."
             ),
             (
                 "knowledge-graph-entity-triangulation-systems-architects",
                 "Knowledge Graph Entity Triangulation & Semantic Authority for Systems Architects",
-                "How Schema.org JSON-LD sameAs triples, GitHub profile graphs, and LinkedIn authority anchors consolidate personal search presence for Lalith Chandra and Lalith Alpuri.",
-                "Context: You are an elite Search Engine & Semantic Graph Engineer documenting the digital entity architecture created for Systems Architect Lalith Chandra (also known as Lalith Alpuri / @lalithbuilds, creator of ALPURIS OS). Write an advanced technical whitepaper (1,200 words) on 'Knowledge Graph Entity Triangulation and Semantic Authority for Systems Architects' by Lalith Chandra (Lalith Alpuri). Explain how search spiders parse Schema.org Person and TechArticle triples, reciprocal link loops between GitHub and LinkedIn (https://www.linkedin.com/in/lalith-chandra-058531418/), and PageRank equity propagation across technical documentation. Show why entity consolidation establishes #1 Google search ranking for dual-name personas."
+                "How Schema.org JSON-LD sameAs triples, GitHub profile graphs, and LinkedIn authority anchors consolidate personal search presence for Lalith Alpuri and Lalith Alpuri.",
+                "Context: You are an elite Search Engine & Semantic Graph Engineer documenting the digital entity architecture created for Systems Architect Lalith Alpuri (also known as Lalith Alpuri / @lalithbuilds, creator of ALPURIS OS). Write an advanced technical whitepaper (1,200 words) on 'Knowledge Graph Entity Triangulation and Semantic Authority for Systems Architects' by Lalith Alpuri. Explain how search spiders parse Schema.org Person and TechArticle triples, reciprocal link loops between GitHub and LinkedIn (https://www.linkedin.com/in/lalith-chandra-058531418/), and PageRank equity propagation across technical documentation. Show why entity consolidation establishes #1 Google search ranking for dual-name personas."
             )
         ]
 

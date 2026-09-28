@@ -5,7 +5,7 @@
 ## Canonical facts
 
 - **Name:** ALPURIS OS
-- **Author:** Lalith Chandra (`lalithbuilds`)
+- **Author:** Lalith Alpuri (`lalithbuilds`)
 - **License:** MIT
 - **Repository:** https://github.com/lalithbuilds/alpuris-os
 - **Documentation:** https://lalithbuilds.github.io/alpuris-os/
