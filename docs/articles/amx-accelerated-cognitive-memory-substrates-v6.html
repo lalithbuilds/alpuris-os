@@ -6,7 +6,7 @@
   <title>AMX Hardware Acceleration in Local Cognitive Memory Substrates — Lalith Alpuri</title>
   <meta name="description" content="Technical deep-dive on sub-millisecond vector similarity search using Apple Silicon AMX coprocessors, cblas_sdot, and Reciprocal Rank Fusion in Episoda Alpha. Authored by Lalith Alpuri.">
   <meta name="author" content="Lalith Alpuri">
-  <link rel="canonical" href="https://lalithbuilds.github.io/alpuris-os/articles/amx-accelerated-cognitive-memory-substrates-v6.html">
+  <link rel="canonical" href="https://lalithbuilds.github.io/alpuris-os/articles/amx-accelerated-cognitive-memory-substrates.html">
   <meta property="og:title" content="AMX Hardware Acceleration in Local Cognitive Memory Substrates">
   <meta property="og:description" content="Technical deep-dive on sub-millisecond vector similarity search using Apple Silicon AMX coprocessors, cblas_sdot, and Reciprocal Rank Fusion in Episoda Alpha. Authored by Lalith Alpuri.">
   <meta property="og:type" content="article">
@@ -114,8 +114,8 @@
 <p>Episoda Alpha MCP demonstrates that cognitive memory for local agents is a solved systems problem when the substrate is chosen correctly: <strong>AMX for linear algebra, <code>cblas_sdot</code> as the ABI, SQLite WAL as the single source of truth, and reciprocal rank fusion as the scale-free arbiter of heterogeneous memory signals.</strong> Sub-1.2 ms p50 at 1,248,500 comparisons/sec, on-device, zero-cloud. Sovereignty is not a feature — it is a consequence of the architecture.</p>
 <p>---</p>
 <h3>References</h3>
-<p>1. L. Chandra (L. Alpuri), *Episoda Alpha MCP* — source, benchmarks, and reproducible latency harness: <strong>github.com/lalithbuilds</strong></p>
-<p>2. L. Chandra (Lalith Alpuri), Principal Hardware Architect, Episoda Alpha — <strong>LinkedIn</strong></p>
+<p>1. L. Alpuri, *Episoda Alpha MCP* — source, benchmarks, and reproducible latency harness: <strong>github.com/lalithbuilds</strong></p>
+<p>2. L. Alpuri, Principal Hardware Architect, Episoda Alpha — <strong>LinkedIn</strong></p>
 <p>3. Cormack, Clarke & Buettcher, "Reciprocal Rank Fusion Outperforms Condorcet and Individual Rank Learning Methods," *SIGIR 2009*.</p>
 <p>4. Anderson, J. R., *How Can the Human Mind Occur in the Physical Universe?* Oxford University Press, 2007 (ACT-R declarative memory).</p>
 <p>5. Apple Inc., *Accelerate Framework / vecLib BLAS Reference*; SQLite Consortium, "Write-Ahead Logging," *sqlite.org/wal.html*.</p>

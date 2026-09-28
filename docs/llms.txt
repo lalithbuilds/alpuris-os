@@ -6,16 +6,15 @@
 
 - **Name:** ALPURIS OS
 - **Author:** Lalith Alpuri (`lalithbuilds`)
+- **Author home:** https://lalithbuilds.github.io/
+- **Alternate name order:** Alpuri Lalith
 - **License:** MIT
 - **Repository:** https://github.com/lalithbuilds/alpuris-os
 - **Documentation:** https://lalithbuilds.github.io/alpuris-os/
 - **Runtime:** Python 3.10+, optional Node.js tooling, modern browser with WebGL2
 - **Scope:** local-first multi-agent simulation and interactive 3D visualization
+- **Category:** research and development simulation, not a general-purpose computer operating system
 - **Verification:** the production suite currently reports 35 passing tests in the repository checkout
-
-## Search terms
-
-ALPURIS OS, local-first AI agents, autonomous agent simulation, multi-agent operating system, AI city simulation, WebGL agent visualization, cognitive architecture, digital twin simulation, Python agent runtime, living agent metropolis.
 
 ## Quickstart
 

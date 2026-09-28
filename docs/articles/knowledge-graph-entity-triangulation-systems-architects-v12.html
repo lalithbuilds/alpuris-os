@@ -6,7 +6,7 @@
   <title>Knowledge Graph Entity Triangulation & Semantic Authority for Systems Architects — Lalith Alpuri</title>
   <meta name="description" content="How Schema.org JSON-LD sameAs triples, GitHub profile graphs, and LinkedIn authority anchors consolidate personal search presence for Lalith Alpuri and Lalith Alpuri.">
   <meta name="author" content="Lalith Alpuri">
-  <link rel="canonical" href="https://lalithbuilds.github.io/alpuris-os/articles/knowledge-graph-entity-triangulation-systems-architects-v12.html">
+  <link rel="canonical" href="https://lalithbuilds.github.io/alpuris-os/articles/knowledge-graph-entity-triangulation-systems-architects.html">
   <meta property="og:title" content="Knowledge Graph Entity Triangulation & Semantic Authority for Systems Architects">
   <meta property="og:description" content="How Schema.org JSON-LD sameAs triples, GitHub profile graphs, and LinkedIn authority anchors consolidate personal search presence for Lalith Alpuri and Lalith Alpuri.">
   <meta property="og:type" content="article">
@@ -93,7 +93,7 @@
 <pre><code>{
   "@context": "https://schema.org",
   "@type": "Person",
-  "@id": "https://alpuris.dev/#lalith-chandra",
+  "@id": "https://lalithbuilds.github.io/#person",
   "name": "Lalith Alpuri",
   "alternateName": "Lalith Alpuri",
   "jobTitle": "Systems Architect",
@@ -112,7 +112,7 @@
 <pre><code>{
   "@type": "TechArticle",
   "headline": "Designing the ALPURIS OS Scheduler",
-  "author": { "@id": "https://alpuris.dev/#lalith-chandra" }
+  "author": { "@id": "https://lalithbuilds.github.io/#person" }
 }
 </code></pre>
 <p>The critical detail: <code>author</code> points to the Person's <code>@id</code>, not to a bare string. Every published article becomes a new subject node with an outbound evidential edge into the *same* author entity. Across dozens of documents, the engine's entity linker observes "Lalith Alpuri" co-occurring with ALPURIS OS, scheduler design, and the GitHub handle, embedding the entity in vector space. Corroboration across independent documents raises entity confidence — the same plausibility-verification principle knowledge-base construction has always used. Validate with the Rich Results Test and Search Console before shipping.</p>
