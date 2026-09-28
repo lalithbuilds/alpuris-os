@@ -24,6 +24,8 @@ from http.server import ThreadingHTTPServer, SimpleHTTPRequestHandler
 from urllib.parse import urlparse
 from typing import Any, Dict, List, Set, Optional
 
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+
 try:
     from ray_agent_world.world_engine import (
         LivingWorld, WORKSPACE_DIR, ZONE_COORDINATES, ZONE_METADATA,
@@ -3397,7 +3399,7 @@ class WorldHandler(SimpleHTTPRequestHandler):
             }
             self._send_json(info)
         elif parsed.path.startswith("/static/"):
-            file_path = os.path.join("/Users/lalith/ray_agent_world", parsed.path[1:])
+            file_path = os.path.join(PROJECT_ROOT, parsed.path[1:])
             if os.path.exists(file_path):
                 self.send_response(200)
                 if file_path.endswith(".js"):

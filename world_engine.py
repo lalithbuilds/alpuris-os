@@ -1252,7 +1252,7 @@ class LivingWorld:
 
         # 6. Capture Virtual Actuator Desktop
         with self.x11_lock:
-            self.computer.capture_screenshot("/Users/lalith/ray_agent_world/static/live_screen.png")
+            self.computer.capture_screenshot(os.path.join(PROJECT_ROOT, "static", "live_screen.png"))
 
         # 7. Step Real-World Macro-GDP & Economic Accounting Engine (GDP = C + I + G + NX)
         macro_econ = self.life_economy.step_macro_economy(self.personas, self.tick_count)
@@ -1495,5 +1495,4 @@ class SpatialHashGrid:
                         if dx * dx + dy * dy <= r2:
                             results.append(eid)
         return results
-
 

@@ -20,7 +20,8 @@ import resource
 import collections
 from typing import Dict, Any, List, Tuple
 
-SANDBOX_DIR = "/Users/lalith/ray_agent_world/sandbox"
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+SANDBOX_DIR = os.environ.get("ALPURIS_SANDBOX_DIR", os.path.join(PROJECT_ROOT, "sandbox"))
 os.makedirs(SANDBOX_DIR, exist_ok=True)
 
 FORBIDDEN_MODULES = {
