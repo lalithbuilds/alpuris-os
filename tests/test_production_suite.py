@@ -33,15 +33,15 @@ if PROJECT_ROOT not in sys.path:
 if PARENT_ROOT not in sys.path:
     sys.path.insert(0, PARENT_ROOT)
 
-import world_engine
-from world_engine import (
+import world_engine  # noqa: E402
+from world_engine import (  # noqa: E402
     LivingWorld, BENGALURU_ZONES, ZONE_COORDINATES, ZONE_METADATA,
     METRO_LINES, INITIAL_STOCKS, DB_PATH, WORKSPACE_DIR
-)
-from life_and_economy_engine import LifeAndEconomyEngine
-from sandboxed_execution_engine import SandboxedExecutionEngine
-import server
-from server import WorldHandler, WORLD, WORLD_LOCK, SSE_SUBSCRIBERS, SSE_LOCK, _push_sse
+)  # noqa: E402
+from life_and_economy_engine import LifeAndEconomyEngine  # noqa: E402
+from sandboxed_execution_engine import SandboxedExecutionEngine  # noqa: E402
+import server  # noqa: E402
+from server import WorldHandler, WORLD, WORLD_LOCK, SSE_SUBSCRIBERS, SSE_LOCK, _push_sse  # noqa: E402
 
 # ---------------------------------------------------------------------------
 # CONSTANTS & SPECIFICATIONS
@@ -185,7 +185,7 @@ class TestWorldEngineStateAndTickIntegrity(unittest.TestCase):
         for sector in CORE_16_SECTORS:
             self.assertIn(sector, zone_coords, f"Core sector {sector} missing from zone_coordinates")
             self.assertIn(sector, zone_meta, f"Core sector {sector} missing from zone_metadata")
-            
+
             coord = zone_coords[sector]
             self.assertIsInstance(coord, dict, f"Coordinates for {sector} must be a dict")
             self.assertIn("x", coord, f"Coordinate dict for {sector} must contain 'x'")
@@ -293,7 +293,7 @@ class TestMacroEconomyAndGDPConsistency(unittest.TestCase):
         self.assertEqual(len(wallets), 100)
         for w in wallets:
             self.assertGreaterEqual(w, 0.0, f"Found negative citizen wallet: {w}")
-        
+
         total_wallets = sum(wallets)
         self.assertGreaterEqual(total_wallets, 0.0)
 
@@ -373,7 +373,7 @@ class TestBLRTech30StockMarketMath(unittest.TestCase):
         """Verify blr_tech_index formula: round(sum(s['price'] for s in stocks) * 1.15, 2)."""
         stocks = self.telemetry["stocks"]
         expected_index = round(sum(s["price"] for s in stocks) * 1.15, 2)
-        
+
         # Parse index from telemetry (remove formatting commas)
         actual_index_str = self.telemetry["blr_tech_index"].replace(",", "")
         actual_index = float(actual_index_str)
@@ -803,7 +803,6 @@ class TestOrnsteinUhlenbeckAndMacroFlow(unittest.TestCase):
         count = server.WORLD.update_spatial_index()
         self.assertEqual(count, 100)
 
-        from world_engine import ZONE_COORDINATES
         manyata_pos = ZONE_COORDINATES["Manyata_Tech_Park"]
         neighbors = grid.query_radius(manyata_pos, radius=200.0)
         self.assertIsInstance(neighbors, list)

@@ -231,9 +231,9 @@ class VoxelWorldGrid:
             cur = conn.cursor()
             cur.execute("SELECT COUNT(*), COUNT(DISTINCT zone), COUNT(DISTINCT owner_id) FROM physical_world_blocks")
             total_blocks, active_zones, active_builders = cur.fetchone()
-            
+
             cur.execute("""
-                SELECT block_type, COUNT(*) FROM physical_world_blocks 
+                SELECT block_type, COUNT(*) FROM physical_world_blocks
                 GROUP BY block_type ORDER BY COUNT(*) DESC LIMIT 5
             """)
             top_blocks = {r[0]: r[1] for r in cur.fetchall()}

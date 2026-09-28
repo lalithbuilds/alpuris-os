@@ -167,7 +167,8 @@ class ContinuousGLMDaemon:
             return f"Error running command: {e}"
 
     def tool_web_search(self, query: str) -> str:
-        import urllib.request, urllib.parse
+        import urllib.request
+        import urllib.parse
 
         results = []
         try:
@@ -274,9 +275,9 @@ class ContinuousGLMDaemon:
     def run_cycle(self):
         self.metrics["total_cycles"] += 1
         cycle_num = self.metrics["total_cycles"]
-        self._log(f"\n=======================================================")
+        self._log("\n=======================================================")
         self._log(f"🚀 INITIATING AUTONOMOUS CYCLE #{cycle_num}")
-        self._log(f"=======================================================")
+        self._log("=======================================================")
 
         if cycle_num % 2 == 1:
             # Mission 1: GLM-5.2 BETA (Cognitive Systems & ECS)

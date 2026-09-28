@@ -15,6 +15,7 @@ import sys
 import json
 import time
 import threading
+import queue as _queue
 import signal
 import atexit
 import socket
@@ -25,12 +26,12 @@ from typing import Any, Dict, List, Set, Optional
 
 try:
     from ray_agent_world.world_engine import (
-        LivingWorld, WORKSPACE_DIR, ZONE_COORDINATES, ZONE_METADATA, 
+        LivingWorld, WORKSPACE_DIR, ZONE_COORDINATES, ZONE_METADATA,
         METRO_LINES, BENGALURU_ZONES, INITIAL_STOCKS, WEATHER_STATES, CITY_BILLS
     )
 except ModuleNotFoundError:
     from world_engine import (
-        LivingWorld, WORKSPACE_DIR, ZONE_COORDINATES, ZONE_METADATA, 
+        LivingWorld, WORKSPACE_DIR, ZONE_COORDINATES, ZONE_METADATA,
         METRO_LINES, BENGALURU_ZONES, INITIAL_STOCKS, WEATHER_STATES, CITY_BILLS
     )
 
@@ -133,7 +134,6 @@ def handle_shutdown_signal(signum, frame):
         threading.Thread(target=CURRENT_SERVER.shutdown, daemon=True).start()
 
 # SSE subscribers — list of queue.Queue objects, one per connected client
-import queue as _queue
 SSE_SUBSCRIBERS: list = []
 SSE_LOCK = threading.Lock()
 
@@ -168,7 +168,7 @@ def background_autonomous_runner():
                 update_telemetry_cache(new_data)
                 print(f"✓ [Bengaluru OS] Tick #{LAST_TELEMETRY['tick']} | {LAST_TELEMETRY['world_time']} ({LAST_TELEMETRY['circadian_phase']}) | Dialogues: {len(LAST_TELEMETRY['active_conversations'])} | GDP: {LAST_TELEMETRY['economy']['total_gdp_inr']} | BLR-TECH: {LAST_TELEMETRY['blr_tech_index']}")
                 _push_sse(new_data)
-                
+
                 # Granular sleep to immediately respond to shutdown signals
                 sleep_slices = int(TICK_INTERVAL_SEC * 10)
                 for _ in range(sleep_slices):
@@ -231,7 +231,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             padding: 16px 20px;
             min-height: 100vh;
         }
-        
+
         .header {
             display: flex;
             justify-content: space-between;
@@ -248,7 +248,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         .title { font-size: 20px; font-weight: 800; color: #fff; display: flex; align-items: center; gap: 10px; letter-spacing: 0.5px; }
         .live-dot { width: 10px; height: 10px; background: var(--green); border-radius: 50%; display: inline-block; box-shadow: 0 0 14px var(--green); animation: pulse 2s infinite; }
         @keyframes pulse { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(0.85); } 100% { opacity: 1; transform: scale(1); } }
-        
+
         .badge-city {
             background: rgba(249, 115, 22, 0.15);
             border: 1px solid var(--orange);
@@ -415,12 +415,12 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             border-radius: 8px;
             padding: 16px;
         }
-        .section-header { 
-            font-size: 13px; 
-            font-weight: 700; 
-            color: #fff; 
-            margin-bottom: 10px; 
-            border-bottom: 1px solid var(--border); 
+        .section-header {
+            font-size: 13px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 10px;
+            border-bottom: 1px solid var(--border);
             padding-bottom: 6px;
             display: flex;
             justify-content: space-between;
@@ -814,7 +814,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                     <div style="font-size: 10px; color: #94a3b8; margin-top: 2px;">Inquiry Question:</div>
                     <input type="text" id="fg-question-input" value="Would you pay ₹2,499 for automated microsecond AI kernel tracing?" style="background: #0f172a; color: #fff; border: 1px solid var(--border); border-radius: 4px; padding: 4px 6px; font-size: 11px;" />
                     <button class="btn btn-blue" onclick="runSyntheticFocusGroup()" style="font-size: 11px; padding: 6px 10px; margin-top: 4px;">⚡ Interrogate Cohort Subconscious</button>
-                    
+
                     <div id="fg-results-box" style="margin-top: 6px; font-size: 10px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 6px; max-height: 120px; overflow-y: auto;">
                         <div style="color: #64748b; font-style: italic;">Run a focus group to interrogate the 100 citizen personas in real-time.</div>
                     </div>
@@ -1077,7 +1077,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                 <span>🏢 NAMMA BENGALURU PHYSICAL WORLD ENGINE</span>
                 <span style="font-size: 11px; color: var(--green);" id="workplace-status">100 Live Citizens</span>
             </div>
-            
+
             <!-- Living Fauna & Transit Fleet Status Banner -->
             <div style="background: linear-gradient(135deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.9)); border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 6px; padding: 8px 10px; margin-bottom: 10px; font-size: 11px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px;">
                 <span style="color: var(--cyan); font-weight: bold;">🐾 LIVING FAUNA:</span>
@@ -2332,7 +2332,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             fetchState();
         }
 
-        
+
         function filterCitizenDirectory(query) {
             const q = (query || '').trim().toLowerCase();
             const cards = document.querySelectorAll('#citizen-grid .citizen-mini-card');
@@ -2413,7 +2413,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             document.getElementById('citizen-modal').style.display = 'flex';
         }
 
-        
+
         function openCitizenDossier(pid) {
             const panel = document.getElementById('citizen-dossier-panel');
             if (!panel) return;
@@ -3025,7 +3025,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                 document.getElementById('house-address').innerText = h.full_address;
                 document.getElementById('house-monthly-rent').innerText = '₹' + Number(h.monthly_rent_inr).toLocaleString() + ' / month';
                 document.getElementById('house-lease-type').innerText = h.is_owner ? 'Registered Freehold (Owner)' : 'Residential Lease (Tenant)';
-                
+
                 const badge = document.getElementById('house-occupancy-badge');
                 if (badge) {
                     badge.innerText = h.current_occupancy;

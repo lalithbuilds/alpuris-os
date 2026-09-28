@@ -146,7 +146,7 @@ class GLMAutonomousEngineer:
                 return f"Successfully applied exact edit to {path}"
 
             # Fallback: line-trimmed matching
-            target_lines = [l.strip() for l in target_snippet.strip().splitlines() if l.strip()]
+            target_lines = [line.strip() for line in target_snippet.strip().splitlines() if line.strip()]
             orig_lines = original.splitlines()
             found_start = -1
             match_len = len(target_lines)
@@ -301,10 +301,10 @@ class GLMAutonomousEngineer:
         return None
 
     def run_mission(self, mission_goal: str, max_steps: int = 15) -> Dict[str, Any]:
-        print(f"\n==================================================")
-        print(f"🎯 STARTING GLM-5.2 MISSION:")
+        print("\n==================================================")
+        print("🎯 STARTING GLM-5.2 MISSION:")
         print(f"{mission_goal}")
-        print(f"==================================================\n")
+        print("==================================================\n")
 
         system_prompt = (
             "You are GLM-5.2, an expert autonomous systems engineer with full access to the codebase.\n"

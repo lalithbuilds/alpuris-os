@@ -62,12 +62,12 @@ class LifeAndEconomyEngine:
     def __init__(self, db_path: str = DB_PATH):
         self.db_path = db_path
         self.lock = threading.Lock()
-        
+
         # In-memory fast state caches
         self.citizen_records: Dict[str, Dict[str, Any]] = {}
         self.companies: List[Dict[str, Any]] = []
         self.milestones: List[Dict[str, Any]] = []
-        
+
         # Real-time transaction flow accumulator per tick (INR)
         self.flow_ledger = {
             "consumption_inr": 0.0,
@@ -76,7 +76,7 @@ class LifeAndEconomyEngine:
             "tax_collected_inr": 0.0,
             "exports_inr": 0.0
         }
-        
+
         # Macro-GDP Accounting state (in Crores INR)
         # GDP = C + I + G + NX
         self.macro_gdp = {
@@ -90,7 +90,7 @@ class LifeAndEconomyEngine:
             "city_treasury_inr": 85000000.0,
             "inflation_rate": 4.2
         }
-        
+
         self._init_db()
         self._load_state()
 
@@ -98,7 +98,7 @@ class LifeAndEconomyEngine:
         with self.lock:
             conn = sqlite3.connect(self.db_path)
             cur = conn.cursor()
-            
+
             # Citizen Life, Romance, Career & Wealth Record
             cur.execute("""
                 CREATE TABLE IF NOT EXISTS citizen_life_records (
@@ -121,7 +121,7 @@ class LifeAndEconomyEngine:
                     last_vacation_tick INTEGER DEFAULT 0
                 )
             """)
-            
+
             # Companies / Startups Registry
             cur.execute("""
                 CREATE TABLE IF NOT EXISTS companies_registry (
@@ -136,7 +136,7 @@ class LifeAndEconomyEngine:
                     created_tick INTEGER NOT NULL
                 )
             """)
-            
+
             # Macro Economy History Ledger
             cur.execute("""
                 CREATE TABLE IF NOT EXISTS macro_economy_ledger (
@@ -151,7 +151,7 @@ class LifeAndEconomyEngine:
                     timestamp REAL NOT NULL
                 )
             """)
-            
+
             # Life Milestone Event Feed
             cur.execute("""
                 CREATE TABLE IF NOT EXISTS life_milestones (
@@ -165,7 +165,7 @@ class LifeAndEconomyEngine:
                     created_at REAL NOT NULL
                 )
             """)
-            
+
             conn.commit()
             conn.close()
 
@@ -173,7 +173,7 @@ class LifeAndEconomyEngine:
         with self.lock:
             conn = sqlite3.connect(self.db_path)
             cur = conn.cursor()
-            
+
             # Load citizen records
             cur.execute("SELECT * FROM citizen_life_records")
             rows = cur.fetchall()
@@ -187,7 +187,7 @@ class LifeAndEconomyEngine:
                     "doubling_count": r[13], "company_id": r[14],
                     "vacation_count": r[15], "last_vacation_tick": r[16]
                 }
-                
+
             # Load companies
             cur.execute("SELECT * FROM companies_registry ORDER BY valuation_inr DESC")
             c_rows = cur.fetchall()
@@ -199,7 +199,7 @@ class LifeAndEconomyEngine:
                 }
                 for c in c_rows
             ]
-            
+
             # Load milestones
             cur.execute("SELECT event_type, title, description, highlight_icon, tick FROM life_milestones ORDER BY id DESC LIMIT 15")
             m_rows = cur.fetchall()
@@ -207,14 +207,14 @@ class LifeAndEconomyEngine:
                 {"type": m[0], "title": m[1], "desc": m[2], "icon": m[3], "tick": m[4]}
                 for m in m_rows
             ]
-            
+
             conn.close()
 
     def register_or_get_citizen(self, p) -> Dict[str, Any]:
         """Ensures a citizen has a full life record initialized."""
         if p.id in self.citizen_records:
             return self.citizen_records[p.id]
-            
+
         role_l = p.role.lower()
         if "chief" in role_l or "principal" in role_l or "vp" in role_l or "head" in role_l:
             c_lvl = 4
@@ -294,7 +294,7 @@ class LifeAndEconomyEngine:
         self.milestones.insert(0, m)
         if len(self.milestones) > 20:
             self.milestones.pop()
-            
+
         with self.lock:
             conn = sqlite3.connect(self.db_path)
             cur = conn.cursor()
@@ -322,7 +322,7 @@ class LifeAndEconomyEngine:
                 self.macro_gdp["city_treasury_inr"] += tax_withheld
                 self.flow_ledger["tax_collected_inr"] += tax_withheld
             rec["happiness"] = min(100.0, rec["happiness"] + 0.8)
-            
+
             # Promotion check
             if random.random() < 0.04 and rec["career_level"] < 5:
                 rec["career_level"] += 1
@@ -347,30 +347,35 @@ class LifeAndEconomyEngine:
             cost = round(random.uniform(120.0, 350.0), 2)
             if p.spend_inr(cost, "Artisan filter coffee and breakfast"):
                 rec["happiness"] = min(100.0, rec["happiness"] + 1.5)
-                with self.lock: self.flow_ledger["consumption_inr"] += cost
+                with self.lock:
+                    self.flow_ledger["consumption_inr"] += cost
         elif "Pub" in loc or "Brewery" in loc:
             cost = round(random.uniform(650.0, 1600.0), 2)
             if p.spend_inr(cost, "Craft microbrewery beer flight & gourmet nachos"):
                 rec["happiness"] = min(100.0, rec["happiness"] + 3.0)
                 p.adjust_energy(4.0)
-                with self.lock: self.flow_ledger["consumption_inr"] += cost
+                with self.lock:
+                    self.flow_ledger["consumption_inr"] += cost
         elif "Gym" in loc or "Fit" in loc:
             cost = 350.0
             if p.spend_inr(cost, "Cult.fit strength & conditioning pass"):
                 p.adjust_energy(10.0)
                 rec["happiness"] = min(100.0, rec["happiness"] + 2.5)
-                with self.lock: self.flow_ledger["consumption_inr"] += cost
+                with self.lock:
+                    self.flow_ledger["consumption_inr"] += cost
         elif "Mall" in loc:
             cost = round(random.uniform(800.0, 3200.0), 2)
             if p.spend_inr(cost, "Electronics & lifestyle shopping at Nexus Mall"):
                 rec["happiness"] = min(100.0, rec["happiness"] + 4.0)
-                with self.lock: self.flow_ledger["consumption_inr"] += cost
+                with self.lock:
+                    self.flow_ledger["consumption_inr"] += cost
 
         # Childcare & education expenses if parents
         if rec["children"]:
             child_expense = len(rec["children"]) * 850.0
             if p.spend_inr(child_expense, "Children education, tuition & supplies"):
-                with self.lock: self.flow_ledger["consumption_inr"] += child_expense
+                with self.lock:
+                    self.flow_ledger["consumption_inr"] += child_expense
 
         # 3. ROMANCE, DATING, MARRIAGE & WEDDINGS
         if rec["marital_status"] == "SINGLE":
@@ -389,13 +394,13 @@ class LifeAndEconomyEngine:
                     rec["partner_name"] = chosen.name
                     rec["romance_score"] = 55.0
                     rec["marital_status"] = "DATING"
-                    
+
                     op_rec["partner_id"] = p.id
                     op_rec["partner_name"] = p.name
                     op_rec["romance_score"] = 55.0
                     op_rec["marital_status"] = "DATING"
                     self._persist_citizen(op_rec)
-                    
+
                     title = f"ROMANCE: {p.name} and {chosen.name} started dating!"
                     desc = f" sparks ignited over coffee and conversations at {p.location.replace('_', ' ')}."
                     self.record_milestone("DATING", title, desc, "❤️", tick, f"{p.name} & {chosen.name}")
@@ -408,7 +413,7 @@ class LifeAndEconomyEngine:
                 # Grow romance
                 rec["romance_score"] = min(100.0, rec["romance_score"] + random.uniform(4.0, 9.0))
                 op_rec["romance_score"] = rec["romance_score"]
-                
+
                 # Propose & Engagement
                 if rec["romance_score"] >= 80.0 and random.random() < 0.30:
                     rec["marital_status"] = "ENGAGED"
@@ -417,7 +422,7 @@ class LifeAndEconomyEngine:
                     rec["happiness"] = min(100.0, rec["happiness"] + 20.0)
                     op_rec["happiness"] = min(100.0, op_rec["happiness"] + 20.0)
                     self._persist_citizen(op_rec)
-                    
+
                     title = f"ENGAGEMENT: {p.name} & {partner.name} are engaged!"
                     desc = f"Romantic proposal at {p.location.replace('_', ' ')} accepted with a ring!"
                     self.record_milestone("ENGAGEMENT", title, desc, "💍", tick, f"{p.name} & {partner.name}")
@@ -433,16 +438,16 @@ class LifeAndEconomyEngine:
                     rec["wedding_tick"] = tick
                     op_rec["marital_status"] = "MARRIED"
                     op_rec["wedding_tick"] = tick
-                    
+
                     # Wedding reception expenses & celebration
                     wedding_cost = 12000.0
                     p.spend_inr(wedding_cost / 2, "Bengaluru Wedding Feast & Celebration")
                     partner.spend_inr(wedding_cost / 2, "Bengaluru Wedding Feast & Celebration")
-                    
+
                     rec["happiness"] = 100.0
                     op_rec["happiness"] = 100.0
                     self._persist_citizen(op_rec)
-                    
+
                     title = f"WEDDING: {p.name} & {partner.name} tied the knot!"
                     desc = "Grand traditional & tech Bengaluru wedding at Vidhana Soudha Registrar. Joint household established!"
                     self.record_milestone("WEDDING", title, desc, "👰🤵", tick, f"{p.name} & {partner.name}")
@@ -452,7 +457,7 @@ class LifeAndEconomyEngine:
         if rec["marital_status"] == "MARRIED" and len(rec["children"]) < 2:
             partner = all_personas.get(rec["partner_id"])
             household_savings = p.wallet_inr + (partner.wallet_inr if partner else 0)
-            
+
             # Opportunity to welcome a child
             if household_savings > 45000.0 and (tick - (rec["wedding_tick"] or 0) >= 3) and random.random() < 0.15:
                 child_name = random.choice(CHILD_NAMES) + " " + p.name.split()[-1]
@@ -468,14 +473,14 @@ class LifeAndEconomyEngine:
                 rec["children"].append(child)
                 p.spend_inr(6000.0, f"Baby shower & nursery celebration for {child_name}")
                 rec["happiness"] = 100.0
-                
+
                 # Sync partner
                 if partner:
                     op_rec = self.register_or_get_citizen(partner)
                     op_rec["children"].append(child)
                     op_rec["happiness"] = 100.0
                     self._persist_citizen(op_rec)
-                    
+
                 title = f"BABY BORN: {child_name} welcomed by {p.name} & {rec['partner_name']}!"
                 desc = f"Healthy new addition to the Bengaluru metropolis family! Enrolled at {school}."
                 self.record_milestone("BIRTH", title, desc, "🍼", tick, f"{p.name} & {rec['partner_name']}")
@@ -488,7 +493,7 @@ class LifeAndEconomyEngine:
             rec["happiness"] = min(100.0, rec["happiness"] + dest["joy"])
             rec["vacation_count"] += 1
             rec["last_vacation_tick"] = tick
-            
+
             title = f"TRAVEL: {p.name} explored {dest['name'].replace('_', ' ')}!"
             desc = f"{dest['desc']}. Spent ₹{int(dest['cost'])}, happiness boosted to {int(rec['happiness'])}%."
             self.record_milestone("VACATION", title, desc, "✈️", tick, p.name)
@@ -500,7 +505,7 @@ class LifeAndEconomyEngine:
             c_name = f"{p.name.split()[0]}'s {s_tmpl['name']}"
             equity_cost = 25000.0
             p.spend_inr(equity_cost, f"Incorporated {c_name} in Bengaluru")
-            
+
             company = {
                 "name": c_name,
                 "sector": s_tmpl["sector"],
@@ -511,7 +516,7 @@ class LifeAndEconomyEngine:
                 "employees": [p.name],
                 "created_tick": tick
             }
-            
+
             with self.lock:
                 conn = sqlite3.connect(self.db_path)
                 cur = conn.cursor()
@@ -524,12 +529,12 @@ class LifeAndEconomyEngine:
                 company["id"] = c_id
                 conn.commit()
                 conn.close()
-                
+
             self.companies.insert(0, company)
             rec["company_id"] = c_id
             rec["career_level"] = 5
             rec["salary_inr"] += 15000.0  # Founder dividend
-            
+
             title = f"STARTUP LAUNCH: {p.name} founded '{c_name}'!"
             desc = f"Sector: {company['sector']} • Initial Valuation: ₹{company['valuation_inr']/100000:,.1f} Lakhs. High-tech job creator!"
             self.record_milestone("STARTUP_LAUNCH", title, desc, "🚀", tick, p.name)
@@ -542,15 +547,15 @@ class LifeAndEconomyEngine:
             found_biz = next((c for c in self.companies if c.get("id") == rec["company_id"]), None)
             if found_biz:
                 biz_equity = found_biz["valuation_inr"] * 0.65  # 65% founder ownership
-                
+
         total_nw = p.wallet_inr + biz_equity
         rec["current_net_worth"] = total_nw
-        
+
         # Check money doubling multiplier
         init_nw = max(10000.0, rec["initial_net_worth"])
         multiplier = total_nw / init_nw
         expected_doublings = int(math.log2(max(1.0, multiplier)))
-        
+
         if expected_doublings > rec["doubling_count"]:
             rec["doubling_count"] = expected_doublings
             mult_display = f"{2 ** expected_doublings}x"
@@ -561,7 +566,7 @@ class LifeAndEconomyEngine:
 
         # Persist updated life state
         self._persist_citizen(rec)
-        
+
         return {
             "marital_status": rec["marital_status"],
             "partner_name": rec["partner_name"],
@@ -617,7 +622,7 @@ class LifeAndEconomyEngine:
                 "tax_collected_inr": 0.0,
                 "exports_inr": 0.0
             }
-            
+
             # Log macro ledger periodically
             if tick % 3 == 0:
                 conn = sqlite3.connect(self.db_path)
@@ -645,7 +650,7 @@ class LifeAndEconomyEngine:
                         "company": next((c["name"] for c in self.companies if c.get("id") == rec["company_id"]), None)
                     })
             rich_list.sort(key=lambda x: x["net_worth_inr"], reverse=True)
-            
+
             # Families summary
             families = []
             for cid, rec in self.citizen_records.items():

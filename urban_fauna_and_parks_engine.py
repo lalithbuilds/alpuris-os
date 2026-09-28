@@ -134,7 +134,7 @@ class UrbanFaunaAndParksEngine:
                 citizen.energy = min(100.0, citizen.energy + 8.0)
                 citizen.last_action = f"Petted indie dog {dog['name']} at {dog['zone']}"
                 dog["happiness"] = min(100.0, dog["happiness"] + 4.0)
-                
+
                 interaction = {
                     "tick": tick,
                     "dog_name": dog["name"],

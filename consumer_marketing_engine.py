@@ -21,7 +21,6 @@ import time
 import json
 import random
 import re
-import os
 import sqlite3
 import threading
 from typing import Dict, List, Any, Optional, Tuple
@@ -156,7 +155,7 @@ class ConsumerMarketingEngine:
                         c_level = c["career_level"] or 2
                         salary = c["salary_inr"] or 5000.0
                         name = c["citizen_name"]
-                        
+
                         # Infer dept & role from career level & name
                         role = "Senior Systems Lead" if c_level >= 4 else "Mid Software Engineer" if c_level == 3 else "Associate Specialist"
                         dept = "Core Architecture" if "Aarav" in name or "Srinivasan" in name or "Murthy" in name else "Engineering"
@@ -188,13 +187,13 @@ class ConsumerMarketingEngine:
                         }
                         self.consumer_profiles[cid] = prof
                         cur.execute(
-                            """INSERT OR REPLACE INTO citizen_consumer_profiles 
-                               (citizen_id, citizen_name, role, department, price_sensitivity, 
-                                brand_skepticism, tech_affinity, lifestyle_affinity, food_beverage_affinity, 
-                                fitness_affinity, fintech_affinity, mobility_affinity, discretionary_ratio, 
+                            """INSERT OR REPLACE INTO citizen_consumer_profiles
+                               (citizen_id, citizen_name, role, department, price_sensitivity,
+                                brand_skepticism, tech_affinity, lifestyle_affinity, food_beverage_affinity,
+                                fitness_affinity, fintech_affinity, mobility_affinity, discretionary_ratio,
                                 influence_weight, inventory_json, ad_memory_json)
                                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
-                            (cid, name, role, dept, prof["price_sensitivity"], skepticism, tech_aff, life_aff, 
+                            (cid, name, role, dept, prof["price_sensitivity"], skepticism, tech_aff, life_aff,
                              food_aff, fit_aff, 1.2, 1.1, prof["discretionary_ratio"], prof["influence_weight"], "[]", "{}")
                         )
                 conn.commit()
@@ -348,13 +347,13 @@ class ConsumerMarketingEngine:
             self.consumer_profiles[cid] = profile
             with sqlite3.connect(self.db_path) as conn:
                 conn.execute(
-                    """INSERT OR REPLACE INTO citizen_consumer_profiles 
-                       (citizen_id, citizen_name, role, department, price_sensitivity, 
-                        brand_skepticism, tech_affinity, lifestyle_affinity, food_beverage_affinity, 
-                        fitness_affinity, fintech_affinity, mobility_affinity, discretionary_ratio, 
+                    """INSERT OR REPLACE INTO citizen_consumer_profiles
+                       (citizen_id, citizen_name, role, department, price_sensitivity,
+                        brand_skepticism, tech_affinity, lifestyle_affinity, food_beverage_affinity,
+                        fitness_affinity, fintech_affinity, mobility_affinity, discretionary_ratio,
                         influence_weight, inventory_json, ad_memory_json)
                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
-                    (cid, name, role, dept, price_sens, skepticism, tech_aff, lifestyle_aff, 
+                    (cid, name, role, dept, price_sens, skepticism, tech_aff, lifestyle_aff,
                      food_aff, fitness_aff, fintech_aff, mobility_aff, disc_ratio, influence, "[]", "{}")
                 )
                 conn.commit()
@@ -401,9 +400,9 @@ class ConsumerMarketingEngine:
 
             with sqlite3.connect(self.db_path) as conn:
                 conn.execute(
-                    """INSERT OR REPLACE INTO consumer_campaigns 
-                       (id, name, tagline, sector, price_inr, claimed_utility, actual_quality, 
-                        variant, channel, status, created_tick, target_audience, impressions, 
+                    """INSERT OR REPLACE INTO consumer_campaigns
+                       (id, name, tagline, sector, price_inr, claimed_utility, actual_quality,
+                        variant, channel, status, created_tick, target_audience, impressions,
                         clicks, purchases, revenue_inr, promoters, passives, detractors)
                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
                     (camp["id"], camp["name"], camp["tagline"], camp["sector"], camp["price_inr"],
@@ -550,7 +549,7 @@ class ConsumerMarketingEngine:
 
             actual_quality = campaign.get("actual_quality", 7.5)
             satisfaction = actual_quality - (claimed_utility * 0.15)
-            
+
             if satisfaction >= 7.5:
                 nps_rating = random.randint(9, 10)
                 sentiment = 0.85
@@ -647,7 +646,7 @@ class ConsumerMarketingEngine:
 
             profile = self.register_or_update_profile(citizen)
             social_proof = 0.0
-            
+
             rels = getattr(citizen, "relationships", {})
             peer_ids = list(rels.keys()) if isinstance(rels, dict) else [r.get("with_id") for r in rels if isinstance(r, dict)]
             for peer_cid in peer_ids:
@@ -657,7 +656,7 @@ class ConsumerMarketingEngine:
 
             affinity = self.get_sector_affinity(profile, camp["sector"])
             ctr_prob = min(0.85, 0.25 * affinity + (social_proof * 0.2))
-            
+
             c_name = getattr(citizen, "name", None) or citizen.get("citizen_name", "Citizen")
             c_id = getattr(citizen, "id", None) or citizen.get("citizen_id", "CIT")
 
@@ -669,7 +668,7 @@ class ConsumerMarketingEngine:
                     camp["purchases"] += 1
                     camp["revenue_inr"] += decision_res["price"]
                     macro_c_injection += decision_res["price"]
-                    
+
                     nps = decision_res.get("nps_rating", 8)
                     if nps >= 9:
                         camp["promoters"] += 1
@@ -705,17 +704,17 @@ class ConsumerMarketingEngine:
             with sqlite3.connect(self.db_path) as conn:
                 cur = conn.cursor()
                 cur.executemany(
-                    """INSERT INTO consumer_transactions 
-                       (campaign_id, citizen_id, citizen_name, tick, price_inr, 
-                        decision, objection_reason, thought_monologue, sentiment_score, 
+                    """INSERT INTO consumer_transactions
+                       (campaign_id, citizen_id, citizen_name, tick, price_inr,
+                        decision, objection_reason, thought_monologue, sentiment_score,
                         nps_rating, wom_shared, timestamp)
                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
                     new_transactions
                 )
                 for camp in active_camps:
                     cur.execute(
-                        """UPDATE consumer_campaigns 
-                           SET impressions = ?, clicks = ?, purchases = ?, revenue_inr = ?, 
+                        """UPDATE consumer_campaigns
+                           SET impressions = ?, clicks = ?, purchases = ?, revenue_inr = ?,
                                promoters = ?, passives = ?, detractors = ?
                            WHERE id = ?""",
                         (camp["impressions"], camp["clicks"], camp["purchases"], camp["revenue_inr"],
@@ -729,13 +728,13 @@ class ConsumerMarketingEngine:
             n_t = float(camp["purchases"])
             promoters = float(camp["promoters"])
             detractors = float(camp["detractors"])
-            
+
             p = 0.03
             q = max(0.0, 0.38 * (promoters / max(1.0, n_t)) - 0.20 * (detractors / max(1.0, n_t)))
-            
+
             remaining_market = max(0.0, total_m - n_t)
             d_n = (p + q * (n_t / total_m)) * remaining_market
-            
+
             k_factor = round((promoters * 1.5) / max(1.0, n_t), 2)
             total_responses = max(1.0, promoters + camp["passives"] + detractors)
             nps_score = round(((promoters - detractors) / total_responses) * 100, 1)
@@ -912,7 +911,7 @@ class ConsumerMarketingEngine:
 
         # UNVARNISHED REAL-WORLD TRUTH ENGINE
         is_failure = enthusiastic_pct < 38.0
-        
+
         if is_failure:
             if price_resistant_pct >= 40.0 or failure_objection_counts["BUDGET_CAP"] + failure_objection_counts["SOLVENCY"] >= total * 0.4:
                 verdict = "🚨 COMMERCIAL FAILURE: SEVERE UNIT ECONOMICS & PRICING SUICIDE"
@@ -990,7 +989,7 @@ class ConsumerMarketingEngine:
         with self.lock:
             with sqlite3.connect(self.db_path) as conn:
                 conn.execute(
-                    """INSERT INTO consumer_focus_groups 
+                    """INSERT INTO consumer_focus_groups
                        (campaign_id, question, cohort_filter, tick, summary_json, quotes_json, timestamp)
                        VALUES (?, ?, ?, ?, ?, ?, ?)""",
                     (campaign_id or "GENERAL", question, cohort_filter, tick,
@@ -1012,25 +1011,25 @@ class ConsumerMarketingEngine:
                 conn.row_factory = sqlite3.Row
                 camps = [dict(r) for r in conn.execute("SELECT * FROM consumer_campaigns").fetchall()]
                 tx_rows = conn.execute(
-                    """SELECT campaign_id, citizen_name, decision, objection_reason, 
-                              thought_monologue, price_inr, nps_rating, tick 
-                       FROM consumer_transactions 
+                    """SELECT campaign_id, citizen_name, decision, objection_reason,
+                              thought_monologue, price_inr, nps_rating, tick
+                       FROM consumer_transactions
                        ORDER BY id DESC LIMIT 40"""
                 ).fetchall()
                 recent_txs = [dict(r) for r in tx_rows]
-                
+
                 objection_counts = {}
                 for r in conn.execute(
-                    """SELECT objection_reason, COUNT(*) as cnt 
-                       FROM consumer_transactions 
-                       WHERE objection_reason IS NOT NULL 
+                    """SELECT objection_reason, COUNT(*) as cnt
+                       FROM consumer_transactions
+                       WHERE objection_reason IS NOT NULL
                        GROUP BY objection_reason"""
                 ).fetchall():
                     objection_counts[r["objection_reason"]] = r["cnt"]
 
                 fg_rows = conn.execute(
-                    """SELECT id, campaign_id, question, cohort_filter, tick, summary_json, quotes_json, timestamp 
-                       FROM consumer_focus_groups 
+                    """SELECT id, campaign_id, question, cohort_filter, tick, summary_json, quotes_json, timestamp
+                       FROM consumer_focus_groups
                        ORDER BY id DESC LIMIT 5"""
                 ).fetchall()
                 recent_fgs = []

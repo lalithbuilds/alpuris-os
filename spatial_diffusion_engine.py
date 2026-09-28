@@ -16,7 +16,7 @@ class SpatialDiffusionEngine:
     def step_spatial_diffusion(self, citizens: Dict[str, Any], tick: int) -> Dict[str, Any]:
         """Simulate word-of-mouth spread among citizens sharing the same 3D sector or transit line."""
         new_transmissions = []
-        
+
         # Group citizens by current zone
         zones: Dict[str, List[Any]] = {}
         for c in citizens.values():

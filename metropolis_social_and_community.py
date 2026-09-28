@@ -157,7 +157,7 @@ class MetropolisSocialAndCommunity:
             ("@sneha_pm", "Sneha Reddy", "📱 Product Manager")
         ]
         author = random.choice(c_names)
-        
+
         if recent_fg_audit and recent_fg_audit.get("summary", {}).get("is_commercial_failure"):
             s = recent_fg_audit["summary"]
             p_name = s.get("target_product", "Product")

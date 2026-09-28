@@ -206,10 +206,10 @@ def query_lumino_single(messages: List[Dict[str, str]], model: str = None, max_t
         with urllib.request.urlopen(req, timeout=timeout) as resp:
             tokens = []
             for line in resp:
-                l = line.decode("utf-8", errors="ignore").strip()
-                if l.startswith("data: ") and l != "data: [DONE]":
+                line_text = line.decode("utf-8", errors="ignore").strip()
+                if line_text.startswith("data: ") and line_text != "data: [DONE]":
                     try:
-                        chunk = json.loads(l[6:])
+                        chunk = json.loads(line_text[6:])
                         delta = chunk.get("choices", [{}])[0].get("delta", {}).get("content", "")
                         if delta:
                             tokens.append(delta)
@@ -544,15 +544,15 @@ class Persona:
         self.onsets: List[float] = []
         self.is_active_shift = True
         self.last_action = "Initialized in Bengaluru"
-        
+
         # Bengaluru Living Economy
         self.wallet_inr = 25000.0  # ₹25,000 initial bank balance
         self.energy = 100.0        # 0 - 100% stamina
-        
+
         # Social Graph & Rumor Network
         self.relationships: Dict[str, Dict[str, Any]] = {}
         self.known_rumors: List[str] = []
-        
+
         # Hierarchical Goal Tree (DAG)
         self.current_goal = f"Execute {role} responsibilities in Bengaluru"
         self.subtasks: List[str] = [

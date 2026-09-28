@@ -81,7 +81,7 @@ class BengaluruTVBroadcastNetwork:
         temp_str = weather.get("temp", "23°C")
         cond_str = weather.get("condition", "Pleasant")
         b24 = self.channels["BLR24_NEWS"]
-        
+
         b24_tickers = [
             f"CITY WEATHER: {temp_str} • {cond_str} across all 16 metropolis sectors",
             f"TRAFFIC MONITOR: Silk Board junction at {silk_congestion}% gridlock; Namma Metro Green/Purple lines on schedule",
@@ -109,7 +109,7 @@ class BengaluruTVBroadcastNetwork:
         if stocks:
             stock_str = " | ".join([f"{s.get('symbol')}: ₹{s.get('price')} ({s.get('change')})" for s in stocks[:4]])
             cnbc_tickers.append(f"BLR-TECH-30 STOCKS: {stock_str}")
-        
+
         if real_intel and "finance" in real_intel:
             fx = real_intel["finance"].get("usd_inr", 86.85)
             cnbc_tickers.append(f"REAL FOREX: USD/INR at ₹{fx} | Indian IT & SaaS margins benefit from resilient dollar conversion")

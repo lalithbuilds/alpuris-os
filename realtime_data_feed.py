@@ -92,7 +92,7 @@ class RealtimeMetropolisDataHarvester:
                 req = urllib.request.Request(hn_url, headers={"User-Agent": "MetropolisOS/1.0"})
                 with urllib.request.urlopen(req, timeout=3.0) as resp:
                     top_ids = json.loads(resp.read().decode())[:4]
-                
+
                 hn_items = []
                 for tid in top_ids:
                     try:

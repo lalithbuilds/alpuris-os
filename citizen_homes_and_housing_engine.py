@@ -17,7 +17,7 @@ RESIDENTIAL_COMMUNITIES = [
         "address": "12th Main Road, HAL 2nd Stage, Indiranagar",
         "median_rent": 16500.0,
         "units": [
-            "Flat 101", "Flat 102", "Flat 103", "Flat 201", "Flat 202", "Flat 203", 
+            "Flat 101", "Flat 102", "Flat 103", "Flat 201", "Flat 202", "Flat 203",
             "Flat 301", "Flat 302", "Flat 303", "Penthouse 401", "Penthouse 402",
             "Rooftop Pod A", "Rooftop Pod B", "Rooftop Pod C", "Rooftop Pod D"
         ]
@@ -41,9 +41,9 @@ RESIDENTIAL_COMMUNITIES = [
         "address": "Bull Temple Road, Basavanagudi",
         "median_rent": 19000.0,
         "units": [
-            "House #14 'Ananda Nilaya'", "House #18 'Prashanti'", "House #22 'Guru Kripa'", 
-            "House #27 'Srinidhi'", "House #33 'Sharada Krupa'", "House #38 'Shanti Nivas'", 
-            "House #41 'Varuna'", "House #45 'Cauvery Illa'", "House #49 'Ganga Kutir'", 
+            "House #14 'Ananda Nilaya'", "House #18 'Prashanti'", "House #22 'Guru Kripa'",
+            "House #27 'Srinidhi'", "House #33 'Sharada Krupa'", "House #38 'Shanti Nivas'",
+            "House #41 'Varuna'", "House #45 'Cauvery Illa'", "House #49 'Ganga Kutir'",
             "House #51 'Venkateshwara Kuteera'", "House #55 'Amrutha'", "House #60 'Vijayanagar Illa'",
             "House #65 'Saraswathi'", "House #70 'Kailasa'", "House #75 'Chitrakoot'"
         ]
@@ -55,9 +55,9 @@ RESIDENTIAL_COMMUNITIES = [
         "address": "Varthur Road, Whitefield",
         "median_rent": 48000.0,
         "units": [
-            "Villa 12 'The Banyan'", "Villa 15 'The Teak'", "Villa 18 'The Cedar'", 
-            "Villa 21 'The Gulmohar'", "Villa 25 'The Palms'", "Villa 28 'The Magnolia'", 
-            "Villa 31 'The Orchard'", "Villa 35 'The Jacaranda'", "Villa 39 'The Willow'", 
+            "Villa 12 'The Banyan'", "Villa 15 'The Teak'", "Villa 18 'The Cedar'",
+            "Villa 21 'The Gulmohar'", "Villa 25 'The Palms'", "Villa 28 'The Magnolia'",
+            "Villa 31 'The Orchard'", "Villa 35 'The Jacaranda'", "Villa 39 'The Willow'",
             "Villa 42 'Cyber Crest'", "Villa 45 'Silicon Vista'", "Villa 48 'Cloud Crest'",
             "Villa 52 'Horizon Point'", "Villa 55 'Green Gable'", "Villa 60 'Summit Villa'"
         ]
@@ -81,8 +81,8 @@ RESIDENTIAL_COMMUNITIES = [
         "address": "80 Feet Road, 4th Block, Koramangala",
         "median_rent": 26000.0,
         "units": [
-            "Suite 1A", "Suite 1B", "Suite 2A", "Suite 2B", "Suite 3A", "Suite 3B", 
-            "Suite 4A", "Suite 4B", "Suite 4C", "Studio 10", "Studio 12", "Studio 14", 
+            "Suite 1A", "Suite 1B", "Suite 2A", "Suite 2B", "Suite 3A", "Suite 3B",
+            "Suite 4A", "Suite 4B", "Suite 4C", "Studio 10", "Studio 12", "Studio 14",
             "Studio 15", "Studio 18", "Studio 20"
         ]
     },
@@ -93,9 +93,9 @@ RESIDENTIAL_COMMUNITIES = [
         "address": "Seppings Road, Shivajinagar",
         "median_rent": 18000.0,
         "units": [
-            "Townhouse 4", "Townhouse 8", "Townhouse 11", "Townhouse 14", "Townhouse 17", 
-            "Townhouse 21", "Townhouse 25", "Flat 1 - St. Mark's Close", "Flat 3 - St. Mark's Close", 
-            "Flat 5 - Rose Lane", "Flat 7 - Rose Lane", "Flat 9 - Rose Lane", 
+            "Townhouse 4", "Townhouse 8", "Townhouse 11", "Townhouse 14", "Townhouse 17",
+            "Townhouse 21", "Townhouse 25", "Flat 1 - St. Mark's Close", "Flat 3 - St. Mark's Close",
+            "Flat 5 - Rose Lane", "Flat 7 - Rose Lane", "Flat 9 - Rose Lane",
             "Parish Cottage A", "Parish Cottage B", "Parish Cottage C"
         ]
     },
@@ -141,7 +141,7 @@ class CitizenHousingEngine:
 
         community_lookup = {c["community_name"]: c for c in RESIDENTIAL_COMMUNITIES}
         allocated_unit_counts: Dict[str, int] = {c["community_name"]: 0 for c in RESIDENTIAL_COMMUNITIES}
-        
+
         for c in citizens.values():
             if c.id in self.citizen_homes:
                 continue
@@ -149,7 +149,7 @@ class CitizenHousingEngine:
             # Prioritize matching home zone to citizen workplace
             pref_name = zone_home_preference.get(getattr(c, "location", ""), "Sobha Daisy & Carnation Enclave")
             comm = community_lookup.get(pref_name, RESIDENTIAL_COMMUNITIES[0])
-            
+
             # If preferred community is full, pick next available community
             if allocated_unit_counts[comm["community_name"]] >= len(comm["units"]):
                 for alt_comm in RESIDENTIAL_COMMUNITIES:
@@ -176,10 +176,10 @@ class CitizenHousingEngine:
                 "full_address": f"{unit_name}, {comm['community_name']}, {comm['address']}, Bengaluru",
                 "monthly_rent_inr": 0.0 if is_homeowner else rent,
                 "room_furnishings": [
-                    "Ergonomic Standing Desk", 
-                    "Orthopedic Memory Foam Bed", 
-                    "Filter Coffee French Press", 
-                    "High-Speed Fiber Router (1 Gbps)", 
+                    "Ergonomic Standing Desk",
+                    "Orthopedic Memory Foam Bed",
+                    "Filter Coffee French Press",
+                    "High-Speed Fiber Router (1 Gbps)",
                     "Bengaluru Monsoon Umbrella Stand"
                 ],
                 "roommates": [],
@@ -203,7 +203,7 @@ class CitizenHousingEngine:
             h2["community_name"] = joint_home["community_name"]
             h2["zone"] = joint_home["zone"]
             c2.home_zone = joint_home["zone"]
-            
+
             if c2.name not in joint_home["roommates"]:
                 joint_home["roommates"].append(c2.name)
             if c1.name not in h2["roommates"]:
@@ -229,7 +229,7 @@ class CitizenHousingEngine:
                 home["current_occupancy"] = "SLEEPING_IN_BED"
                 sleeping_count += 1
                 at_home_count += 1
-                
+
                 # Restore energy and reduce arousal/stress during sleep
                 c.energy = min(100.0, c.energy + 10.0)
                 if hasattr(c, "current_arousal"):

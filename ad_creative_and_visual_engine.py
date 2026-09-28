@@ -22,7 +22,7 @@ class AdCreativeAndVisualEngine:
             "GENERAL": {"bg1": "#111827", "bg2": "#1f2937", "accent": "#fbbf24", "text": "#ffffff"}
         }
         theme = theme_colors.get(sector, theme_colors["GENERAL"])
-        
+
         svg_markup = f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 320" width="100%" height="100%">
   <defs>
     <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -37,23 +37,23 @@ class AdCreativeAndVisualEngine:
   <rect width="600" height="320" rx="14" fill="url(#grad)" stroke="{theme['accent']}" stroke-width="2" />
   <circle cx="530" cy="70" r="90" fill="{theme['accent']}" opacity="0.08" />
   <circle cx="70" cy="270" r="110" fill="{theme['accent']}" opacity="0.05" />
-  
+
   <rect x="35" y="30" width="110" height="24" rx="12" fill="{theme['accent']}" opacity="0.2" />
   <text x="45" y="46" fill="{theme['accent']}" font-family="system-ui, sans-serif" font-size="11" font-weight="bold">BANGALORE VERIFIED</text>
-  
+
   <text x="35" y="100" fill="{theme['text']}" font-family="system-ui, sans-serif" font-size="24" font-weight="900">{product_name[:32]}</text>
-  
+
   <text x="35" y="135" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="13" font-weight="400">
     <tspan x="35" dy="0">{pitch[:55]}</tspan>
     <tspan x="35" dy="20">{pitch[55:110]}</tspan>
   </text>
-  
+
   <rect x="35" y="210" width="160" height="42" rx="8" fill="#0f172a" stroke="#334155" stroke-width="1.5" />
   <text x="48" y="236" fill="#f8fafc" font-family="system-ui, sans-serif" font-size="18" font-weight="bold">₹{price_inr:,.0f}<tspan font-size="11" fill="#94a3b8"> / unit</tspan></text>
-  
+
   <rect x="210" y="210" width="180" height="42" rx="8" fill="{theme['accent']}" />
   <text x="245" y="236" fill="#0f172a" font-family="system-ui, sans-serif" font-size="14" font-weight="bold">TRY IN INDIRANAGAR →</text>
-  
+
   <text x="35" y="295" fill="#64748b" font-family="system-ui, sans-serif" font-size="10">BLR METROPOLIS AD NETWORK • CERTIFIED UNIT ECONOMICS</text>
 </svg>"""
 

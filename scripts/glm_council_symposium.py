@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-import os, sys, json, time, requests
+import os
+import sys
+import json
+import time
+import requests
 from typing import Dict, List, Any
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dotenv import load_dotenv
@@ -102,7 +106,7 @@ def run_pov(member: Dict[str, Any], prompt: str) -> Dict[str, Any]:
 
 def main():
     print(f"🚀 Initializing GLM-5.2 4-POV Model Council Symposium with {len(KEYS)} API keys...")
-    
+
     prompt_phase1 = """COUNCIL DIRECTIVE FROM CREATOR LALITH & RAY GLOBAL MODEL:
 We are rebuilding the Living Agent Metropolis OS into the undisputed best autonomous agent world ever created.
 Current Baseline:

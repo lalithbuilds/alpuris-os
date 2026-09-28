@@ -123,7 +123,8 @@ class SupremeGLMSwarm:
             return f"Command error: {e}"
 
     def tool_web_search(self, query: str) -> str:
-        import urllib.request, urllib.parse
+        import urllib.request
+        import urllib.parse
         results = []
         try:
             url = f"https://api.duckduckgo.com/?q={urllib.parse.quote(query)}&format=json"

@@ -466,8 +466,8 @@ class LivingWorld:
                 conn = sqlite3.connect(DB_PATH)
                 cur = conn.cursor()
                 cur.execute(
-                    """INSERT INTO world_events 
-                       (tick, persona_id, persona_name, department, zone, action, arousal, timestamp) 
+                    """INSERT INTO world_events
+                       (tick, persona_id, persona_name, department, zone, action, arousal, timestamp)
                        VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
                     (self.tick_count, pid, name, dept, zone, action, arousal, time.time())
                 )
@@ -482,10 +482,10 @@ class LivingWorld:
                 conn = sqlite3.connect(DB_PATH)
                 cur = conn.cursor()
                 cur.execute(
-                    """INSERT INTO world_conversations 
-                       (tick, world_time, zone, speaker_1, speaker_2, turn_1, turn_2, affinity, timestamp) 
+                    """INSERT INTO world_conversations
+                       (tick, world_time, zone, speaker_1, speaker_2, turn_1, turn_2, affinity, timestamp)
                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)""",
-                    (self.tick_count, self.clock.get_time_str(), conv["zone"], conv["speaker_1"], 
+                    (self.tick_count, self.clock.get_time_str(), conv["zone"], conv["speaker_1"],
                      conv["speaker_2"], conv["turn_1"], conv["turn_2"], conv["affinity"], time.time())
                 )
                 conn.commit()
@@ -499,7 +499,7 @@ class LivingWorld:
                 conn = sqlite3.connect(DB_PATH)
                 cur = conn.cursor()
                 cur.execute(
-                    """SELECT tick, world_time, zone, speaker_1, speaker_2, turn_1, turn_2, affinity, timestamp 
+                    """SELECT tick, world_time, zone, speaker_1, speaker_2, turn_1, turn_2, affinity, timestamp
                        FROM world_conversations ORDER BY id DESC LIMIT ?""",
                     (limit,)
                 )
@@ -540,7 +540,7 @@ class LivingWorld:
                 conn = sqlite3.connect(DB_PATH)
                 cur = conn.cursor()
                 cur.execute(
-                    """SELECT tick, persona_id, persona_name, department, zone, action, arousal, timestamp 
+                    """SELECT tick, persona_id, persona_name, department, zone, action, arousal, timestamp
                        FROM world_events ORDER BY id DESC LIMIT ?""",
                     (limit,)
                 )
@@ -580,7 +580,7 @@ class LivingWorld:
         p = self.personas.get(persona_id.upper())
         if not p:
             return {"status": "error", "message": f"Citizen {persona_id} not found"}
-        
+
         reply = p.chat_with_creator(message)
         self.log_event("GOVERNOR", "Lalith (City Governor)", "City Administration", p.location, f"To {p.name}: {message}", 0.2)
         self.log_event(p.id, p.name, p.department, p.location, f"To Governor Lalith: {reply}", p.current_arousal)
@@ -601,7 +601,7 @@ class LivingWorld:
             desc = "Sudden Monsoonal Cloudburst Floods Silk Board & ORR"
             self.silk_board_congestion = 98
             self.weather = {
-                "temp": "19°C", "condition": "Severe Monsoon Torrent", 
+                "temp": "19°C", "condition": "Severe Monsoon Torrent",
                 "humidity": "95%", "aqi": 25, "desc": "Silk Board flyover underpass waterlogged, Namma Metro running at max capacity"
             }
             impact = 0.45
@@ -853,7 +853,7 @@ class LivingWorld:
         bill = random.choice(active_bills)
         voted_set = self.bill_voter_ids.setdefault(bill["id"], set())
         available_voters = [v for v in self.personas.values() if v.id not in voted_set]
-        
+
         if not available_voters:
             # If all citizens voted, tally final result
             if bill["yes_votes"] >= 60:
@@ -1231,7 +1231,7 @@ class LivingWorld:
         # 2. Step ALL 100 Citizens Simultaneously in Parallel
         with concurrent.futures.ThreadPoolExecutor(max_workers=60) as executor:
             futs = [
-                executor.submit(self._step_single_citizen, p, stressor_event, i) 
+                executor.submit(self._step_single_citizen, p, stressor_event, i)
                 for i, p in enumerate(self.personas.values())
             ]
             tick_summary = [f.result() for f in futs]

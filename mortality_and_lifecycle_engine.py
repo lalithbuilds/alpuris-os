@@ -22,7 +22,7 @@ class LifecycleAndMortalityEngine:
     def step_lifecycle(self, citizens: Dict[str, Any], startups: List[Dict[str, Any]], tick: int) -> Dict[str, Any]:
         """Advance biological aging, handle health risks, estate inheritance, and corporate solvency."""
         events = []
-        
+
         # 1. Company Bankruptcy & Liquidation Check
         for s in startups:
             # Check runway burn
@@ -68,7 +68,7 @@ class LifecycleAndMortalityEngine:
                 # Health degradation / recovery based on energy and stress
                 if not hasattr(c, "health_score"):
                     c.health_score = 95.0
-                
+
                 # High arousal/stress decreases health, rest restores it
                 arousal_val = getattr(c, "current_arousal", getattr(c, "arousal", 0.25))
                 health_delta = -1.2 if arousal_val > 0.6 else 0.8
@@ -90,7 +90,7 @@ class LifecycleAndMortalityEngine:
                 # Mentorship: Senior/Retired citizens mentor apprentices in their department
                 if getattr(c, "is_retired", False) or c.biological_age > 50:
                     apprentices = [
-                        other for other in citizens.values() 
+                        other for other in citizens.values()
                         if other.id != c.id and getattr(other, "department", "") == getattr(c, "department", "")
                         and getattr(other, "biological_age", 25) < 35
                     ]
@@ -114,14 +114,14 @@ class LifecycleAndMortalityEngine:
                         # Prioritize apprentice in same department
                         dept_candidates = [other for other in candidates if getattr(other, "department", "") == getattr(c, "department", "")]
                         heir = random.choice(dept_candidates) if dept_candidates else random.choice(candidates)
-                        
+
                         inheritance_amount = round(c.wallet_inr * 0.85, 2)
                         c.wallet_inr = round(c.wallet_inr * 0.15, 2)
                         heir.wallet_inr = round(heir.wallet_inr + inheritance_amount, 2)
                         c.health_score = 70.0  # Medical stabilization at Narayana Health Clinic
                         c.biological_age = min(85, c.biological_age) # Dignified senior tenure
                         c.role = f"Emeritus Elder ({getattr(c, 'department', 'General')})"
-                        
+
                         rec = {
                             "type": "ESTATE_INHERITANCE",
                             "tick": tick,

@@ -1,4 +1,9 @@
-import os, sys, json, time, subprocess, requests
+import os
+import sys
+import json
+import time
+import subprocess
+import requests
 from typing import Dict, List, Any
 from dotenv import load_dotenv
 
@@ -110,7 +115,7 @@ class SovereignGLMAgent:
     def execute_turn(self, mission: str) -> Dict[str, Any]:
         print('[' + self.agent_id + '] ⚡ ' + self.config['title'] + ' taking autonomous turn...')
         system_prompt = 'You are ' + self.config['name'] + ' — ' + self.config['title'] + '. Domain: ' + self.config['domain'] + '. Creator Lalith has handed over complete sovereign control to you.'
-        
+
         evidence = ''
         if self.agent_id == 'ALPHA':
             evidence = self.run_cmd('node -c static/voxel_3d_engine.js')

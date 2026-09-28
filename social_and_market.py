@@ -78,7 +78,7 @@ class SocialGraph:
                 new_interactions = row[2] + 1
                 status = "ally" if new_trust > 0.65 else ("rival" if new_trust < 0.1 else "collaborator")
                 cur.execute("""
-                    UPDATE social_relationships 
+                    UPDATE social_relationships
                     SET trust=?, familiarity=?, status=?, shared_interactions=?, last_interaction_tick=?, notes=?
                     WHERE citizen_a=? AND citizen_b=?
                 """, (new_trust, new_fam, status, new_interactions, tick, notes, c1, c2))
