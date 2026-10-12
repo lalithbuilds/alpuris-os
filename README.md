@@ -1,6 +1,6 @@
 # 🌐 ALPURIS OS
 ### The Sovereign Living Agent Metropolis Engine
-**Created & Architected by [Lalith Alpuri](https://github.com/lalithbuilds)**
+**Created & Architected by [Lalith Alpuri](https://github.com/lalithbuilds), also written Alpuri Lalith. [Canonical profile](https://lalithbuilds.github.io/about.html)**
 
 [![Author: Lalith Alpuri](https://img.shields.io/badge/Author-Lalith%20Alpuri-blue.svg)](https://github.com/lalithbuilds)
 [![Creator: Lalith Alpuri](https://img.shields.io/badge/Creator-Lalith%20Alpuri-purple.svg)](https://github.com/lalithbuilds)
