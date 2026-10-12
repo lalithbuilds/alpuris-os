@@ -23,11 +23,12 @@
     "author": {
       "@type": "Person",
       "name": "Lalith Alpuri",
-      "alternateName": ["Lalith Alpuri", "Lalith Alpuri", "lalithbuilds"],
+      "@id": "https://lalithbuilds.github.io/#person",
+      "alternateName": ["Alpuri Lalith", "@lalithbuilds"],
+      "url": "https://lalithbuilds.github.io/about.html",
       "sameAs": [
-        "https://www.linkedin.com/in/lalith-alpuri/",
         "https://github.com/lalithbuilds",
-        "https://lalithbuilds.github.io/alpuris-os/"
+        "https://www.linkedin.com/in/lalith-alpuri/"
       ]
     },
     "publisher": {
@@ -71,14 +72,14 @@
       </div>
     </div>
     <span class="badge">TECHNICAL WHITEPAPER</span>
-    <span class="badge">ALPURIS OS & EPISODA ALPHA</span>
+    <span class="badge">ALPURIS OS TECHNICAL NOTE</span>
     <h1>PIANO: Dual-Speed Cognition Architecture for Sovereign Living Metropolises</h1>
     <div class="meta">
-      By <a href="https://www.linkedin.com/in/lalith-alpuri/"><strong>Lalith Alpuri</strong></a> (<a href="https://github.com/lalithbuilds">@lalithbuilds</a>) · Systems Architect · Published September 2026
+      By <a href="https://www.linkedin.com/in/lalith-alpuri/"><strong>Lalith Alpuri</strong> (also written Alpuri Lalith)</a> (<a href="https://github.com/lalithbuilds">@lalithbuilds</a>) · Systems Architect · Published September 2026
     </div>
     <div class="content">
       <h1>PIANO: Dual-Speed Cognition for Autonomous Agent Metropolises</h1>
-<p><strong>Lalith Alpuri</strong> — Systems Architect, ALPURIS OS</p>
+<p><strong>Lalith Alpuri</strong> (also written Alpuri Lalith) — Systems Architect, ALPURIS OS</p>
 <p>GitHub: [@lalithbuilds](https://github.com/lalithbuilds) · LinkedIn: [lalith-alpuri](https://www.linkedin.com/in/lalith-alpuri/)</p>
 <p><strong>Keywords:</strong> dual-process cognition, agent-based simulation, entity-component systems, spatial hashing, memory compaction, sovereign systems</p>
 <p>---</p>
@@ -109,7 +110,7 @@
 <p>2. <strong>Coherence failure</strong> — <code>k</code> consecutive failed actuations of the same goal (blocked paths, unfillable orders) force replanning.</p>
 <p>3. <strong>Epoch boundaries</strong> — simulated day/quarter rollovers guarantee every citizen reflects at least once per epoch, preserving identity continuity.</p>
 <p>4. <strong>Social pressure</strong> — reputation or net-worth deltas beyond <code>τ_r</code>.</p>
-<p>Admitted reflections enter a <strong>global priority queue</strong> (priority = salience × agent state), with a concurrency cap (8 in the Alpha) and explicit backpressure: overflow reflections decay rather than queue unboundedly. Each reflection proceeds in five phases: <strong>snapshot</strong> (copy agent view at tick barrier), <strong>context assembly</strong> (tiered retrieval, §5), <strong>deliberation</strong> (a pluggable kernel — local planner by default, or model invocation via Episoda Alpha MCP), <strong>validation</strong> (diffs must typecheck against the component schema), and <strong>commit</strong> — applied transactionally at the next tick barrier so System-1 never observes torn state. This barrier discipline also gives replayable, auditable histories.</p>
+<p>Admitted reflections enter a <strong>global priority queue</strong> (priority = salience × agent state), with a concurrency cap (8 in the Alpha) and explicit backpressure: overflow reflections decay rather than queue unboundedly. Each reflection proceeds in five phases: <strong>snapshot</strong> (copy agent view at tick barrier), <strong>context assembly</strong> (tiered retrieval, §5), <strong>deliberation</strong> (a pluggable kernel — local planner by default, or model invocation via a compatible MCP service such as EpisodAI (a separate project)), <strong>validation</strong> (diffs must typecheck against the component schema), and <strong>commit</strong> — applied transactionally at the next tick barrier so System-1 never observes torn state. This barrier discipline also gives replayable, auditable histories.</p>
 <h2>5. Memory Architecture and Compaction</h2>
 <p>Each citizen carries three tiers:</p>
 <li>**Echoic ring** (256 entries) — raw recent events, cheap, fully overwritten.</li>
@@ -150,7 +151,7 @@ query(center, r):  scan (⌈r/c⌉·2+1)² cell window → distance filter
     </div>
     <div class="footer">
       <p>© 2026 Lalith Alpuri. MIT Licensed Architecture.</p>
-      <p>ALPURIS OS: Sovereign Living Agent Metropolis Engine & Episoda Alpha Cognitive Memory Substrates.</p>
+      <p>ALPURIS OS is a separate living-agent simulation project by Lalith Alpuri.</p>
     </div>
   </div>
 </body>

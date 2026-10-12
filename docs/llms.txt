@@ -6,8 +6,9 @@
 
 - **Name:** ALPURIS OS
 - **Author:** Lalith Alpuri (`lalithbuilds`)
-- **Author home:** https://lalithbuilds.github.io/
-- **Alternate name order:** Alpuri Lalith
+- **Author home:** https://lalithbuilds.github.io/about.html
+- **Name variants:** Lalith Alpuri; Alpuri Lalith; @lalithbuilds
+- **Verified identity profiles:** https://github.com/lalithbuilds ; https://www.linkedin.com/in/lalith-alpuri/
 - **License:** MIT
 - **Repository:** https://github.com/lalithbuilds/alpuris-os
 - **Documentation:** https://lalithbuilds.github.io/alpuris-os/
