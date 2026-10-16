@@ -21,10 +21,65 @@ import atexit
 import socket
 import gzip
 from http.server import ThreadingHTTPServer, SimpleHTTPRequestHandler
-from urllib.parse import urlparse
+from urllib.parse import urlparse, parse_qs, unquote
 from typing import Any, Dict, List, Set, Optional
 
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+MAX_JSON_BODY = 1_048_576
+_STATIC_CONTENT_TYPES = {
+    ".js": "application/javascript",
+    ".css": "text/css",
+    ".json": "application/json",
+    ".html": "text/html; charset=utf-8",
+    ".png": "image/png",
+    ".jpg": "image/jpeg",
+    ".jpeg": "image/jpeg",
+    ".gif": "image/gif",
+    ".svg": "image/svg+xml",
+    ".webp": "image/webp",
+}
+
+
+def _query_params(parsed) -> Dict[str, str]:
+    """Decode a query string. Values may contain '=' and percent-escapes."""
+    raw = parse_qs(parsed.query, keep_blank_values=True)
+    return {key: values[-1] for key, values in raw.items() if values}
+
+
+def _bounded_int(raw: Any, default: int, low: int, high: int) -> int:
+    try:
+        value = int(raw)
+    except (TypeError, ValueError):
+        return default
+    if value < low:
+        return low
+    if value > high:
+        return high
+    return value
+
+
+def _resolve_static_file(url_path: str) -> Optional[str]:
+    """Map a /static/ URL onto a file inside the static directory.
+
+    Rejects traversal via '..', absolute paths, and percent-encoded equivalents.
+    """
+    prefix = "/static/"
+    if not url_path.startswith(prefix):
+        return None
+    rel = unquote(url_path[len(prefix):])
+    if not rel or rel.startswith(("/", "\\")) or "\\" in rel or "\x00" in rel:
+        return None
+    static_root = os.path.realpath(os.path.join(PROJECT_ROOT, "static"))
+    candidate = os.path.realpath(os.path.join(static_root, rel))
+    try:
+        if os.path.commonpath([static_root, candidate]) != static_root:
+            return None
+    except ValueError:
+        return None
+    if not os.path.isfile(candidate):
+        return None
+    return candidate
+
 
 try:
     from ray_agent_world.world_engine import (
@@ -70,35 +125,56 @@ PID_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "server.pid"
 SHUTDOWN_EVENT = threading.Event()
 CURRENT_SERVER = None
 
+def _pid_is_alive(pid: int) -> bool:
+    if pid <= 0:
+        return False
+    try:
+        os.kill(pid, 0)
+    except ProcessLookupError:
+        return False
+    except PermissionError:
+        return True
+    except OSError:
+        return False
+    return True
+
+
 def acquire_pid_lock(pid_file: str) -> bool:
-    """Acquire single-instance lock; cleans up stale PID files from crashed instances."""
-    if os.path.exists(pid_file):
+    """Acquire a single-instance lock, reclaiming stale PID files from crashed instances."""
+    for _ in range(2):
         try:
-            with open(pid_file, "r") as f:
-                content = f.read().strip()
-                if content:
-                    old_pid = int(content)
-                    if old_pid != os.getpid():
-                        try:
-                            os.kill(old_pid, 0)
-                            print(f"✗ [Bengaluru OS] Another simulator instance is running with PID {old_pid}.")
-                            return False
-                        except OSError:
-                            print(f"✓ [Bengaluru OS] Cleaned up stale PID file from crashed process {old_pid}.")
-                            os.remove(pid_file)
-        except Exception:
+            fd = os.open(pid_file, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o644)
+        except FileExistsError:
+            try:
+                with open(pid_file, "r", encoding="utf-8") as handle:
+                    content = handle.read().strip()
+                old_pid = int(content) if content else -1
+            except (OSError, ValueError):
+                old_pid = -1
+            if old_pid == os.getpid():
+                return True
+            if _pid_is_alive(old_pid):
+                print(f"✗ [Bengaluru OS] Another simulator instance is running with PID {old_pid}.")
+                return False
+            print(f"✓ [Bengaluru OS] Cleaned up stale PID file from crashed process {old_pid}.")
             try:
                 os.remove(pid_file)
-            except Exception:
+            except FileNotFoundError:
                 pass
-
-    try:
-        with open(pid_file, "w") as f:
-            f.write(str(os.getpid()))
+            except OSError as exc:
+                print(f"✗ [Bengaluru OS] Failed to remove stale PID file {pid_file}: {exc}")
+                return False
+            continue
+        try:
+            os.write(fd, str(os.getpid()).encode("ascii"))
+        except OSError as exc:
+            print(f"✗ [Bengaluru OS] Failed to write PID file {pid_file}: {exc}")
+            return False
+        finally:
+            os.close(fd)
         return True
-    except Exception as e:
-        print(f"✗ [Bengaluru OS] Failed to write PID file {pid_file}: {e}")
-        return False
+    print(f"✗ [Bengaluru OS] Failed to acquire PID lock {pid_file}.")
+    return False
 
 def release_pid_lock(pid_file: str):
     """Release and delete the PID file on clean shutdown."""
@@ -3154,6 +3230,30 @@ class WorldHandler(SimpleHTTPRequestHandler):
         self.wfile.write(encoded)
         self.wfile.flush()
 
+    def _read_json_body(self) -> Optional[Dict[str, Any]]:
+        """Read a JSON object body. Sends 400 and returns None when the body is unusable."""
+        raw_length = self.headers.get("Content-Length", "0")
+        try:
+            length = int(raw_length)
+        except (TypeError, ValueError):
+            self._send_json({"status": "error", "message": "Invalid Content-Length"}, status=400)
+            return None
+        if length < 0 or length > MAX_JSON_BODY:
+            self._send_json({"status": "error", "message": "Request body is outside the allowed size"}, status=400)
+            return None
+        if length == 0:
+            return {}
+        try:
+            payload = self.rfile.read(length)
+            body = json.loads(payload.decode("utf-8"))
+        except (json.JSONDecodeError, UnicodeDecodeError):
+            self._send_json({"status": "error", "message": "Invalid JSON body"}, status=400)
+            return None
+        if not isinstance(body, dict):
+            self._send_json({"status": "error", "message": "JSON body must be an object"}, status=400)
+            return None
+        return body
+
     def do_OPTIONS(self):
         self.send_response(204)
         self.send_header("Access-Control-Allow-Origin", "*")
@@ -3192,10 +3292,7 @@ class WorldHandler(SimpleHTTPRequestHandler):
                 self.wfile.write(raw_data)
                 self.wfile.flush()
         elif parsed.path.startswith("/api/zone_blocks"):
-            query_params = {}
-            if "?" in self.path:
-                qstr = self.path.split("?", 1)[1]
-                query_params = dict(q.split("=") for q in qstr.split("&") if "=" in q)
+            query_params = _query_params(parsed)
             zone = query_params.get("zone", "Manyata_Tech_Park")
             blocks = WORLD.voxel_world.get_zone_blocks(zone)
             self._send_json({"zone": zone, "blocks": blocks})
@@ -3310,10 +3407,7 @@ class WorldHandler(SimpleHTTPRequestHandler):
                 WORKSPACE_CACHE["data"] = workspace_files
                 self._send_json(workspace_files)
         elif parsed.path == "/api/citizen/phone":
-            query_params = {}
-            if "?" in self.path:
-                qstr = self.path.split("?", 1)[1]
-                query_params = dict(q.split("=") for q in qstr.split("&") if "=" in q)
+            query_params = _query_params(parsed)
             cid = query_params.get("id", "AARAV")
             with WORLD_LOCK:
                 p_data = WORLD.smartphone_engine.get_citizen_phone(cid)
@@ -3326,10 +3420,7 @@ class WorldHandler(SimpleHTTPRequestHandler):
                     p_data = list(WORLD.smartphone_engine.smartphones.values())[0]
             self._send_json(p_data or {})
         elif parsed.path == "/api/citizen/home":
-            query_params = {}
-            if "?" in self.path:
-                qstr = self.path.split("?", 1)[1]
-                query_params = dict(q.split("=") for q in qstr.split("&") if "=" in q)
+            query_params = _query_params(parsed)
             cid = query_params.get("id", "AARAV")
             with WORLD_LOCK:
                 h_data = WORLD.housing_engine.get_citizen_home(cid)
@@ -3351,29 +3442,32 @@ class WorldHandler(SimpleHTTPRequestHandler):
                 }
             self._send_json(f_data)
         elif parsed.path == "/api/events/bus":
-            query_params = {}
-            if "?" in self.path:
-                qstr = self.path.split("?", 1)[1]
-                query_params = dict(q.split("=") for q in qstr.split("&") if "=" in q)
-            topic = query_params.get("topic")
-            limit = int(query_params.get("limit", 50))
+            query_params = _query_params(parsed)
+            topic = query_params.get("topic") or None
+            limit = _bounded_int(query_params.get("limit"), 50, 0, 250)
             with WORLD_LOCK:
                 events = WORLD.event_bus.get_recent(limit=limit, topic=topic)
             self._send_json({"events": events, "total_events": len(events)})
         elif parsed.path == "/api/citizen/profile":
-            query_params = {}
-            if "?" in self.path:
-                qstr = self.path.split("?", 1)[1]
-                query_params = dict(q.split("=") for q in qstr.split("&") if "=" in q)
+            query_params = _query_params(parsed)
             cid = query_params.get("id", "AARAV")
             with WORLD_LOCK:
-                p = WORLD.personas.get(cid.upper())
+                p = WORLD.personas.get(str(cid).upper())
                 if not p:
                     for k, v in WORLD.personas.items():
-                        if k.lower() == cid.lower() or v.name.lower() == cid.lower():
+                        if k.lower() == str(cid).lower() or v.name.lower() == str(cid).lower():
                             p = v
                             break
+                if not p and str(cid).isdigit():
+                    ordered = list(WORLD.personas.values())
+                    index = int(cid)
+                    if 0 <= index < len(ordered):
+                        p = ordered[index]
                 if p:
+                    life = WORLD.life_economy.citizen_records.get(p.id, {})
+                    thought = getattr(p, "last_action", "") or ""
+                    if not thought and getattr(p, "memory", None) and p.memory.nodes:
+                        thought = p.memory.nodes[-1].content
                     profile = {
                         "id": p.id,
                         "name": p.name,
@@ -3381,8 +3475,10 @@ class WorldHandler(SimpleHTTPRequestHandler):
                         "department": p.department,
                         "location": p.location,
                         "wallet_inr": p.wallet_inr,
+                        "net_worth": life.get("current_net_worth", p.wallet_inr),
                         "energy": p.energy,
                         "stress_arousal": p.current_arousal,
+                        "piano_thought": thought,
                         "status": "active"
                     }
                 else:
@@ -3399,17 +3495,12 @@ class WorldHandler(SimpleHTTPRequestHandler):
             }
             self._send_json(info)
         elif parsed.path.startswith("/static/"):
-            file_path = os.path.join(PROJECT_ROOT, parsed.path[1:])
-            if os.path.exists(file_path):
+            file_path = _resolve_static_file(parsed.path)
+            if file_path:
                 self.send_response(200)
-                if file_path.endswith(".js"):
-                    self.send_header("Content-type", "application/javascript")
-                elif file_path.endswith(".css"):
-                    self.send_header("Content-type", "text/css")
-                elif file_path.endswith(".json"):
-                    self.send_header("Content-type", "application/json")
-                else:
-                    self.send_header("Content-type", "image/png")
+                ext = os.path.splitext(file_path)[1].lower()
+                self.send_header("Content-Type", _STATIC_CONTENT_TYPES.get(ext, "application/octet-stream"))
+                self.send_header("X-Content-Type-Options", "nosniff")
                 self.end_headers()
                 with open(file_path, "rb") as f:
                     self.wfile.write(f.read())
@@ -3422,10 +3513,14 @@ class WorldHandler(SimpleHTTPRequestHandler):
         global LAST_TELEMETRY, AUTO_RUNNING
         parsed = urlparse(self.path)
         if parsed.path == "/api/command":
-            length = int(self.headers.get("Content-Length", 0))
-            body = json.loads(self.rfile.read(length).decode()) if length else {}
+            body = self._read_json_body()
+            if body is None:
+                return
             cmd = body.get("command", "")
             params = body.get("params", {})
+            if not isinstance(params, dict):
+                self._send_json({"status": "error", "message": "params must be an object"}, status=400)
+                return
             res = {"status": "error", "message": f"Unknown command: {cmd}"}
             if cmd == "broadcast":
                 with WORLD_LOCK:
@@ -3444,8 +3539,12 @@ class WorldHandler(SimpleHTTPRequestHandler):
                 AUTO_RUNNING = not AUTO_RUNNING
                 res = {"status": "ok", "auto_running": AUTO_RUNNING}
             elif cmd == "set_time":
-                h = int(params.get("hour", 9))
-                m = int(params.get("minute", 0))
+                try:
+                    h = int(params.get("hour", 9))
+                    m = int(params.get("minute", 0))
+                except (TypeError, ValueError):
+                    self._send_json({"status": "error", "message": "hour and minute must be integers"}, status=400)
+                    return
                 with WORLD_LOCK:
                     WORLD.clock.set_time(hour=h, minute=m)
                     WORLD._update_weather_and_traffic()
@@ -3466,10 +3565,15 @@ class WorldHandler(SimpleHTTPRequestHandler):
             _push_sse(new_data)
             self._send_json(new_data)
         elif parsed.path == "/api/set_time":
-            length = int(self.headers.get("Content-Length", 0))
-            body = json.loads(self.rfile.read(length).decode()) if length else {}
-            hour = int(body.get("hour", 9))
-            minute = int(body.get("minute", 0))
+            body = self._read_json_body()
+            if body is None:
+                return
+            try:
+                hour = int(body.get("hour", 9))
+                minute = int(body.get("minute", 0))
+            except (TypeError, ValueError):
+                self._send_json({"status": "error", "message": "hour and minute must be integers"}, status=400)
+                return
             with WORLD_LOCK:
                 WORLD.clock.set_time(hour=hour, minute=minute)
                 WORLD._update_weather_and_traffic()
@@ -3482,49 +3586,65 @@ class WorldHandler(SimpleHTTPRequestHandler):
             AUTO_RUNNING = not AUTO_RUNNING
             self._send_json({"status": "toggled", "auto_running": AUTO_RUNNING})
         elif parsed.path == "/api/broadcast":
-            length = int(self.headers.get("Content-Length", 0))
-            body = json.loads(self.rfile.read(length).decode()) if length else {}
+            body = self._read_json_body()
+            if body is None:
+                return
             msg = body.get("message", "")
             with WORLD_LOCK:
                 res = WORLD.broadcast_executive_directive(msg)
             self._send_json(res)
         elif parsed.path == "/api/place_voxel":
-            length = int(self.headers.get("Content-Length", 0))
-            body = json.loads(self.rfile.read(length).decode()) if length else {}
+            body = self._read_json_body()
+            if body is None:
+                return
             zone = body.get("zone", "Manyata_Tech_Park")
-            x = int(body.get("x", 10))
-            y = int(body.get("y", 10))
+            try:
+                x = int(body.get("x", 10))
+                y = int(body.get("y", 10))
+            except (TypeError, ValueError):
+                self._send_json({"status": "error", "message": "x and y must be integers"}, status=400)
+                return
             btype = body.get("block_type", "solar_panel")
             with WORLD_LOCK:
                 res = WORLD.voxel_world.place_block("GOVERNOR", "Lalith (City Governor)", zone, x, y, btype, WORLD.tick_count)
             self._send_json(res)
         elif parsed.path == "/api/direct_message":
-            length = int(self.headers.get("Content-Length", 0))
-            body = json.loads(self.rfile.read(length).decode()) if length else {}
+            body = self._read_json_body()
+            if body is None:
+                return
             pid = body.get("persona_id", "AARAV")
             msg = body.get("message", "")
             with WORLD_LOCK:
                 res = WORLD.direct_message_citizen(pid, msg)
             self._send_json(res)
         elif parsed.path == "/api/macro_event":
-            length = int(self.headers.get("Content-Length", 0))
-            body = json.loads(self.rfile.read(length).decode()) if length else {}
+            body = self._read_json_body()
+            if body is None:
+                return
             ev_type = body.get("event_type", "MONSOON_FLOOD")
             with WORLD_LOCK:
                 res = WORLD.trigger_macro_event(ev_type)
             self._send_json(res)
         elif parsed.path == "/api/campaign/launch":
-            length = int(self.headers.get("Content-Length", 0))
-            body = json.loads(self.rfile.read(length).decode()) if length else {}
+            body = self._read_json_body()
+            if body is None:
+                return
+            try:
+                price_inr = float(body.get("price_inr", 1999.0))
+                claimed_utility = float(body.get("claimed_utility", 8.0))
+                actual_quality = float(body.get("actual_quality", 8.0))
+            except (TypeError, ValueError):
+                self._send_json({"status": "error", "message": "Numeric campaign fields must be numbers"}, status=400)
+                return
             with WORLD_LOCK:
                 res = WORLD.consumer_marketing.create_or_update_campaign(
                     campaign_id=body.get("id", f"CAMP-{int(time.time()*1000)%100000}"),
                     name=body.get("name", "New Innovation"),
                     tagline=body.get("tagline", "High-performance solution"),
                     sector=body.get("sector", "TECH_DEV_TOOL"),
-                    price_inr=float(body.get("price_inr", 1999.0)),
-                    claimed_utility=float(body.get("claimed_utility", 8.0)),
-                    actual_quality=float(body.get("actual_quality", 8.0)),
+                    price_inr=price_inr,
+                    claimed_utility=claimed_utility,
+                    actual_quality=actual_quality,
                     variant=body.get("variant", "A"),
                     channel=body.get("channel", "ALL"),
                     target_audience=body.get("target_audience", "ALL"),
@@ -3532,25 +3652,35 @@ class WorldHandler(SimpleHTTPRequestHandler):
                 )
             self._send_json(res)
         elif parsed.path == "/api/campaign/ab_test":
-            length = int(self.headers.get("Content-Length", 0))
-            body = json.loads(self.rfile.read(length).decode()) if length else {}
+            body = self._read_json_body()
+            if body is None:
+                return
+            try:
+                variant_a_price = float(body.get("variant_a_price", 1999.0))
+                variant_b_price = float(body.get("variant_b_price", 2999.0))
+                claimed_utility = float(body.get("claimed_utility", 8.5))
+                actual_quality = float(body.get("actual_quality", 8.5))
+            except (TypeError, ValueError):
+                self._send_json({"status": "error", "message": "Numeric campaign fields must be numbers"}, status=400)
+                return
             with WORLD_LOCK:
                 camp_a, camp_b = WORLD.consumer_marketing.create_ab_test(
                     base_id=body.get("base_id", f"AB-{int(time.time()*1000)%100000}"),
                     name=body.get("name", "Product Test"),
                     sector=body.get("sector", "TECH_DEV_TOOL"),
                     variant_a_tagline=body.get("variant_a_tagline", "Technical & Benchmark-Driven"),
-                    variant_a_price=float(body.get("variant_a_price", 1999.0)),
+                    variant_a_price=variant_a_price,
                     variant_b_tagline=body.get("variant_b_tagline", "Supercharge your workflow! 10x speed"),
-                    variant_b_price=float(body.get("variant_b_price", 2999.0)),
-                    claimed_utility=float(body.get("claimed_utility", 8.5)),
-                    actual_quality=float(body.get("actual_quality", 8.5)),
+                    variant_b_price=variant_b_price,
+                    claimed_utility=claimed_utility,
+                    actual_quality=actual_quality,
                     tick=WORLD.tick_count
                 )
             self._send_json({"variant_a": camp_a, "variant_b": camp_b})
         elif parsed.path == "/api/campaign/focus_group":
-            length = int(self.headers.get("Content-Length", 0))
-            body = json.loads(self.rfile.read(length).decode()) if length else {}
+            body = self._read_json_body()
+            if body is None:
+                return
             q = body.get("question", "Would you buy this product?")
             camp_id = body.get("campaign_id")
             cohort = body.get("cohort_filter", "ALL")
@@ -3568,9 +3698,10 @@ class WorldHandler(SimpleHTTPRequestHandler):
                 fg_res["visual_creative"] = WORLD.creative_engine.generate_ad_creative(target_p, q, target_price, sector)
             self._send_json(fg_res)
         elif parsed.path == "/api/citizen/call":
-            length = int(self.headers.get("Content-Length", 0))
-            body = json.loads(self.rfile.read(length).decode()) if length else {}
-            c_name = body.get("citizen_name", "Aarav Sharma")
+            body = self._read_json_body()
+            if body is None:
+                return
+            c_name = str(body.get("citizen_name", "Aarav Sharma") or "")
             u_msg = body.get("message", "How is your architecture scaling today?")
             with WORLD_LOCK:
                 cit = None
@@ -3593,25 +3724,32 @@ class WorldHandler(SimpleHTTPRequestHandler):
                 "spoken_response": spoken
             })
         elif parsed.path == "/api/creative/generate":
-            length = int(self.headers.get("Content-Length", 0))
-            body = json.loads(self.rfile.read(length).decode()) if length else {}
+            body = self._read_json_body()
+            if body is None:
+                return
             p_name = body.get("product_name", "DevPulse AI")
             pitch = body.get("pitch", "High-performance developer tooling for Bangalore architects")
-            price = float(body.get("price_inr", 2499.0))
+            try:
+                price = float(body.get("price_inr", 2499.0))
+            except (TypeError, ValueError):
+                self._send_json({"status": "error", "message": "price_inr must be a number"}, status=400)
+                return
             sector = body.get("sector", "TECH_DEV_TOOL")
             with WORLD_LOCK:
                 ad = WORLD.creative_engine.generate_ad_creative(p_name, pitch, price, sector)
             self._send_json(ad)
         elif parsed.path == "/api/social/post":
-            length = int(self.headers.get("Content-Length", 0))
-            body = json.loads(self.rfile.read(length).decode()) if length else {}
-            txt = body.get("text", "")
+            body = self._read_json_body()
+            if body is None:
+                return
+            txt = str(body.get("text", "") or "")
             with WORLD_LOCK:
                 tweet = WORLD.social_os.post_user_tweet(txt)
             self._send_json(tweet)
         elif parsed.path == "/api/fauna/interact":
-            length = int(self.headers.get("Content-Length", 0))
-            body = json.loads(self.rfile.read(length).decode()) if length else {}
+            body = self._read_json_body()
+            if body is None:
+                return
             c_name = body.get("citizen_name", "Aarav Sharma")
             a_id = body.get("animal_id", "d1")
             act = body.get("action", "PET")

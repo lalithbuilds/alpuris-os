@@ -10,6 +10,7 @@ Bengaluru Living Agent Metropolis Engine (Namma Bengaluru)
 - Governor "God Mode" Executive Console (City Broadcast + 1-on-1 Direct Citizen Calling)
 """
 
+import math
 import os
 import sys
 import time
@@ -199,6 +200,14 @@ class MetropolisEventBus:
         return event
 
     def get_recent(self, limit: int = 50, topic: Optional[str] = None) -> List[Dict[str, Any]]:
+        try:
+            limit = int(limit)
+        except (TypeError, ValueError):
+            limit = 50
+        # A non-positive limit must be empty. list[-0:] is the whole list.
+        if limit <= 0:
+            return []
+        limit = min(limit, self.max_history)
         with self._lock:
             if topic:
                 filtered = [e for e in self.history if e["topic"] == topic]
@@ -649,11 +658,23 @@ class LivingWorld:
             sym = stock["symbol"]
             base = BASE_STOCK_PRICES.get(sym, stock["price"])
             cur = stock["price"]
-            # Discrete Ornstein-Uhlenbeck: drift pull + Brownian shock
+            # Discrete Ornstein-Uhlenbeck: drift pull + Brownian shock.
+            # Production ticker envelope is [-1.8%, +2.4%] per step.
             drift = theta * ((base - cur) / base)
             shock = random.gauss(0.0, sigma)
-            step_pct = max(-0.06, min(0.06, drift + shock))
-            new_price = max(1.0, round(cur * (1.0 + step_pct), 1))
+            step_pct = max(-0.018, min(0.024, drift + shock))
+            lower = cur * (1.0 - 0.018)
+            upper = cur * (1.0 + 0.024)
+            raw = min(upper, max(lower, cur * (1.0 + step_pct)))
+            new_price = round(raw, 1)
+            # 0.1 price ticks can land just outside the envelope; snap inward.
+            if new_price < lower:
+                new_price = math.ceil(lower * 10.0 - 1e-9) / 10.0
+            if new_price > upper:
+                new_price = math.floor(upper * 10.0 + 1e-9) / 10.0
+            if new_price < lower or new_price > upper:
+                new_price = cur
+            new_price = max(1.0, new_price)
             delta_pct = round(((new_price - cur) / max(0.1, cur)) * 100.0, 1)
             stock["price"] = new_price
             sign = "+" if delta_pct >= 0 else ""
@@ -1422,17 +1443,6 @@ class LivingWorld:
         }
         return telemetry
 
-if __name__ == "__main__":
-    world = LivingWorld()
-    print("Initialized 100-citizen Bengaluru Living Metropolis. Stepping tick 1...")
-    t0 = time.time()
-    res = world.step()
-    dt = time.time() - t0
-    print(f"City Tick #{res['tick']} completed in {dt:.2f}s | {res['world_time']} ({res['circadian_phase']})")
-    print(f"Economy: GDP {res['economy']['total_gdp_inr']} | BLR-TECH-30 Index: {res['blr_tech_index']} | Top Earner: {res['economy']['top_earner']}")
-    print(f"Citizens: {res['total_citizens']} Active across {len(res['zone_coordinates'])} Bengaluru Sectors")
-    print(f"Weather: {res['weather']['temp']} {res['weather']['condition']} | Silk Board Congestion: {res['silk_board_congestion']}%")
-    print(f"Spoken Dialogues: {len(res['active_conversations'])} simultaneous conversations")
 
 class SpatialHashGrid:
     """
@@ -1495,4 +1505,17 @@ class SpatialHashGrid:
                         if dx * dx + dy * dy <= r2:
                             results.append(eid)
         return results
+
+
+if __name__ == "__main__":
+    world = LivingWorld()
+    print("Initialized 100-citizen Bengaluru Living Metropolis. Stepping tick 1...")
+    t0 = time.time()
+    res = world.step()
+    dt = time.time() - t0
+    print(f"City Tick #{res['tick']} completed in {dt:.2f}s | {res['world_time']} ({res['circadian_phase']})")
+    print(f"Economy: GDP {res['economy']['total_gdp_inr']} | BLR-TECH-30 Index: {res['blr_tech_index']} | Top Earner: {res['economy']['top_earner']}")
+    print(f"Citizens: {res['total_citizens']} Active across {len(res['zone_coordinates'])} Bengaluru Sectors")
+    print(f"Weather: {res['weather']['temp']} {res['weather']['condition']} | Silk Board Congestion: {res['silk_board_congestion']}%")
+    print(f"Spoken Dialogues: {len(res['active_conversations'])} simultaneous conversations")
 

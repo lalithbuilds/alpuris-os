@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-echo "⚡ [Test Suite] Running 28-Suite Production Regression Tests..."
+echo "⚡ [Test Suite] Running production regression tests..."
 
 if [ -d ".venv" ]; then
     source .venv/bin/activate
