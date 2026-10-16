@@ -20,27 +20,90 @@ from typing import List, Dict, Any, Optional, Tuple
 from dataclasses import dataclass, field
 
 ENV_PATH = os.path.join(os.path.dirname(__file__), ".env")
-if os.path.exists(ENV_PATH):
-    with open(ENV_PATH, "r") as f:
-        for line in f:
-            if line.strip() and not line.startswith("#") and "=" in line:
-                k, v = line.strip().split("=", 1)
-                os.environ[k] = v.strip()
+
+_PLACEHOLDER_SECRETS = {
+    "changeme",
+    "placeholder",
+    "todo",
+    "replace_me",
+    "xxx",
+    "none",
+    "null",
+    "sk-or-v1-key1",
+    "sk-or-v1-key2",
+}
+
+
+def _is_placeholder_secret(value: str) -> bool:
+    """True for blank values and the tokens shipped in .env.example."""
+    token = (value or "").strip().strip('"').strip("'")
+    if not token:
+        return True
+    lowered = token.lower()
+    if lowered.startswith("your_") or lowered in _PLACEHOLDER_SECRETS or token in _PLACEHOLDER_SECRETS:
+        return True
+    return False
+
+
+def load_local_env(path: str = ENV_PATH, override: bool = False) -> None:
+    """Load KEY=VALUE pairs without clobbering the process environment.
+
+    Placeholder example values are skipped so copying .env.example does not
+    turn the offline heuristic runtime into live calls with fake credentials.
+    """
+    if not path or not os.path.exists(path):
+        return
+    with open(path, "r", encoding="utf-8") as handle:
+        for line in handle:
+            stripped = line.strip()
+            if not stripped or stripped.startswith("#") or "=" not in stripped:
+                continue
+            if stripped.startswith("export "):
+                stripped = stripped[len("export "):].strip()
+            key, value = stripped.split("=", 1)
+            key = key.strip()
+            value = value.strip().strip('"').strip("'")
+            if not key or _is_placeholder_secret(value):
+                continue
+            if key == "OPENROUTER_KEYS":
+                usable = [
+                    part.strip()
+                    for part in value.split(",")
+                    if part.strip() and not _is_placeholder_secret(part.strip())
+                ]
+                if not usable:
+                    continue
+                value = ",".join(usable)
+            if override or key not in os.environ:
+                os.environ[key] = value
+
+
+def _configured_secret(name: str, default: str = "") -> str:
+    value = os.environ.get(name, default)
+    if value is None:
+        return ""
+    token = str(value).strip().strip('"').strip("'")
+    if _is_placeholder_secret(token):
+        return ""
+    return token
+
+
+load_local_env()
 
 # Multi-Tier Provider Registry
-KRUTRIM_API_KEY = os.environ.get("KRUTRIM_API_KEY", "")
+KRUTRIM_API_KEY = _configured_secret("KRUTRIM_API_KEY")
 KRUTRIM_URL = os.environ.get("KRUTRIM_URL", "https://cloud.olakrutrim.com/v1/chat/completions")
 WORLD_ARCHITECT_MODEL = os.environ.get("WORLD_ARCHITECT_MODEL", "gpt-oss-120b")
 
-SARVAM_API_KEY = os.environ.get("SARVAM_API_KEY", "")
+SARVAM_API_KEY = _configured_secret("SARVAM_API_KEY")
 SARVAM_URL = os.environ.get("SARVAM_URL", "https://api.sarvam.ai/v1/chat/completions")
 CITIZEN_DIALOGUE_MODEL = os.environ.get("CITIZEN_DIALOGUE_MODEL", "sarvam-105b-conversations")
 
-LUMINO_AI_API_KEY = os.environ.get("LUMINO_AI_API_KEY", "")
+LUMINO_AI_API_KEY = _configured_secret("LUMINO_AI_API_KEY")
 LUMINO_URL = os.environ.get("LUMINO_URL", "https://api.luminoai.co.in/api/v1/chat/completions")
 LUMINO_CONCURRENCY_MODEL = os.environ.get("LUMINO_CONCURRENCY_MODEL", "mimo-2-5")
 
-NVIDIA_API_KEY = os.environ.get("NVIDIA_API_KEY", "")
+NVIDIA_API_KEY = _configured_secret("NVIDIA_API_KEY")
 NVIDIA_URL = os.environ.get("NVIDIA_URL", "https://integrate.api.nvidia.com/v1/chat/completions")
 GOVERNANCE_MODEL = os.environ.get("GOVERNANCE_MODEL", "openai/gpt-oss-20b")
 
@@ -48,9 +111,17 @@ OMNIROUTE_URL = os.environ.get("OMNIROUTE_URL", "http://localhost:20128/v1/chat/
 OMNIROUTE_API_KEY = os.environ.get("OMNIROUTE_API_KEY", "omniroute-master-key")
 OMNIROUTE_MODEL = os.environ.get("OMNIROUTE_MODEL", "nvidia/openai/gpt-oss-20b")
 
-OPENROUTER_KEYS = [k.strip() for k in os.environ.get("OPENROUTER_KEYS", "").split(",") if k.strip()]
-if not OPENROUTER_KEYS and os.environ.get("OPENROUTER_API_KEY"):
-    OPENROUTER_KEYS = [os.environ.get("OPENROUTER_API_KEY")]
+OPENROUTER_KEYS = [
+    token for token in (
+        part.strip().strip('"').strip("'")
+        for part in os.environ.get("OPENROUTER_KEYS", "").split(",")
+    )
+    if token and not _is_placeholder_secret(token)
+]
+if not OPENROUTER_KEYS:
+    single_openrouter_key = _configured_secret("OPENROUTER_API_KEY")
+    if single_openrouter_key:
+        OPENROUTER_KEYS = [single_openrouter_key]
 
 OPENROUTER_MODEL = os.environ.get("OPENROUTER_MODEL", "liquid/lfm-2.5-2.6b:free")
 LOCAL_LLM_URL = os.environ.get("LOCAL_LLM_URL", "http://localhost:11434/v1/chat/completions")

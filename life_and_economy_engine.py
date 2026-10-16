@@ -9,6 +9,8 @@ Drives:
 6. Real Macro-GDP Engine based on Standard National Accounting: GDP = C + I + G + NX
 """
 
+import ast
+import json
 import time
 import math
 import random
@@ -16,6 +18,27 @@ import os
 import sqlite3
 import threading
 from typing import Dict, List, Any, Optional, Tuple
+
+
+def _load_stored_list(raw: Any) -> List[Any]:
+    """Decode a JSON list, or a legacy Python literal written by older builds.
+
+    Unreadable values and anything that is not a list become []. This path
+    must not eval stored text: the database file is on disk and can be edited.
+    """
+    if raw is None:
+        return []
+    text = str(raw).strip()
+    if not text:
+        return []
+    try:
+        value = json.loads(text)
+    except (json.JSONDecodeError, TypeError, ValueError):
+        try:
+            value = ast.literal_eval(text)
+        except (ValueError, SyntaxError, MemoryError, TypeError):
+            return []
+    return value if isinstance(value, list) else []
 
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 DB_PATH = os.environ.get("ALPURIS_DB_PATH", os.path.join(PROJECT_ROOT, "world_memory.sqlite"))
@@ -182,7 +205,7 @@ class LifeAndEconomyEngine:
                     "citizen_id": r[0], "citizen_name": r[1], "career_level": r[2],
                     "salary_inr": r[3], "marital_status": r[4], "partner_id": r[5],
                     "partner_name": r[6], "romance_score": r[7], "wedding_tick": r[8],
-                    "children": eval(r[9]) if r[9] else [], "happiness": r[10],
+                    "children": _load_stored_list(r[9]), "happiness": r[10],
                     "initial_net_worth": r[11], "current_net_worth": r[12],
                     "doubling_count": r[13], "company_id": r[14],
                     "vacation_count": r[15], "last_vacation_tick": r[16]
@@ -195,7 +218,7 @@ class LifeAndEconomyEngine:
                 {
                     "id": c[0], "name": c[1], "sector": c[2], "founder_id": c[3],
                     "founder_name": c[4], "valuation_inr": c[5], "revenue_inr": c[6],
-                    "employees": eval(c[7]) if c[7] else [], "created_tick": c[8]
+                    "employees": _load_stored_list(c[7]), "created_tick": c[8]
                 }
                 for c in c_rows
             ]
@@ -282,7 +305,7 @@ class LifeAndEconomyEngine:
             """, (
                 rec["citizen_id"], rec["citizen_name"], rec["career_level"], rec["salary_inr"],
                 rec["marital_status"], rec["partner_id"], rec["partner_name"], rec["romance_score"],
-                rec["wedding_tick"], str(rec["children"]), rec["happiness"], rec["initial_net_worth"],
+                rec["wedding_tick"], json.dumps(rec["children"]), rec["happiness"], rec["initial_net_worth"],
                 rec["current_net_worth"], rec["doubling_count"], rec["company_id"],
                 rec["vacation_count"], rec["last_vacation_tick"]
             ))
@@ -319,7 +342,7 @@ class LifeAndEconomyEngine:
             net_salary = round(salary - tax_withheld, 2)
             p.earn_inr(net_salary, f"Net Salary for {p.role}")
             with self.lock:
-                self.macro_gdp["city_treasury_inr"] += tax_withheld
+                # Posted once, when the macro step closes the ledger.
                 self.flow_ledger["tax_collected_inr"] += tax_withheld
             rec["happiness"] = min(100.0, rec["happiness"] + 0.8)
 
@@ -524,7 +547,7 @@ class LifeAndEconomyEngine:
                     INSERT INTO companies_registry (name, sector, founder_id, founder_name, valuation_inr, quarterly_rev_inr, employees_json, created_tick)
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?)
                 """, (company["name"], company["sector"], company["founder_id"], company["founder_name"],
-                      company["valuation_inr"], company["revenue_inr"], str(company["employees"]), tick))
+                      company["valuation_inr"], company["revenue_inr"], json.dumps(company["employees"]), tick))
                 c_id = cur.lastrowid
                 company["id"] = c_id
                 conn.commit()

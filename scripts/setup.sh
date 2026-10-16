@@ -22,11 +22,9 @@ fi
 source .venv/bin/activate
 pip install --upgrade pip
 
-# Install dependencies
-if [ -f "requirements-dev.txt" ]; then
-    echo "⚡ Installing development dependencies..."
-    pip install -r requirements-dev.txt
-fi
+# Install the package and the same dev tools CI uses.
+echo "⚡ Installing the package and development dependencies..."
+pip install -e ".[dev]"
 
 # Copy .env.example if .env does not exist
 if [ ! -f ".env" ]; then

@@ -346,28 +346,28 @@ class TestBLRTech30StockMarketMath(unittest.TestCase):
             self.assertGreater(s["price"], 0.0, f"Stock {s['symbol']} price must be strictly positive")
 
     def test_volatility_bounds_simulation(self):
-        """Simulate stock price updates and verify fluctuations strictly honor volatility envelope."""
-        # Create an isolated stock state
-        test_stocks = [
-            {"symbol": "TEST_A", "price": 1000.0, "change": "+0.0%"},
-            {"symbol": "TEST_B", "price": 500.0, "change": "+0.0%"}
-        ]
-
+        """Drive the real ticker and verify each step stays inside [-1.8%, +2.4%]."""
         import random
-        for iteration in range(25):
-            for stock in test_stocks:
-                old_price = stock["price"]
-                delta_pct = round(random.uniform(-1.8, 2.4), 1)
-                new_price = round(old_price * (1 + delta_pct / 100), 1)
-                stock["price"] = new_price
-                sign = "+" if delta_pct >= 0 else ""
-                stock["change"] = f"{sign}{delta_pct}%"
+        from world_engine import LivingWorld
 
-                # Verify volatility bounds
-                self.assertGreaterEqual(delta_pct, -1.8, f"Delta {delta_pct}% violated lower bound -1.8%")
-                self.assertLessEqual(delta_pct, 2.4, f"Delta {delta_pct}% violated upper bound +2.4%")
-                self.assertGreater(new_price, 0.0, f"Stock price fell below zero: {new_price}")
-                self.assertTrue(stock["change"].endswith("%"), "Change string must end with %")
+        random.seed(7)
+        stub = type("StockStub", (), {})()
+        stub.stocks = [
+            {"symbol": "INFX", "price": 1585.0, "change": "+0.0%"},
+            {"symbol": "SWGY", "price": 492.0, "change": "+0.0%"},
+            {"symbol": "YATR", "price": 315.0, "change": "+0.0%"},
+        ]
+        stub.personas = {}
+        for _ in range(25):
+            before = {stock["symbol"]: stock["price"] for stock in stub.stocks}
+            LivingWorld._update_stock_market(stub)
+            for stock in stub.stocks:
+                old_price = before[stock["symbol"]]
+                delta_pct = ((stock["price"] - old_price) / old_price) * 100.0
+                self.assertGreaterEqual(delta_pct, -1.8 - 1e-6, f"{stock['symbol']} moved {delta_pct}%")
+                self.assertLessEqual(delta_pct, 2.4 + 1e-6, f"{stock['symbol']} moved {delta_pct}%")
+                self.assertGreater(stock["price"], 0.0)
+                self.assertTrue(stock["change"].endswith("%"))
 
     def test_blr_tech_index_calculation(self):
         """Verify blr_tech_index formula: round(sum(s['price'] for s in stocks) * 1.15, 2)."""
@@ -483,6 +483,82 @@ class TestHTTPServerEndpoints(unittest.TestCase):
             urllib.request.urlopen(url, timeout=3.0)
         self.assertEqual(ctx.exception.code, 404)
 
+    def _raw_request(self, method: str, path: str, body: bytes = None, headers=None):
+        import http.client
+        from urllib.parse import urlparse as _urlparse
+        parsed = _urlparse(self.base_url)
+        conn = http.client.HTTPConnection(parsed.hostname, parsed.port, timeout=5)
+        conn.request(method, path, body=body, headers=headers or {})
+        resp = conn.getresponse()
+        payload = resp.read()
+        conn.close()
+        return resp.status, resp.getheader("Content-Type"), payload
+
+    def test_static_files_stay_inside_static_dir(self):
+        """Legitimate static assets load, and path traversal cannot read the repo."""
+        status, content_type, payload = self._raw_request("GET", "/static/voxel_3d_engine.js")
+        self.assertEqual(status, 200)
+        self.assertIn("javascript", content_type)
+        self.assertIn(b"ProceduralAlpurisAudio", payload)
+
+        for path in (
+            "/static/../server.py",
+            "/static/%2e%2e/server.py",
+            "/static/%2e%2e/%2e%2e/etc/passwd",
+            "/static/voxel_3d_engine.js/../../server.py",
+        ):
+            status, _, body = self._raw_request("GET", path)
+            self.assertEqual(status, 404, path)
+            self.assertNotIn(b"def do_GET", body)
+            self.assertNotIn(b"root:", body)
+
+    def test_event_bus_limit_is_bounded(self):
+        """A non-numeric or zero limit must not 500 or dump the buffer via slice[-0:]."""
+        status, _, payload = self._raw_request("GET", "/api/events/bus?limit=nope")
+        self.assertEqual(status, 200)
+        self.assertIn("events", json.loads(payload.decode()))
+
+        status, _, payload = self._raw_request("GET", "/api/events/bus?limit=0")
+        self.assertEqual(status, 200)
+        self.assertEqual(json.loads(payload.decode())["events"], [])
+
+        status, _, payload = self._raw_request("GET", "/api/citizen/profile?id=AARAV=extra")
+        self.assertEqual(status, 200)
+        self.assertIn("error", json.loads(payload.decode()))
+
+    def test_invalid_json_and_numeric_fields_return_400(self):
+        """Malformed command bodies return 400 instead of an unhandled 500."""
+        status, content_type, payload = self._raw_request(
+            "POST",
+            "/api/broadcast",
+            body=b"not-json",
+            headers={"Content-Type": "application/json"},
+        )
+        self.assertEqual(status, 400)
+        self.assertIn("json", content_type)
+        self.assertIn("Invalid JSON", payload.decode())
+
+        status, _, payload = self._raw_request(
+            "POST",
+            "/api/set_time",
+            body=json.dumps({"hour": "dawn"}).encode(),
+            headers={"Content-Type": "application/json"},
+        )
+        self.assertEqual(status, 400)
+        self.assertIn("integers", payload.decode())
+
+    def test_citizen_zero_matches_documented_dossier(self):
+        """id=0 is the first citizen, and the dossier includes net worth and a thought."""
+        status, _, payload = self._raw_request("GET", "/api/citizen/profile?id=0")
+        self.assertEqual(status, 200)
+        data = json.loads(payload.decode())
+        self.assertEqual(data.get("id"), "AARAV")
+        self.assertIn("wallet_inr", data)
+        self.assertIn("energy", data)
+        self.assertGreaterEqual(data.get("net_worth", -1), 0)
+        self.assertIsInstance(data.get("piano_thought"), str)
+        self.assertTrue(data.get("piano_thought"))
+
 
 # ---------------------------------------------------------------------------
 # TEST SUITE 5: SANDBOX EXECUTION SAFETY & TIMEOUT LIMITS
@@ -521,6 +597,11 @@ class TestSandboxExecutionSafety(unittest.TestCase):
             ("import socket\ns = socket.socket()", "Prohibited module import: 'socket'"),
             ("with open('/tmp/leak.txt', 'w') as f: f.write('leak')", "Prohibited built-in call: 'open()'"),
             ("eval('2 + 2')", "Prohibited built-in call: 'eval()'"),
+            ("import builtins\nbuiltins.open('/tmp/leak.txt', 'w')", "Prohibited module import: 'builtins'"),
+            ("f = open\nf('/tmp/leak.txt', 'w')", "Prohibited built-in reference: 'open'"),
+            ("payload = getattr((), '__class__')", "Prohibited built-in call: 'getattr()'"),
+            ("from sys import modules\nprint(modules)", "Prohibited module import: 'modules'"),
+            ("import pathlib\npathlib.Path('/tmp/leak.txt').write_text('x')", "Prohibited module import: 'pathlib'"),
         ]
         for idx, (bad_code, reason) in enumerate(dangerous_scripts):
             res = self.engine.execute_bounty_task(f"SEC-BLOCK-{idx}", "Dangerous Exploit", "Hacker Citizen", bad_code)
@@ -556,6 +637,29 @@ class TestSandboxExecutionSafety(unittest.TestCase):
         res = self.engine.execute_bounty_task("BNT-TEST-04", "Buffer Flooder Task", "Rohan Mehta", task_code)
         self.assertEqual(res["status"], "PASSED")
         self.assertLessEqual(len(res["stdout"]), 1000, "Stdout was not safely truncated")
+
+    def test_sandbox_runs_isolated_and_does_not_write_on_bypass(self):
+        """Bypass attempts stay blocked, and accepted code runs with isolated Python."""
+        leak = os.path.join(PROJECT_ROOT, "sandbox", "alpuris-sandbox-leak.txt")
+        if os.path.exists(leak):
+            os.remove(leak)
+        blocked = self.engine.execute_bounty_task(
+            "SEC-BYPASS",
+            "Builtin escape",
+            "Hacker Citizen",
+            "import builtins\nbuiltins.open(%r, 'w').write('x')\n" % leak,
+        )
+        self.assertEqual(blocked["status"], "BLOCKED_SECURITY")
+        self.assertFalse(os.path.exists(leak))
+
+        isolated = self.engine.execute_bounty_task(
+            "SEC-ISO",
+            "Isolation probe",
+            "Aarav Sharma",
+            "import sys\nprint('ISOLATED:' + str(int(sys.flags.isolated)))\n",
+        )
+        self.assertEqual(isolated["status"], "PASSED")
+        self.assertIn("ISOLATED:1", isolated["stdout"])
 
 
 # ---------------------------------------------------------------------------
@@ -834,6 +938,150 @@ class TestOrnsteinUhlenbeckAndMacroFlow(unittest.TestCase):
             self.assertIn("congestion_level", stats)
             self.assertIn(stats["congestion_level"], ["HIGH", "MEDIUM", "LOW"])
             self.assertGreaterEqual(stats["density_factor"], 0.0)
+
+
+class TestLedgerSecurityAndProcessLock(unittest.TestCase):
+    """Regression coverage for treasury posting, stored-literal loading, env files, and the PID lock."""
+
+    def test_withheld_tax_is_credited_to_treasury_once(self):
+        import tempfile
+        from cognitive_core import Persona
+
+        db_path = os.path.join(tempfile.mkdtemp(), "tax.sqlite")
+        engine = LifeAndEconomyEngine(db_path=db_path)
+        citizen = Persona("P_TAX", "Tax Tester", "Intern Analyst", "Manyata_Tech_Park", "SYSTEM")
+        citizen.wallet_inr = 50000.0
+        before = engine.macro_gdp["city_treasury_inr"]
+        engine.step_citizen_life(
+            citizen,
+            tick=1,
+            circadian_phase="Morning Standup",
+            all_personas={"P_TAX": citizen},
+        )
+        accrued = engine.flow_ledger["tax_collected_inr"]
+        self.assertGreater(accrued, 0.0)
+        self.assertEqual(engine.macro_gdp["city_treasury_inr"], before)
+        engine.step_macro_economy({"P_TAX": citizen}, tick=1)
+        self.assertAlmostEqual(engine.macro_gdp["city_treasury_inr"] - before, accrued, places=2)
+        self.assertEqual(engine.flow_ledger["tax_collected_inr"], 0.0)
+
+    def test_stored_lists_do_not_eval_database_text(self):
+        import sqlite3
+        import tempfile
+
+        db_path = os.path.join(tempfile.mkdtemp(), "life.sqlite")
+        LifeAndEconomyEngine(db_path=db_path)
+        marker = os.path.join(tempfile.mkdtemp(), "pwned")
+        payload = "__import__('os').system('touch %s')" % marker
+        conn = sqlite3.connect(db_path)
+        conn.execute(
+            """INSERT INTO citizen_life_records (citizen_id, citizen_name, children_json)
+               VALUES ('EVIL', 'Evil', ?)""",
+            (payload,),
+        )
+        conn.execute(
+            """INSERT INTO companies_registry (
+                   name, sector, founder_id, founder_name, valuation_inr,
+                   quarterly_rev_inr, employees_json, created_tick
+               ) VALUES ('X', 'Y', 'EVIL', 'Evil', 1, 1, ?, 1)""",
+            (payload,),
+        )
+        legacy = str([{"id": "child_1", "name": "Aarohi"}])
+        conn.execute(
+            """INSERT INTO citizen_life_records (citizen_id, citizen_name, children_json)
+               VALUES ('LEGACY', 'Legacy Parent', ?)""",
+            (legacy,),
+        )
+        conn.commit()
+        conn.close()
+
+        reloaded = LifeAndEconomyEngine(db_path=db_path)
+        self.assertEqual(reloaded.citizen_records["EVIL"]["children"], [])
+        self.assertEqual(reloaded.companies[0]["employees"], [])
+        self.assertEqual(reloaded.citizen_records["LEGACY"]["children"][0]["name"], "Aarohi")
+        self.assertFalse(os.path.exists(marker))
+
+    def test_dotenv_ignores_placeholders_and_keeps_real_environment(self):
+        import tempfile
+        from cognitive_core import _configured_secret, _is_placeholder_secret, load_local_env
+
+        self.assertTrue(_is_placeholder_secret("your_nvidia_nim_api_key_here"))
+        self.assertTrue(_is_placeholder_secret("sk-or-v1-key1"))
+        self.assertFalse(_is_placeholder_secret("sk-or-v1-real-token"))
+
+        fd, path = tempfile.mkstemp(suffix=".env")
+        os.close(fd)
+        with open(path, "w", encoding="utf-8") as handle:
+            handle.write("NVIDIA_API_KEY=your_nvidia_nim_api_key_here\n")
+            handle.write("OPENROUTER_KEYS=sk-or-v1-key1,sk-or-v1-key2\n")
+            handle.write("SARVAM_API_KEY=real-sarvam-token\n")
+            handle.write("KRUTRIM_API_KEY=from-file\n")
+        keys = ("NVIDIA_API_KEY", "OPENROUTER_KEYS", "SARVAM_API_KEY", "KRUTRIM_API_KEY")
+        saved = {key: os.environ.get(key) for key in keys}
+        try:
+            os.environ.pop("NVIDIA_API_KEY", None)
+            os.environ.pop("OPENROUTER_KEYS", None)
+            os.environ.pop("SARVAM_API_KEY", None)
+            os.environ["KRUTRIM_API_KEY"] = "already-set"
+            load_local_env(path)
+            self.assertNotIn("NVIDIA_API_KEY", os.environ)
+            self.assertNotIn("OPENROUTER_KEYS", os.environ)
+            self.assertEqual(os.environ.get("SARVAM_API_KEY"), "real-sarvam-token")
+            self.assertEqual(os.environ.get("KRUTRIM_API_KEY"), "already-set")
+            os.environ["NVIDIA_API_KEY"] = "your_nvidia_nim_api_key_here"
+            self.assertEqual(_configured_secret("NVIDIA_API_KEY"), "")
+        finally:
+            for key, value in saved.items():
+                if value is None:
+                    os.environ.pop(key, None)
+                else:
+                    os.environ[key] = value
+            os.remove(path)
+
+    def test_pid_lock_is_exclusive_and_reclaims_stale_files(self):
+        import tempfile
+
+        import subprocess
+        import sys
+
+        fd, path = tempfile.mkstemp(prefix="alpuris-pid-")
+        os.close(fd)
+        os.remove(path)
+        holder = subprocess.Popen([sys.executable, "-c", "import time; time.sleep(30)"])
+        try:
+            with open(path, "w", encoding="utf-8") as handle:
+                handle.write(str(holder.pid))
+            self.assertFalse(server.acquire_pid_lock(path))
+            holder.kill()
+            holder.wait(timeout=5)
+            self.assertTrue(server.acquire_pid_lock(path))
+            with open(path, "r", encoding="utf-8") as handle:
+                self.assertEqual(handle.read().strip(), str(os.getpid()))
+            with open(path, "w", encoding="utf-8") as handle:
+                handle.write("99999999")
+            self.assertTrue(server.acquire_pid_lock(path))
+        finally:
+            if holder.poll() is None:
+                holder.kill()
+                holder.wait(timeout=5)
+            server.release_pid_lock(path)
+            if os.path.exists(path):
+                os.remove(path)
+
+    def test_world_engine_cli_runs_after_spatial_grid_definition(self):
+        """python world_engine.py must not execute before SpatialHashGrid exists."""
+        source = open(os.path.join(PROJECT_ROOT, "world_engine.py"), encoding="utf-8").read()
+        self.assertLess(source.index("class SpatialHashGrid"), source.index('if __name__ == "__main__"'))
+
+    def test_event_history_zero_limit_is_empty(self):
+        from world_engine import MetropolisEventBus
+
+        bus = MetropolisEventBus(max_history=10)
+        bus.publish("tick", {"n": 1})
+        self.assertEqual(bus.get_recent(limit=0), [])
+        self.assertEqual(bus.get_recent(limit=-3), [])
+        self.assertEqual(len(bus.get_recent(limit="nope")), 1)
+
 
 if __name__ == "__main__":
     print("=" * 80)

@@ -24,16 +24,30 @@ PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 SANDBOX_DIR = os.environ.get("ALPURIS_SANDBOX_DIR", os.path.join(PROJECT_ROOT, "sandbox"))
 os.makedirs(SANDBOX_DIR, exist_ok=True)
 
-FORBIDDEN_MODULES = {
-    "os", "subprocess", "shutil", "socket", "ctypes", "pty", "posix",
-    "multiprocessing", "threading", "importlib", "pickle", "shelve", "marshal",
-    "http", "urllib", "requests", "signal", "tempfile"
+# Citizen scripts may only import a small computational stdlib.
+# A denylist misses `import builtins`, `import pathlib`, and `from sys import modules`.
+ALLOWED_MODULES = {
+    "sys", "json", "math", "time", "statistics", "collections", "itertools",
+    "functools", "re", "datetime", "decimal", "random", "string", "typing",
+    "heapq", "bisect", "array", "numbers", "fractions", "copy", "pprint",
+    "textwrap", "dataclasses", "enum", "abc", "contextlib", "operator",
 }
-FORBIDDEN_FUNCS = {"eval", "exec", "compile", "breakpoint", "__import__", "open"}
+FORBIDDEN_FUNCS = {
+    "eval", "exec", "compile", "breakpoint", "__import__", "open",
+    "getattr", "setattr", "delattr", "globals", "locals", "vars", "dir",
+    "type", "object", "super", "help", "input", "memoryview",
+}
 FORBIDDEN_ATTRS = {
     "__subclasses__", "__globals__", "__code__", "__builtins__", "__class__",
-    "modules", "_getframe"
+    "__bases__", "__mro__", "__dict__", "__init__", "__new__", "__reduce__",
+    "__reduce_ex__", "modules", "gi_frame", "f_globals", "f_builtins", "_getframe",
 }
+_CHILD_MEMORY_BYTES = 512 * 1024 * 1024
+
+
+def _blocked_name(name: str) -> bool:
+    return name in FORBIDDEN_FUNCS or name in FORBIDDEN_ATTRS or name.startswith("_")
+
 
 def validate_citizen_ast(task_code: str) -> Tuple[bool, str]:
     """Strict AST security validation for citizen bounty scripts."""
@@ -43,29 +57,40 @@ def validate_citizen_ast(task_code: str) -> Tuple[bool, str]:
         return False, f"Syntax Error: {e}"
 
     for node in ast.walk(tree):
-        # 1. Block prohibited module imports
+        # 1. Allow only the computational stdlib. Everything else is blocked,
+        # including builtins, pathlib, and io, which can open files.
         if isinstance(node, ast.Import):
             for alias in node.names:
                 mod = alias.name.split(".")[0]
-                if mod in FORBIDDEN_MODULES:
+                if mod not in ALLOWED_MODULES:
                     return False, f"Prohibited module import: '{alias.name}'"
         elif isinstance(node, ast.ImportFrom):
-            if node.module:
-                mod = node.module.split(".")[0]
-                if mod in FORBIDDEN_MODULES:
-                    return False, f"Prohibited module import: '{node.module}'"
+            if node.module is None or node.level:
+                return False, "Prohibited module import: relative import"
+            mod = node.module.split(".")[0]
+            if mod not in ALLOWED_MODULES:
+                return False, f"Prohibited module import: '{node.module}'"
+            for alias in node.names:
+                imported = alias.name.split(".")[0]
+                if alias.name == "*" or _blocked_name(imported):
+                    return False, f"Prohibited module import: '{alias.name}'"
 
-        # 2. Block prohibited function calls
+        # 2. Block prohibited function calls, including getattr/open aliases
+        # that would otherwise slip past an attribute denylist.
         elif isinstance(node, ast.Call):
             if isinstance(node.func, ast.Name) and node.func.id in FORBIDDEN_FUNCS:
                 return False, f"Prohibited built-in call: '{node.func.id}()'"
-            elif isinstance(node.func, ast.Attribute) and node.func.attr in FORBIDDEN_ATTRS:
+            elif isinstance(node.func, ast.Attribute) and _blocked_name(node.func.attr):
                 return False, f"Prohibited introspection call: '{node.func.attr}()'"
 
-        # 3. Block dangerous attribute access
+        # 3. Block dangerous attribute access, including dunder traversal.
         elif isinstance(node, ast.Attribute):
-            if node.attr in FORBIDDEN_ATTRS:
+            if _blocked_name(node.attr):
                 return False, f"Prohibited attribute access: '{node.attr}'"
+
+        # 4. Block loading a forbidden builtin into another name (`f = open`).
+        elif isinstance(node, ast.Name) and isinstance(node.ctx, ast.Load) and _blocked_name(node.id):
+            return False, f"Prohibited built-in reference: '{node.id}'"
 
     return True, "VALIDATED"
 
@@ -129,15 +154,24 @@ class SandboxedExecutionEngine:
             # Enforce CPU limit: 2s soft, 3s hard (kills infinite loops with SIGXCPU)
             try:
                 resource.setrlimit(resource.RLIMIT_CPU, (2, 3))
+                resource.setrlimit(resource.RLIMIT_AS, (_CHILD_MEMORY_BYTES, _CHILD_MEMORY_BYTES))
             except Exception:
                 pass
 
+        child_env = {
+            "PATH": "/usr/bin:/bin",
+            "PYTHONDONTWRITEBYTECODE": "1",
+            "LANG": os.environ.get("LANG", "C.UTF-8"),
+        }
+
         try:
             proc = subprocess.Popen(
-                [sys.executable, script_path],
+                [sys.executable, "-I", script_path],
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 text=True,
+                cwd=SANDBOX_DIR,
+                env=child_env,
                 preexec_fn=_setup_child_process
             )
             try:

@@ -7,7 +7,7 @@
 [![LinkedIn: Lalith Alpuri](https://img.shields.io/badge/LinkedIn-Lalith%20Alpuri-0A66C2.svg?logo=linkedin&logoColor=white)](https://www.linkedin.com/in/lalith-alpuri/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-emerald.svg)](https://opensource.org/licenses/MIT)
 [![Python: 3.10+](https://img.shields.io/badge/Python-3.10%20%7C%203.11%20%7C%203.12-blue.svg)](https://www.python.org/)
-[![Tests: 35 Passed](https://img.shields.io/badge/Tests-35%20Passed%20(100%25)-brightgreen.svg)](tests/test_production_suite.py)
+[![Tests: 46 Passed](https://img.shields.io/badge/Tests-46%20Passed%20(100%25)-brightgreen.svg)](tests/test_production_suite.py)
 [![WebGL: 60 FPS](https://img.shields.io/badge/WebGL-60%20FPS%20Locked-cyan.svg)](static/voxel_3d_engine.js)
 [![Procedural Audio: Zero--Asset](https://img.shields.io/badge/Web%20Audio-Procedural%20Synthesis-purple.svg)](static/voxel_3d_engine.js)
 [![Port: 9090](https://img.shields.io/badge/Port-9090%20Live-purple.svg)](http://localhost:9090)
@@ -109,7 +109,7 @@ A visitor should be able to see the project before reading the full architecture
    ```bash
    python3 -m venv .venv
    source .venv/bin/activate
-   pip install -e .
+   pip install -e ".[dev]"
    python3 server.py
    ```
 
@@ -125,7 +125,7 @@ A visitor should be able to see the project before reading the full architecture
    python3 -m pytest -q
    ```
 
-Expected local baseline: **35 tests passing**.
+Expected local baseline: **46 tests passing**.
 
 ### What to Show in Public Demos
 
@@ -153,8 +153,8 @@ cd alpuris-os
 python3 -m venv .venv
 source .venv/bin/activate
 
-# Install dependencies & development tools
-pip install -e .
+# Install the package plus test and lint tools
+pip install -e ".[dev]"
 ```
 
 ### Launch the Metropolis Engine
@@ -165,7 +165,7 @@ Open your browser at `http://localhost:9090` to enter the living 3D metropolis.
 
 ---
 
-## 🧪 Production Test Suite (35 Passed)
+## 🧪 Production Test Suite (46 Passed)
 
 ```bash
 pytest tests/test_production_suite.py
@@ -173,11 +173,11 @@ pytest tests/test_production_suite.py
 ```
 ============================== test session starts ==============================
 platform darwin -- Python 3.14.6, pytest-9.1.1
-collected 35 items
+collected 46 items
 
-tests/test_production_suite.py ...............................           [100%]
+tests/test_production_suite.py .............................................. [100%]
 
-============================== 35 passed ==============================
+============================== 46 passed ==============================
 ```
 
 ---
